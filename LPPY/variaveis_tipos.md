@@ -143,7 +143,7 @@ python exemplo_variaveis.py
 
 ---
 
-## Exercícios de Geometria e Matemática Básica no Cotidiano
+## Exercícios 
 
 1. **Peça ao usuário o comprimento e a largura de um cômodo e calcule a área em metros quadrados.**
 
