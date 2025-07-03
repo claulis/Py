@@ -1,4 +1,6 @@
-# Aula: Variáveis e Tipos de Dados em Python
+# Variáveis e Tipos de Dados em Python
+
+---
 
 ## O que são Variáveis?
 
@@ -117,7 +119,7 @@ print("Altura:", altura)
 
 ---
 
-### 5. Exemplo Prático no VS Code
+### Exemplo Prático no VS Code
 
 1. Abra o VS Code e crie um arquivo chamado `exemplo_variaveis.py`.
 
