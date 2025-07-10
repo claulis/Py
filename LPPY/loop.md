@@ -212,3 +212,103 @@ else:
 ```plaintext
 Nenhum número par encontrado.
 ```
+
+## 5. Exercicios
+
+**Exercício 1: Soma de números positivos**
+Escreva um programa que peça ao usuário para inserir números inteiros (um por vez) até digitar 0. Use um laço while para somar apenas os números positivos inseridos e armazene-os em uma lista. Mostre a soma e a lista final.
+Exemplo:
+
+```plaintext
+Digite um número (0 para parar): 5
+Digite um número (0 para parar): -3
+Digite um número (0 para parar): 10
+Digite um número (0 para parar): 0
+Saída: Soma dos positivos: 15, Lista: [5, 10]
+```
+
+**Exercício 2: Maior número com limite**
+Peça ao usuário para inserir números inteiros até digitar um número negativo. Use um laço while para encontrar o maior número inserido, mas ignore números maiores que 100. Se nenhum número válido for inserido, informe.
+Exemplo:
+
+```plaintext
+Digite um número (negativo para parar): 50
+Digite um número (negativo para parar): 120
+Digite um número (negativo para parar): 30
+Digite um número (negativo para parar): -1
+Saída: Maior número válido: 50
+```
+
+```plaintext
+Entrada:
+Digite um número (negativo para parar): 150
+Digite um número (negativo para parar): -1
+Saída: Nenhum número válido inserido.
+```
+
+**Exercício 3: Tabuada personalizada**
+Peça ao usuário para inserir um número inteiro entre 1 e 10. Use laços for aninhados para gerar a tabuada desse número, mas apenas para multiplicadores ímpares (1, 3, 5, 7, 9). Valide a entrada com if.
+
+Exemplo:
+
+```plaintext
+Digite um número (1 a 10): 5
+
+5 x 1 = 5
+5 x 3 = 15
+5 x 5 = 25
+5 x 7 = 35
+5 x 9 = 45
+```
+
+```plaintext
+Entrada: Digite um número (1 a 10): 12
+Saída: Número inválido! Digite entre 1 e 10.
+```
+
+
+Exercício 8: Contagem com salto
+Peça ao usuário para inserir um número inteiro positivo. Use um laço while para contar de 1 até esse número, mas pule números que são múltiplos de 4 (usando continue). Se o número for inválido (não positivo), informe.
+Exemplo:
+Entrada: Digite um número positivo: 10
+Saída: 1, 2, 3, 5, 6, 7, 9, 10
+
+Entrada: Digite um número positivo: 0
+Saída: Número inválido! Deve ser positivo.
+
+
+Exercício 9: Procurar elemento com validação
+Peça ao usuário para inserir uma lista de números inteiros (separados por espaço) e um número para buscar. Use um laço for com break para encontrar a primeira ocorrência do número. Use if para verificar se o número está na lista e exibir sua posição (baseada em 1). Se não estiver, use else.
+Exemplo:
+Entrada:
+Digite números separados por espaço: 10 20 30 40
+Digite o número a buscar: 30
+Saída: Número 30 encontrado na posição 3
+
+Entrada:
+Digite números separados por espaço: 10 20 40
+Digite o número a buscar: 50
+Saída: Número 50 não encontrado.
+
+
+Exercício 10: Somar até atingir limite ou esgotar
+Peça ao usuário para inserir uma lista de números inteiros (separados por espaço). Use um laço while para somar os números até que a soma ultrapasse 100 ou a lista acabe. Inclua apenas números positivos e pares (usando if). Mostre a soma final e quantos números foram usados.
+Exemplo:
+Entrada: Digite números separados por espaço: 10 20 -5 30 60
+Saída: Soma: 120, Números usados: 4
+
+Entrada: Digite números separados por espaço: 2 3 5
+Saída: Soma: 2, Números usados: 1
+
+
+Dicas para resolução
+
+Use input() para capturar entradas do usuário. Converta strings para inteiros com int() ou listas com split() e map(). Exemplo: numeros = list(map(int, input("Digite números: ").split())).
+Valide entradas com if para garantir que os dados são válidos (ex.: números positivos, intervalo correto).
+Use try-except se quiser lidar com entradas inválidas (ex.: letras em vez de números).
+Para conjuntos, use set() para criar a coleção a partir da entrada.
+Teste os programas com diferentes casos, incluindo entradas vazias ou inválidas.
+Use break e continue para controlar o fluxo dos laços quando necessário.
+Para maior clareza, exiba mensagens informativas antes de pedir entradas.
+
+Esses exercícios aumentam a complexidade ao integrar input e if, mas mantêm a dificuldade média-baixa, ideal para praticar laços de repetição com interação e lógica condicional.
