@@ -8,7 +8,7 @@
 
 | Código | Disciplina                                   | Conteúdo Principal                                                                                                   | Carga Horária | Encontros/Aulas |
 |--------|----------------------------------------------|---------------------------------------------------------------------------------------------------------------------|---------------|-----------------|
-| LPPY   | Lógica de Programação e Introdução ao Python | Algoritmos, [variáveis e tipos de dados](/LPPY/variaveis_tipos.md), estruturas de controle, funções, módulos, ambiente Python                    | 21h           | 7               |
+| LPPY   | Lógica de Programação e Introdução ao Python | Algoritmos, [variáveis e tipos de dados](/LPPY/variaveis_tipos.md),[operadores](/LPPY/operadores.md), [estruturas condicionais](/LPPY/estruturas_condicionais.md), funções, módulos, ambiente Python                    | 21h           | 7               |
 | GIT    | GIT, GitHub e GitLab                        | Versionamento, comandos básicos, branches, colaboração, integração com IDE                                          | 6h            | 2               |
 | POB    | Python e Orientação a Objetos                | Classes, objetos, atributos, métodos, encapsulamento, herança, polimorfismo, exceções                              | 24h           | 8               |
 | NBD    | Noções de Banco de Dados                     | Modelos de dados, SQL, criação e manipulação de tabelas, consultas, relacionamentos, chaves, JOINs                  | 24h           | 8               |
