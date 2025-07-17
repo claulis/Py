@@ -217,3 +217,9 @@ Use tuplas ou frozenset para dados que não devem ser alterados, especialmente e
 **Gerenciar Memória:**
 
 Para grandes coleções, prefira array ou numpy em vez de listas. Evite cópias desnecessárias com copy.copy ou copy.deepcopy apenas quando necessário.
+
+## 6. Exemplos completos
+
+[Aqui](../LPPY/asset/code/playlist.py) tem um exemplo completo de cadastro CRUD usando apenas listas.
+
+[Aqui](../LPPY/asset/code/vacinas.py) tem um exemplo completo de cadastro CRUD usando cojuntos, set e frozenset.
