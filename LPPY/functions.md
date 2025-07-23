@@ -259,3 +259,20 @@ for aluno in alunos:
 # Aluno 2 - Média: 9.00, Status: Aprovado
 # Aluno 3 - Média: 6.17, Status: Reprovado
 ```
+
+## 7. Exercicios
+
+**Exercício 1: Saudação Personalizada por Turno**
+Descrição: Crie uma função que gera uma saudação personalizada com base no nome de uma pessoa e no turno do dia (manhã, tarde ou noite). Use um parâmetro padrão para o turno. A função deve retornar a saudação formatada.
+
+[Solução](/LPPY/asset/code/ex_func_1.py)
+
+**Exercício 2: Calculadora de Desconto**
+Descrição: Escreva uma função que calcula o preço final de um produto após aplicar um desconto percentual. A função deve receber o preço original e o percentual de desconto, retornando o valor com desconto.
+
+[Solução](/LPPY/asset/code/ex_func_2.py)
+
+**Exercício 3: Organizador de Lista de Compras**
+Descrição: Escreva uma função que adiciona itens a uma lista de compras e outra que exibe os itens numerados. Use um parâmetro padrão para categorizar os itens (e.g., "Alimentos" como padrão).
+
+[Solução](/LPPY/asset/code/ex_func_3.py)
