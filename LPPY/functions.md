@@ -275,4 +275,4 @@ Descrição: Escreva uma função que calcula o preço final de um produto após
 **Exercício 3: Organizador de Lista de Compras**
 Descrição: Escreva uma função que adiciona itens a uma lista de compras e outra que exibe os itens numerados. Use um parâmetro padrão para categorizar os itens (e.g., "Alimentos" como padrão).
 
-[Solução](/LPPY/asset/code/ex_func_3.py)
+[Solução](/LPPY/asset/code/ex_func_.py)
