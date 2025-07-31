@@ -279,3 +279,12 @@ Compreender classes e objetos em Python envolve:
 5. Implementar métodos de instância, de classe e estáticos para diferentes funcionalidades.
 6. Aplicar abstração para focar no essencial.
 7. Explorar encapsulamento, herança e polimorfismo para designs robustos.
+
+## Exercicio
+
+Pegue o codigo no exemplo e desenvolva:
+
+1. Aluno: remover uma data na lista de frequências
+2. Professor: remover uma presença
+3. Turma: remover aluno da turma, substituir professor, retornar o aluno que tem mais frequencia
+
