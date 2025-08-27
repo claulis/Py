@@ -16,6 +16,11 @@ Principais características do Github:
 
 >Exemplo de cenário: Você e seu colega trabalham no mesmo projeto. Cada um faz commits locais e empurra (push) para o GitHub. A plataforma mostra quem alterou cada linha, permitindo reverter mudanças ou debater melhorias.
 
+## ReferÊncias online
+
+* Para consultar a lista de comandos acessar https://git-scm.com/docs
+
+
 ## Instalação e Configuração Inicial
 
 Antes de tudo, instale o Git e configure suas credenciais para que o GitHub associe seus commits ao seu perfil.
@@ -269,4 +274,30 @@ Isso ajuda a:
 - Identificar períodos de pico  
 - Entender quais áreas recebem mais atenção  
 - Planejar deadlines realistas  
+
+## Visual Studio Code (VS Code) + GitHub 
+
+### O que você precisa
+
+- VS Code instalado
+- Git instalado no seu sistema
+- Conta no GitHub
+- Extensão **GitHub Pull Requests and Issues** instalada no VS Code
+
+### Principais funcionalidades
+
+- **Clonar repositórios** diretamente do GitHub usando o comando `Git: Clone`
+- **Commit e push** de alterações sem sair do editor
+- **Gerenciar branches** e visualizar histórico de commits
+- **Abrir pull requests** e acompanhar issues com a extensão oficial
+- **Autenticação integrada** com GitHub (via navegador ou token)
+
+### Começando um projeto novo
+
+1. Abra a pasta do projeto no VS Code
+2. Vá até o painel de controle de versão (ícone de ramificação)
+3. Clique em **"Initialize Repository"**
+4. Faça seu primeiro commit
+5. Clique em **"Publish Branch"** para criar e enviar o repositório para o GitHub
+
 
