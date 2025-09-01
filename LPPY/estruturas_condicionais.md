@@ -197,7 +197,9 @@ else:
 2. **Positivo, Negativo ou Zero**  
    Leia um número real e imprima:
    - “Positivo” se for maior que zero  
-   - “Negativo” se for menor que zero  
+   - “Negativo” se for 
+   
+   menor que zero  
    - “Zero” se for igual a zero  
 
 3. **Faixa Etária**  
