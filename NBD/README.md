@@ -108,20 +108,33 @@ Essa distinção é pivotal na era do big data.
 
 SQL é declarativa: você descreve o que quer, não como obter. Pronuncia-se "sequel" ou "S-Q-L".
 
-- **Sublínguas Detalhadas**:
-  - **DDL**: CREATE, ALTER, DROP, TRUNCATE. Ex.: `ALTER TABLE Alunos ADD COLUMN Email VARCHAR(100);`
-  - **DML**: INSERT, UPDATE, DELETE. Ex.: `INSERT INTO Pedidos (ID, ClienteID) VALUES (101, 1);`
-  - **DQL**: SELECT com cláusulas como WHERE, GROUP BY, HAVING, ORDER BY. Ex.: `SELECT AVG(Salario) FROM Empregados GROUP BY Departamento HAVING AVG(Salario) > 50000;`
-  - **DCL**: GRANT, REVOKE. Ex.: `GRANT INSERT ON Tabela TO Usuario;`
-  - **TCL**: COMMIT, ROLLBACK, SAVEPOINT.
+SQL (Structured Query Language), ou Linguagem de Consulta Estruturada, é a linguagem padrão utilizada para gerenciar e manipular bancos de dados relacionais. Ela foi criada na década de 1970 baseada no modelo relacional de dados, e desde então tornou-se fundamental para qualquer sistema que precise armazenar, consultar e modificar dados organizados em tabelas.
 
-- **Funcionalidades Avançadas**: Subqueries (`SELECT Nome FROM (SELECT * FROM Alunos WHERE Idade > 18);`), Window Functions (ROW_NUMBER(), RANK()), Common Table Expressions (WITH clause).
+SQL é uma **linguagem declarativa** que permite ao usuário especificar o **que deseja obter ou modificar nos dados, sem precisar dizer como o banco de dados deve executar* essas operações. Basicamente, o usuário escreve comandos SQL e o sistema gerenciador do banco de dados (SGBD), como MySQL, PostgreSQL, Oracle, SQL Server, entre outros, interpreta e executa essas consultas ou comandos.
 
-- **Exemplo Complexo**: Consulta de vendas: `SELECT Produto, SUM(Quantidade) AS Total FROM Vendas INNER JOIN Produtos ON Vendas.ProdID = Produtos.ID WHERE Data > '2024-01-01' GROUP BY Produto ORDER BY Total DESC;`
+Um banco de dados relacional SQL organiza as informações em tabelas compostas por linhas (registros) e colunas (campos). Cada coluna representa um atributo e cada linha representa uma entidade ou instância do dado.
 
-- **Variações**: PL/SQL (Oracle), T-SQL (SQL Server) adicionam programação procedural.
+### Principais componentes e comandos do SQL
 
-- **Importância**: SQL é ubíqua; aprender bem abre portas para data science e desenvolvimento.
+- [**DDL (Data Definition Language):**](/NBD/ddl.md) Cria e altera estruturas de bancos, tabelas e índices. Exemplos: `CREATE`, `ALTER`, `DROP`.
+- [**DML (Data Manipulation Language):**](/NBD/dml.md) Manipula dados armazenados, como inserir, atualizar, excluir.
+- [**DQL (Data Query Language):**](/NBD/dql.md) Consulta dados.
+- **DCL (Data Control Language):** Controla permissões e acessos.
+- **TCL (Transaction Control Language):** Controla transações.
+
+### Como o SQL funciona?
+
+O usuário escreve comandos SQL que são enviados ao SGBD. Este processa a consulta, decide o plano de execução ideal, acessa os dados físicos, realiza as operações solicitadas e retorna os resultados.
+
+A linguagem é declarativa, ou seja, o usuário diz o que quer ("selecionar clientes maiores de 30 anos") e o banco determina como fazer isso internamente. O SQL permite consultar diversas tabelas relacionadas, fazer agregações, ordenar dados, filtrar por condições, etc.
+
+### Sistemas que suportam SQL
+
+Existem muitos SGBDs que implementam SQL, como MySQL, PostgreSQL, Microsoft SQL Server, Oracle, MariaDB, SQLite, entre outros. Embora o núcleo do SQL seja padrão, cada sistema pode ter suas extensões específicas.
+
+SQL é a linguagem universal para lidar com bancos de dados relacionais, permitindo armazenar, manipular, consultar e administrar dados estruturados. Seu domínio é essencial para desenvolvedores, analistas de dados, administradores de banco de dados e qualquer profissional que trabalhe com dados.
+
+SQL simplifica a transformação de dados brutos em informações úteis para decisão, análise e operação de sistemas modernos.
 
 ## Entidade-Relacionamento (ER Model)
 
@@ -379,4 +392,4 @@ Uma chave estrangeira (FK) é um atributo em uma tabela que referencia a PK de o
 - **Tudo Junto**: Em um design normalizado, tabelas relacionadas via FKs usam índices para joins eficientes. Exemplo: Em um ER Model, entidades viram tabelas com PKs, relacionamentos viram FKs, e colunas frequentes ganham índices.
 - **Boas Práticas**: Sempre defina PKs; use FKs para integridade; crie índices baseados em queries reais (use EXPLAIN); normalize para evitar redundância, mas denormalize se performance for crítica.
 
-Essa explicação cobre os aspectos essenciais. Como professor, recomendo praticar: Crie um banco simples com essas estruturas e teste queries. Se quiser exemplos mais avançados, como índices em views ou FKs em transações distribuídas, ou se tiver dúvidas específicas, é só perguntar!
+
