@@ -392,4 +392,7 @@ Uma chave estrangeira (FK) é um atributo em uma tabela que referencia a PK de o
 - **Tudo Junto**: Em um design normalizado, tabelas relacionadas via FKs usam índices para joins eficientes. Exemplo: Em um ER Model, entidades viram tabelas com PKs, relacionamentos viram FKs, e colunas frequentes ganham índices.
 - **Boas Práticas**: Sempre defina PKs; use FKs para integridade; crie índices baseados em queries reais (use EXPLAIN); normalize para evitar redundância, mas denormalize se performance for crítica.
 
+## Exemplos completos
 
+| [MySQL Connector](/NBD/Mysqlconnector/mysqlconnector.md) | [Alchemy ORM](/NBD/SqlAlchemy/alchemy.md)   |
+| :-------------: | :-----------: |
