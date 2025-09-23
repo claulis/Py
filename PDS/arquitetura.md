@@ -35,6 +35,8 @@ Facilita manutenção ao separar responsabiliades; ideal para interfaces interat
 **Exemplo em Python:**  
 Como na reestruturação anterior, `models.py` é o Model, `view.py` é a View, e `control.py` é o Controller.
 
+>Exemplo completo [aqui](/PDS/mvc/mvc.md)
+
 ```python
 # models.py (Model)
 class Pedido:
