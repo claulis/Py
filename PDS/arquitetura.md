@@ -119,10 +119,10 @@ presenter.criar()
 Ilustra a pilha hierárquica.
 
 ```mermaid
-graph TD
-    A[Apresentação <br> (UI/Input)] --> B[Negócios <br> (Lógica/Validações)]
-    B --> C[Persistência <br> (Banco/Repo)]
-    C --> D[Dados Externos <br> (BD/Arquivos)]
+   graph TD
+    A[Apresentacao] --> B[Negocios]
+    B --> C[Persistencia]
+    C --> D[Banco de Dados]
     style A fill:#f9f,stroke:#333
     style B fill:#bbf,stroke:#333
     style C fill:#fbf,stroke:#333
@@ -243,9 +243,9 @@ Mostra abstração.
 
 ```mermaid
 graph TD
-    S[Service <br> (Lógica Negócios)] --> R[Repository <br> (Abstração Dados)]
+    S[Service] --> R[Repository]
     R --> D[Banco de Dados]
-    R --> F[Arquivo/Outro]
+    R --> F[Arquivo]
     style R fill:#afa,stroke:#333
 ```
 
