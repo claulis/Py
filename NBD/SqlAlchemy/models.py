@@ -9,7 +9,6 @@ class Pedido(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     cliente = Column(String(100))
     data_pedido = Column(Date, default=date.today)
-
     itens = relationship("ItemPedido", back_populates="pedido", cascade="all, delete-orphan")
 
 class ItemPedido(Base):
