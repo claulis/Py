@@ -16,7 +16,7 @@ if __name__ == "__main__":
     controller.criar_e_salvar_pedido('Ana Paula', itens_data)
 
     # Exemplo de deleção
-    controller.deletar_e_exibir(16)  # Ajuste o ID conforme necessário
+    controller.deletar_e_exibir(18)  # Ajuste o ID conforme necessário
 
     # Exemplo de listagem
     controller.listar_e_exibir()
