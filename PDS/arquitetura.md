@@ -22,7 +22,6 @@ Aqui, as setas representam fluxos de dados e controle, enfatizando a separação
 
 ## Principais Padrões Arquiteturais Usados em Python
 
-A seguir, explico cada padrão com definição, propósito, exemplo em Python (adaptado ao seu contexto de gerenciamento de pedidos) e um diagrama específico.
 
 ### 1. **MVC (Model-View-Controller)**
 
@@ -31,9 +30,6 @@ Divide a aplicação em Model (dados e lógica de negócios), View (interface de
 
 **Por que usar?**  
 Facilita manutenção ao separar responsabiliades; ideal para interfaces interativas.
-
-**Exemplo em Python:**  
-Como na reestruturação anterior, `models.py` é o Model, `view.py` é a View, e `control.py` é o Controller.
 
 >Exemplo completo [aqui](/PDS/mvc/mvc.md)
 
