@@ -6,8 +6,8 @@
 
 ## Sumário
 
-1. [Poetry](#1-poetry)  
-2. [Django](#2-django)
+1. [Poetry](/DJ/poetry/readme.md)  
+2. [Django](/DJ/Django/readme.md)
 
 ---
 
