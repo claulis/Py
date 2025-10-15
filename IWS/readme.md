@@ -4,6 +4,8 @@ Uma **API REST** (Application Programming Interface Representational State Trans
 
 Pense em uma API REST como um "garçom" em um restaurante: você (o cliente) faz um pedido (uma solicitação), o garçom leva o pedido à cozinha (o servidor), e a cozinha retorna a comida (os dados) por meio do garçom. A API REST é o intermediário que facilita essa comunicação entre um cliente (como um aplicativo ou site) e um servidor (onde os dados estão armazenados).
 
+Exemplo completo [aqui](/IWS/rest/README.md)
+
 ## Princípios fundamentais do REST
 
 O REST é baseado em alguns princípios-chave que garantem sua simplicidade e eficiência:

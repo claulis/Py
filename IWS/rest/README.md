@@ -61,6 +61,8 @@ IWS/
 1. **Instale os pacotes necessários:**
    ```bash
    pip install fastapi sqlalchemy uvicorn pydantic
+
+   pip install -r requirements.txt
    ```
 
 2. **Execute o servidor:**

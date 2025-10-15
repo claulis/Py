@@ -25,5 +25,19 @@ class PedidoOutSchema(BaseModel):
     data_pedido: date
     itens: List[ItemPedidoOutSchema]
 
-    class Config:
+class ClienteOutSchema(BaseModel):
+    id: int
+    nome: str
+    idade: int
+
+class ClienteCreateSchema(BaseModel):
+    nome: str
+    idade: int
+
+class ClienteUpdateSchema(BaseModel):
+    nome: Optional[str] = None
+    idade: Optional[int] = None
+    
+
+class Config:
         from_attributes = True  # Permite mapear de objetos SQLAlchemy
