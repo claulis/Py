@@ -14,7 +14,7 @@
 | NBD    | Noções de Banco de Dados                     | [SGBD, Modelos de dados](/NBD/README.md), SQL, criação e manipulação de tabelas, consultas, relacionamentos, chaves, JOINs                  | 24h           | 8               |
 | PDS    | Padrões de Desenvolvimento de Software       | [Padrões arquiteturais](/PDS/arquitetura.md), MVC, SOLID, Design Patterns, organização de projetos                                         | 6h            | 2               |
 | IWS    | Introdução a WebServices                    | [HTTP, REST, métodos, parâmetros, cookies, sessões, design e documentação de APIs](/IWS/readme.md)                                    | 6h            | 2               |
-| DJ     | Django                                      | Instalação, projeto, apps, MTV, models, views, templates, admin, formulários, autenticação, segurança               | 24h           | 8               |
+| DJ     | Django                                      | [Instalação, projeto, apps, MTV, models, views, templates, admin, formulários, autenticação, segurança](/DJ/readme.md)               | 24h           | 8               |
 | SD     | Metodologias Ágeis e Scrum                  | Scrum, papéis, ciclos, backlog, planning, review, retrospectiva, Kanban                                             | 6h            | 2               |
 | PPI    | Prática de Projeto Integrador               | Projeto prático, documentação, modelagem, requisitos, arquitetura, Scrum aplicado                                   | 27h           | 9               |
 | DSS    | Desenvolvimento de Soft Skills               | Comunicação, trabalho em equipe, liderança, gestão de tempo, inteligência emocional                                 | 9h            | 3               |
