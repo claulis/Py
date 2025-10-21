@@ -92,7 +92,7 @@ poetry env activate
 ### 5. Verificar instalação
 
 ```cmd
-poetry jango-admin --version
+poetry django-admin --version
 ```
 
 ## Criação do Projeto Django
