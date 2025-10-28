@@ -277,13 +277,13 @@ Agora, vamos aplicar esse modelo ao nosso banco MySQL.
 1. Crie os arquivos de migração:
 
     ```bash
-    python manage.py makemigrations tarefas_app
+    poetry run python manage.py makemigrations tarefas_app
     ```
 
 2. Aplique as migrações no banco de dados (isso criará a tabela `tarefas_app_tarefa`):
 
     ```bash
-    python manage.py migrate
+    poetry run python manage.py migrate
     ```
 
 3. (Opcional, mas recomendado) Crie um superusuário para acessar o Admin:
