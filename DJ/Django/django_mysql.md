@@ -58,13 +58,8 @@ Com o ambiente ativo, vamos adicionar os pacotes Python necessários:
 # Adiciona o Django
 poetry add "django~=4.1.0"
 
-# Adiciona o conector do MySQL. 
-# NOTA: No Windows, isso pode falhar se faltarem as bibliotecas C do MySQL.
-# Se falhar, tente instalar o 'mysqlclient' baixando o "wheel" (.whl) 
-# apropriado para sua versão do Python em: https://www.lfd.uci.edu/~gohlke/pythonlibs/#mysqlclient
 poetry add mysqlclient
 
-# Adiciona o python-dotenv para gerenciar senhas fora do código
 poetry add python-dotenv
 ```
 
@@ -79,7 +74,7 @@ poetry add python-dotenv
 2. Crie nosso aplicativo de tarefas, que chamaremos de `tarefas_app`:
 
     ```bash
-    python manage.py startapp tarefas_app
+    poetry run python manage.py startapp tarefas_app
     ```
 
 Sua estrutura de pastas deve se parecer com isto:
