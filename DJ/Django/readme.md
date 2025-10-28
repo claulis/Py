@@ -608,3 +608,6 @@ meu_site_django/           # Projeto principal
 - ❌ Dificulta manutenção em projetos maiores
 - ❌ Impede reutilização de código
 - ❌ Vai contra as boas práticas do Django
+
+---
+Vai aqui para [Django+Mysql](/DJ/Django/django_mysql.md)
