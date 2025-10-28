@@ -73,7 +73,7 @@ poetry add python-dotenv
 1. Crie o projeto Django. Usaremos `config` para o nome do projeto principal e `.` para criá-lo na pasta atual.
 
     ```bash
-    django-admin startproject config .
+    poetry run django-admin startproject config .
     ```
 
 2. Crie nosso aplicativo de tarefas, que chamaremos de `tarefas_app`:
