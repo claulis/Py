@@ -289,7 +289,7 @@ Agora, vamos aplicar esse modelo ao nosso banco MySQL.
 3. (Opcional, mas recomendado) Crie um superusuário para acessar o Admin:
 
     ```bash
-    python manage.py createsuperuser
+    poetry run python manage.py createsuperuser
     ```
 
     (Siga as instruções para criar seu usuário admin)
