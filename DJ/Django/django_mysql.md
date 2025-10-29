@@ -558,7 +558,7 @@ Este arquivo vai "herdar" o `base.html` e mostrar o conteúdo dinâmico.
 Seu projeto está completo. Volte ao terminal (com o `poetry shell` ativo) e execute o servidor:
 
 ```bash
-python manage.py runserver
+poetry run python manage.py runserver
 ```
 
 Abra seu navegador e acesse: **[http://127.0.0.1:8000/](https://www.google.com/url?sa=E&source=gmail&q=http://127.0.0.1:8000/)**
