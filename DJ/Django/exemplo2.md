@@ -250,7 +250,8 @@ def deletar_tarefa(request, pk):
 
 ## 11. Templates (CRIAÇÃO AUTOMÁTICA)
 
-Cole **exatamente** no PowerShell (na pasta `tarefas`):
+1. Crie na pasta raiz a pasta `/templates/tarefas_app/`:
+2. Depois crie na pasta `/templates/` o arquivo `base.html`
 
 ```html
 <!doctype html>
@@ -279,7 +280,7 @@ Cole **exatamente** no PowerShell (na pasta `tarefas`):
 </body>
 </html>
 ```
-
+3. Agora crie na pasta `/templates/tarefas_app/` o arquivo `lista_tarefas.html`
 ```html
 {% extends 'base.html' %}
 {% block title %}Minhas Tarefas{% endblock %}
