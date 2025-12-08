@@ -41,7 +41,7 @@ poetry run python manage.py startapp tarefas_app
 ---
 
 ## 5. Arquivo `.env` (na pasta raiz do projeto)
-
+Coloque sua senha, usuário etc.
 ```bash
 
 SECRET_KEY=django-insecure-troque-por-uma-chave-forte
