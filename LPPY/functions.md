@@ -34,8 +34,8 @@ Com funções, a lógica fica definida em um único ponto:
 def calcular_media(notas):
     return sum(notas) / len(notas) if notas else 0
 
-def verificar_aprovacao(media, nota_minima=7.0):
-    return "Aprovado" if media >= nota_minima else "Reprovado"
+def verificar_aprovacao(media):
+    return "Aprovado" if media >= 7 else "Reprovado"
 
 alunos = [
     {"nome": "Aluno 1", "notas": [7.5, 8.0, 6.5]},
