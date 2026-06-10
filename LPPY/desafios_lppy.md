@@ -41,32 +41,16 @@ Diego Alves            4.0  Reprovado
 ```
 [Solução aqui](/LPPY/asset/code/desafio1.py)
 
-## Desafio 2 — Gerenciador de Estoque
+## Desafio 2 —Classificador de Notas com Estatísticas com cadastro de alunos
 
 ### Enunciado
 
-Crie um sistema de estoque simples para uma lanchonete, com menu interativo e operações de cadastro, listagem e busca de produtos.
+Pegue o exemplo do desafio 1 e agora implemente um cadastro aluno, mantendo as funcionalidades de antes.
 
 ### Instruções
 
-1. O sistema deve ter um menu com as opções: **Adicionar produto**, **Listar estoque**, **Buscar produto** e **Sair**
-2. Cada produto tem: nome, preço e quantidade em estoque
-3. Ao listar, exiba os produtos ordenados por nome e indique `⚠ Estoque baixo` para produtos com quantidade ≤ 5
-4. A busca deve ser por nome (parcial, sem distinção de maiúsculas/minúsculas)
-5. Ao sair, exiba o valor total do estoque (soma de `preço × quantidade` de todos os produtos)
-
-### Saída esperada
-
-```
-====================================================
-Produto              Preço    Qtd  Status
-----------------------------------------------------
-Coxinha              R$   3.50      4  ⚠ Estoque baixo
-Pastel               R$   5.00     12
-Suco de Laranja      R$   7.00      3  ⚠ Estoque baixo
-====================================================
-
-Valor total em estoque: R$ 119.00
-```
-
+1. Imprimir um menu de escolha
+2. Escolher se incluir, remover e listar
+3. Imprimir as estatísticas após cada interação
+4. Manter as funcionalidades do desafio 1
 
