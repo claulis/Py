@@ -39,6 +39,7 @@ Diego Alves            4.0  Reprovado
   Menor nota     : 4.0
 =============================================
 ```
+[Solução aqui](/LPPY/asset/code/desafio1.py)
 
 ## Desafio 2 — Gerenciador de Estoque
 
