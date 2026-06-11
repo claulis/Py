@@ -114,6 +114,9 @@ aluno2 = Aluno("Bruno", "2023002")
 print(Aluno.total_alunos)  # Saída: 2
 print(aluno1.total_alunos)  # Saída: 2
 ```
+<img width="660" height="600" alt="self_init_python" src="https://github.com/user-attachments/assets/f9473a04-d770-468c-a6c4-67bfdb01ea27" />
+
+
 
 ## Métodos de Instância
 
