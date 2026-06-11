@@ -200,6 +200,9 @@ print(Aluno.validar_data("2025-07-30"))  # Saída: True
 print(Aluno.validar_data("invalido"))  # Saída: False
 ```
 
+<img width="828" height="600" alt="trio_metodos_tabela" src="https://github.com/user-attachments/assets/ac901bb7-25d5-4f11-b9af-e4d82406b54b" />
+
+
 ## Aplicar Abstração
 
 Abstrair consiste em modelar apenas os aspectos relevantes de uma entidade. No sistema de frequência:
