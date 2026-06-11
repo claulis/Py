@@ -54,3 +54,5 @@ Pegue o exemplo do desafio 1 e agora implemente um cadastro aluno, mantendo as f
 3. Imprimir as estatísticas após cada interação
 4. Manter as funcionalidades do desafio 1
 
+[Solução aqui](/LPPY/asset/code/desafio2.py)
+
