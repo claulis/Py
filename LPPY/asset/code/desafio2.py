@@ -36,28 +36,66 @@ def gerar_relatorio(turma):
     print(f"  Menor nota     : {min(notas):.1f}")
     print("=" * 45)
 
+def menu():
+    print("\n=== Gerenciador de Turma com Estatísticas ===")
+    print("1. Adicionar aluno")
+    print("2. Atualizar aluno")
+    print("3. Remover Aluno")
+    print("4. Sair")
+    opcao = int(input("\nEscolha uma opção (1-4): "))
+    return opcao
 
+def inserir_aluno():
+      nome = input("  Nome: ")
+      nota = ler_nota_valida(nome)
+      turma.append({"nome": nome, "nota": nota})
 
+def modificar_aluno():
+      indice = int(input("Digite o número do aluno a modificar: ")) - 1
+      if 0 <= indice < len(turma):
+         nome = input("Novo nome do aluno (deixe vazio para manter): ")
+         nota = ler_nota_valida(nome)
+         if nome:
+            turma[indice]["nome"] = nome
+         if nota:
+            turma[indice]["nota"] = nota
+         print("Aluno modificado com sucesso!")
+      else:
+        print("Número inválido!")
 
-
+def remover_aluno():
+   indice = int(input("Digite o número do aluno para remover: ")) - 1
+   if 0 <= indice < len(turma):
+        aluno_removido = turma[indice]
+        turma.pop(indice)
+        print(f"Aluno '{aluno_removido}' removido com sucesso!")
+   else:
+        print("Número inválido!")
+      
 # --- Programa principal ---
 turma = []
 
 while True:
-    print("\n=== Gerenciador de Turma com Estatísticas ===")
-    print("1. Adicionar aluno")
-    print("2. Remover Aluno")
-    print("3. Sair")
-    opcao = int(input("\nEscolha uma opção (1-3): "))
-
-    match opcao:
+    op = menu()
+    match op:
      case 1:
-         nome = input("  Nome: ")
-         nota = ler_nota_valida(nome)
-         turma.append({"nome": nome, "nota": nota})
+         inserir_aluno()
          gerar_relatorio(turma)
-
+    
      case 2:
+           if not turma:
+            print("A turma está vazia!")
+           else:
+            print("\n--- Turma ---")
+            for i in range(len(turma)):
+                print(f"{i+1}. {turma[i]}")
+            print("---------------")
+            try:
+              modificar_aluno()
+              gerar_relatorio(turma)
+            except ValueError:
+                print("Entrada inválida! Digite um número.")
+     case 3:
           if not turma:
             print("A turma está vazia!")
           else:
@@ -66,18 +104,15 @@ while True:
                 print(f"{i+1}. {turma[i]}")
             print("---------------")
             try:
-                indice = int(input("Digite o número do aluno para remover: ")) - 1
-                if 0 <= indice < len(turma):
-                    aluno_removido = turma[indice]
-                    turma.pop(indice)
-                    print(f"Aluno '{aluno_removido}' removido com sucesso!")
-                    gerar_relatorio(turma)
-                else:
-                    print("Número inválido!")
+                remover_aluno()
+                gerar_relatorio(turma)            
             except ValueError:
                 print("Entrada inválida! Digite um número.")
-     case 3:
+     case 4:
            print("Saindo do programa...")
            break
      case _:
            print("Opção inválida! Tente novamente.")
+
+
+
