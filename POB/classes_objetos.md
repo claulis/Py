@@ -171,6 +171,7 @@ aluno1 = Aluno("Ana", "2023001")
 aluno2 = Aluno("Bruno", "2023002")
 print(Aluno.obter_total_alunos())  # Saída: Total de alunos cadastrados: 2
 ```
+<img width="816" height="600" alt="metodo_classe_vs_instancia" src="https://github.com/user-attachments/assets/bcf96f29-dda4-4fe2-8dcb-3313a39ef3dc" />
 
 ## Métodos Estáticos
 
