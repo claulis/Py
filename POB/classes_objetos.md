@@ -1,74 +1,80 @@
-# Classes e Objetos em Python
+# Classes e Objetos
 
-Representar entidades em Python requer usar classes e objetos. Entender esses conceitos envolve:
+## O que você vai aprender
 
-- **Classe**: Definir um molde que especifica atributos (dados) e métodos (comportamentos) de uma entidade. No sistema acadêmico de frequência, modelar a classe `Aluno` abstrai características como nome e matrícula.
-- **Objeto**: Criar uma instância específica de uma classe, contendo valores próprios para os atributos. Por exemplo, instanciar `Aluno("Ana", "2023001")` gera um objeto representando um aluno específico.
+- Como criar uma classe em Python
+- O que é `__init__` e o que é `self`
+- A diferença entre variável de instância e variável de classe
+- Como criar métodos de instância, de classe e estáticos
+- Como modelar um sistema real usando classes
+
+---
+
+## O sistema que vamos construir
+
+Ao longo deste módulo, vamos construir um **sistema de registro de frequência** para uma turma. As entidades do sistema são:
+
+- `Aluno` — tem nome, matrícula e uma lista de presenças
+- `Professor` — pode registrar presenças
+- `Turma` — agrupa alunos e tem um professor responsável
+
+Esse contexto vai guiar todos os exemplos.
 
 [Exemplo completo](../POB/asset/code/chamada/)
 
+---
+
 ## Estruturar uma Classe
 
-Construir uma classe em Python utiliza a palavra-chave `class`, seguida por um nome (geralmente em CamelCase). A estrutura inclui:
+Uma classe em Python começa com a palavra-chave `class`, seguida de um nome.
 
-- **Construtor**: Implementar o método `__init__` para inicializar atributos da instância.
-- **Atributos**: Declarar variáveis de instância (usando `self`) ou de classe (definidas diretamente na classe).
-- **Métodos**: Definir funções que operam nos atributos, incluindo métodos de instância, de classe ou estáticos.
+> **Convenção importante:** nomes de classe usam **CamelCase** — cada palavra começa com maiúscula, sem espaço ou underline. Por exemplo: `Aluno`, `ContaBancaria`, `RegistroFrequencia`. Isso não é obrigatório, mas é o padrão da linguagem e do mercado.
 
-Exemplo básico:
+Estrutura básica:
 
 ```python
-class Exemplo:
-    def __init__(self, valor):
-        self.atributo_instancia = valor
+class NomeDaClasse:
+    def __init__(self, parametros):
+        self.atributo = parametros
     
-    def executar_acao(self):
-        return f"Valor: {self.atributo_instancia}"
+    def nome_do_metodo(self):
+        # código aqui
+        pass
 ```
 
-## Métodos Construtores
+---
 
-Definir um construtor com `__init__` permite inicializar atributos ao criar um objeto. O parâmetro `self` refere-se à instância sendo criada. No sistema de frequência, a classe `Aluno` usa um construtor para definir `nome`, `matricula` e `presencas`:
+## O Construtor `__init__`
+
+O método `__init__` é chamado automaticamente toda vez que você cria um objeto. Ele é responsável por **inicializar os atributos** do objeto.
+
+O parâmetro `self` representa o próprio objeto que está sendo criado. Quando você escreve `self.nome`, está dizendo: "este objeto tem um atributo chamado `nome`".
 
 ```python
 class Aluno:
     def __init__(self, nome, matricula):
-        self.nome = nome
-        self.matricula = matricula
-        self.presencas = []
+        self.nome = nome          # atributo: nome do aluno
+        self.matricula = matricula # atributo: matrícula
+        self.presencas = []       # atributo: lista de presenças (começa vazia)
 ```
 
-Exemplo funcional:
+Criando objetos a partir dessa classe:
 
 ```python
 aluno = Aluno("Ana", "2023001")
-print(aluno.nome)  # Saída: Ana
+
+print(aluno.nome)       # Saída: Ana
 print(aluno.matricula)  # Saída: 2023001
 print(aluno.presencas)  # Saída: []
 ```
 
-Personalizar o construtor permite inicializar objetos com diferentes configurações. Por exemplo, adicionar um parâmetro opcional para presenças iniciais:
+> **Dica:** `self` é sempre o primeiro parâmetro dos métodos, mas você nunca o passa explicitamente. Python faz isso automaticamente.
 
-```python
-class Aluno:
-    def __init__(self, nome, matricula, presencas_iniciais=None):
-        self.nome = nome
-        self.matricula = matricula
-        self.presencas = presencas_iniciais if presencas_iniciais is not None else []
-```
-
-Exemplo funcional:
-
-```python
-aluno1 = Aluno("Bruno", "2023002")
-aluno2 = Aluno("Clara", "2023003", ["2025-07-30"])
-print(aluno1.presencas)  # Saída: []
-print(aluno2.presencas)  # Saída: ["2025-07-30"]
-```
+---
 
 ## Variáveis de Instância
 
-Declarar variáveis com `self` associa-as a uma instância específica. Cada objeto possui seus próprios valores. No sistema de frequência, `nome`, `matricula` e `presencas` são variáveis de instância:
+Variáveis de instância são atributos que **pertencem a cada objeto individualmente**. Cada objeto tem seus próprios valores — alterar o atributo de um não afeta o outro.
 
 ```python
 class Aluno:
@@ -79,48 +85,50 @@ class Aluno:
     
     def adicionar_presenca(self, data):
         self.presencas.append(data)
-```
 
-Exemplo funcional:
-
-```python
 aluno1 = Aluno("Ana", "2023001")
 aluno2 = Aluno("Bruno", "2023002")
+
 aluno1.adicionar_presenca("2025-07-30")
+
 print(aluno1.presencas)  # Saída: ["2025-07-30"]
-print(aluno2.presencas)  # Saída: []
+print(aluno2.presencas)  # Saída: []  ← não foi afetado
 ```
+
+---
 
 ## Variáveis de Classe
 
-Definir variáveis diretamente na classe cria atributos compartilhados por todas as instâncias. No sistema de frequência, contar o total de alunos requer uma variável de classe:
+Variáveis de classe são definidas **diretamente na classe**, fora de qualquer método. Elas são **compartilhadas por todos os objetos** da classe.
+
+Use variáveis de classe quando um dado pertence à classe como um todo, não a um objeto específico. Um bom exemplo é contar quantos alunos foram criados:
 
 ```python
 class Aluno:
-    total_alunos = 0  # Variável de classe
-    
+    total_alunos = 0  # variável de classe — compartilhada por todos
+
     def __init__(self, nome, matricula):
         self.nome = nome
         self.matricula = matricula
         self.presencas = []
-        Aluno.total_alunos += 1
-```
+        Aluno.total_alunos += 1  # incrementa sempre que um aluno é criado
 
-Exemplo funcional:
-
-```python
 aluno1 = Aluno("Ana", "2023001")
 aluno2 = Aluno("Bruno", "2023002")
-print(Aluno.total_alunos)  # Saída: 2
-print(aluno1.total_alunos)  # Saída: 2
+
+print(Aluno.total_alunos)   # Saída: 2
+print(aluno1.total_alunos)  # Saída: 2  ← todos enxergam o mesmo valor
 ```
-<img width="660" height="600" alt="self_init_python" src="https://github.com/user-attachments/assets/f9473a04-d770-468c-a6c4-67bfdb01ea27" />
 
+> **Quando usar cada uma?**
+> - Dado que pertence a **um objeto específico** → variável de instância (`self.nome`)
+> - Dado que pertence a **todos os objetos** → variável de classe (`Aluno.total_alunos`)
 
+---
 
 ## Métodos de Instância
 
-Definir métodos com `self` permite operar nos atributos da instância. No sistema de frequência, o método `adicionar_presenca` modifica a lista `presencas` do objeto:
+Métodos de instância são funções que **operam nos atributos de um objeto específico**. Eles sempre recebem `self` como primeiro parâmetro.
 
 ```python
 class Aluno:
@@ -134,48 +142,52 @@ class Aluno:
             self.presencas.append(data)
             return f"Presença registrada para {self.nome} em {data}."
         return f"Presença já registrada para {self.nome} em {data}."
-```
 
-Exemplo funcional:
-
-```python
 aluno = Aluno("Ana", "2023001")
-print(aluno.adicionar_presenca("2025-07-30"))  # Saída: Presença registrada para Ana em 2025-07-30.
-print(aluno.adicionar_presenca("2025-07-30"))  # Saída: Presença já registrada para Ana em 2025-07-30.
-print(aluno.presencas)  # Saída: ["2025-07-30"]
+
+print(aluno.adicionar_presenca("2025-07-30"))
+# Saída: Presença registrada para Ana em 2025-07-30.
+
+print(aluno.adicionar_presenca("2025-07-30"))
+# Saída: Presença já registrada para Ana em 2025-07-30.
 ```
+
+---
 
 ## Métodos de Classe
 
-Usar o decorador `@classmethod` define métodos que operam na classe, recebendo `cls` como primeiro parâmetro. No sistema de frequência, consultar o total de alunos pode ser implementado assim:
+Métodos de classe operam na **classe em si**, não em um objeto específico. São definidos com o decorador `@classmethod` e recebem `cls` como primeiro parâmetro.
 
 ```python
 class Aluno:
     total_alunos = 0
-    
+
     def __init__(self, nome, matricula):
         self.nome = nome
         self.matricula = matricula
         self.presencas = []
         Aluno.total_alunos += 1
-    
+
     @classmethod
     def obter_total_alunos(cls):
         return f"Total de alunos cadastrados: {cls.total_alunos}"
-```
 
-Exemplo funcional:
-
-```python
 aluno1 = Aluno("Ana", "2023001")
 aluno2 = Aluno("Bruno", "2023002")
-print(Aluno.obter_total_alunos())  # Saída: Total de alunos cadastrados: 2
+
+print(Aluno.obter_total_alunos())
+# Saída: Total de alunos cadastrados: 2
 ```
+
 <img width="816" height="600" alt="metodo_classe_vs_instancia" src="https://github.com/user-attachments/assets/bcf96f29-dda4-4fe2-8dcb-3313a39ef3dc" />
+
+---
 
 ## Métodos Estáticos
 
-Definir métodos com `@staticmethod` cria funções que não dependem de instâncias ou da classe. No sistema de frequência, validar o formato de uma data pode ser um método estático:
+Métodos estáticos **não dependem de instâncias nem da classe**. São funções utilitárias que fazem sentido viver dentro da classe por questão de organização.
+
+São definidos com `@staticmethod` e **não recebem `self` nem `cls`**.
 
 ```python
 class Aluno:
@@ -192,48 +204,48 @@ class Aluno:
             return True
         except ValueError:
             return False
-```
 
-Exemplo funcional:
-
-```python
 print(Aluno.validar_data("2025-07-30"))  # Saída: True
-print(Aluno.validar_data("invalido"))  # Saída: False
+print(Aluno.validar_data("30/07/2025")) # Saída: False
+print(Aluno.validar_data("invalido"))   # Saída: False
 ```
+
+**Quando usar cada tipo de método:**
+
+| Tipo | Decorador | Primeiro parâmetro | Quando usar |
+|---|---|---|---|
+| Instância | (nenhum) | `self` | Quando precisa acessar ou modificar dados do objeto |
+| Classe | `@classmethod` | `cls` | Quando precisa acessar ou modificar dados da classe |
+| Estático | `@staticmethod` | (nenhum) | Função utilitária relacionada à classe, sem precisar de dados dela |
 
 <img width="828" height="600" alt="trio_metodos_tabela" src="https://github.com/user-attachments/assets/ac901bb7-25d5-4f11-b9af-e4d82406b54b" />
 
+---
 
-## Aplicar Abstração
+## Sistema completo
 
-Abstrair consiste em modelar apenas os aspectos relevantes de uma entidade. No sistema de frequência:
-
-- **Aluno**: Representar com `nome`, `matricula` e `presencas`, ignorando detalhes como endereço.
-- **Professor**: Definir com `nome`, `id_professor` e o método `registrar_presenca`.
-- **Turma**: Estruturar com `codigo`, `professor` e uma lista de `alunos`.
-
-Exemplo funcional no sistema de frequência:
+Juntando tudo: `Aluno`, `Professor` e `Turma` trabalhando juntos.
 
 ```python
 class Aluno:
     total_alunos = 0
-    
+
     def __init__(self, nome, matricula):
         self.nome = nome
         self.matricula = matricula
         self.presencas = []
         Aluno.total_alunos += 1
-    
+
     def adicionar_presenca(self, data):
         if data not in self.presencas:
             self.presencas.append(data)
             return f"Presença registrada para {self.nome} em {data}."
         return f"Presença já registrada para {self.nome} em {data}."
-    
+
     @classmethod
     def obter_total_alunos(cls):
         return f"Total de alunos: {cls.total_alunos}"
-    
+
     @staticmethod
     def validar_data(data):
         from datetime import datetime
@@ -242,50 +254,142 @@ class Aluno:
             return True
         except ValueError:
             return False
+
 
 class Professor:
     def __init__(self, nome, id_professor):
         self.nome = nome
         self.id_professor = id_professor
-    
+
     def registrar_presenca(self, aluno, turma, data):
-        if Aluno.validar_data(data) and aluno in turma.alunos:
-            return aluno.adicionar_presenca(data)
-        return f"Erro: Data inválida ou aluno {aluno.nome} não matriculado na turma {turma.codigo}."
+        if not Aluno.validar_data(data):
+            return f"Erro: Data '{data}' está em formato inválido. Use AAAA-MM-DD."
+        if aluno not in turma.alunos:
+            return f"Erro: {aluno.nome} não está matriculado na turma {turma.codigo}."
+        return aluno.adicionar_presenca(data)
+
 
 class Turma:
     def __init__(self, codigo, professor):
         self.codigo = codigo
         self.professor = professor
         self.alunos = []
-    
+
     def matricular_aluno(self, aluno):
         if aluno not in self.alunos:
             self.alunos.append(aluno)
             return f"Aluno {aluno.nome} matriculado na turma {self.codigo}."
         return f"Aluno {aluno.nome} já matriculado na turma {self.codigo}."
 
-# Testar o sistema
+
+# Testando o sistema
 professor = Professor("Dr. Carlos", "P001")
 turma = Turma("T101", professor)
 aluno = Aluno("Ana", "2023001")
-print(turma.matricular_aluno(aluno))  # Saída: Aluno Ana matriculado na turma T101.
-print(professor.registrar_presenca(aluno, turma, "2025-07-30"))  # Saída: Presença registrada para Ana em 2025-07-30.
-print(Aluno.obter_total_alunos())  # Saída: Total de alunos: 1
-print(Aluno.validar_data("2025-07-30"))  # Saída: True
+
+print(turma.matricular_aluno(aluno))
+# Saída: Aluno Ana matriculado na turma T101.
+
+print(professor.registrar_presenca(aluno, turma, "2025-07-30"))
+# Saída: Presença registrada para Ana em 2025-07-30.
+
+print(professor.registrar_presenca(aluno, turma, "30/07/2025"))
+# Saída: Erro: Data '30/07/2025' está em formato inválido. Use AAAA-MM-DD.
+
+print(Aluno.obter_total_alunos())
+# Saída: Total de alunos: 1
 ```
 
-## Conceitos chave
+---
 
-Compreender classes e objetos em Python envolve:
+## Exercícios
 
-1. Definir classes como moldes com atributos e métodos.
-2. Criar objetos como instâncias com valores específicos.
-3. Usar construtores para inicializar atributos.
-4. Declarar variáveis de instância para dados específicos e de classe para dados compartilhados.
-5. Implementar métodos de instância, de classe e estáticos para diferentes funcionalidades.
-6. Aplicar abstração para focar no essencial.
-7. Explorar encapsulamento, herança e polimorfismo para designs robustos.
+Use o sistema acima como base. Antes de escrever código, responda no papel as perguntas de cada exercício.
+
+### Exercício 1 — Remover presença de um aluno
+
+**Pense antes:**
+- O que o método precisa receber como parâmetro?
+- O que acontece se a data não estiver na lista?
+- Qual método já existe que você pode usar como referência?
+
+**Esqueleto:**
+```python
+def remover_presenca(self, data):
+    if data in self.presencas:
+        # complete aqui
+        return f"..."
+    return f"..."
+```
+
+**Teste esperado:**
+```python
+aluno.adicionar_presenca("2025-07-30")
+print(aluno.remover_presenca("2025-07-30"))
+# Saída: Presença de Ana removida em 2025-07-30.
+print(aluno.remover_presenca("2025-07-30"))
+# Saída: Presença não encontrada para Ana em 2025-07-30.
+```
+
+---
+
+### Exercício 2 — Professor remove presença
+
+**Pense antes:**
+- O professor já pode registrar presença. Que verificações ele faz?
+- O método de remover presença deve ter verificações semelhantes?
+
+**Esqueleto:**
+```python
+def remover_presenca(self, aluno, turma, data):
+    # faça as mesmas verificações que registrar_presenca
+    # depois chame o método de remoção do aluno
+    pass
+```
+
+---
+
+### Exercício 3 — Operações na Turma
+
+Implemente três métodos na classe `Turma`:
+
+**a) Remover aluno**
+```python
+def remover_aluno(self, aluno):
+    # O que verificar antes de remover?
+    pass
+```
+
+**b) Substituir professor**
+```python
+def substituir_professor(self, novo_professor):
+    # Como guardar quem era o professor anterior?
+    pass
+```
+
+**c) Aluno com mais presenças**
+```python
+def aluno_mais_presente(self):
+    # Dica: use a função max() com uma função lambda ou key
+    # max(self.alunos, key=lambda a: len(a.presencas))
+    pass
+```
+
+**Teste esperado para c):**
+```python
+aluno1 = Aluno("Ana", "2023001")
+aluno2 = Aluno("Bruno", "2023002")
+aluno1.adicionar_presenca("2025-07-28")
+aluno1.adicionar_presenca("2025-07-29")
+aluno2.adicionar_presenca("2025-07-28")
+turma.matricular_aluno(aluno1)
+turma.matricular_aluno(aluno2)
+
+mais_presente = turma.aluno_mais_presente()
+print(mais_presente.nome)  # Saída: Ana
+```
+
+---
 
 ## Exercicio
 
