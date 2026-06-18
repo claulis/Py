@@ -1,18 +1,8 @@
 # Classes e Objetos
 
-## O que você vai aprender
-
-- Como criar uma classe em Python
-- O que é `__init__` e o que é `self`
-- A diferença entre variável de instância e variável de classe
-- Como criar métodos de instância, de classe e estáticos
-- Como modelar um sistema real usando classes
-
----
-
 ## O sistema que vamos construir
 
-Ao longo deste módulo, vamos construir um **sistema de registro de frequência** para uma turma. As entidades do sistema são:
+Sistema de exemplo nesse arquivo: **sistema de registro de frequência** para uma turma. As entidades do sistema são:
 
 - `Aluno` — tem nome, matrícula e uma lista de presenças
 - `Professor` — pode registrar presenças
