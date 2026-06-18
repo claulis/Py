@@ -1,39 +1,62 @@
 # Encapsulamento em Python
 
-O encapsulamento é um dos pilares fundamentais da Programação Orientada a Objetos (POO) e consiste em **ocultar os detalhes internos de implementação** de uma classe, expondo apenas uma interface controlada para o mundo externo.
+## O problema que o encapsulamento resolve
 
-## Como funciona o encapsulamento
-
-O encapsulamento permite que você:
-
-- **Proteja dados** contra acesso ou modificação inadequada
-- **Controle como** os dados são acessados e modificados
-- **Mantenha a integridade** dos objetos
-- **Facilite a manutenção** do código
-
-## Níveis de visibilidade em Python
-
-Python usa convenções de nomenclatura para indicar diferentes níveis de acesso:
-
-### 1. Atributos Públicos (sem prefixo)
-
-```python
-class ContaBancaria:
-    def __init__(self, titular):
-        self.titular = titular  # Público - pode ser acessado diretamente
-        
-conta = ContaBancaria("João")
-print(conta.titular)  # Funciona normalmente
-conta.titular = "Maria"  # Pode ser alterado diretamente
-```
-
-### 2. Atributos Protegidos (um underscore _)
+Considere o seguinte cenário: você tem uma classe `ContaBancaria` com um atributo `saldo`.
 
 ```python
 class ContaBancaria:
     def __init__(self, titular, saldo_inicial=0):
         self.titular = titular
-        self._saldo = saldo_inicial  # Protegido - convenção para uso interno
+        self.saldo = saldo_inicial
+
+conta = ContaBancaria("Ana", 1000)
+print(conta.saldo)  # Saída: 1000
+
+# Qualquer parte do programa pode fazer isso:
+conta.saldo = -99999
+print(conta.saldo)  # Saída: -99999
+```
+
+Ninguém impediu o saldo de virar negativo. Não houve nenhum aviso, nenhum erro. O dado foi corrompido silenciosamente.
+
+**Encapsulamento** é o mecanismo que impede isso: você controla como os dados são lidos e modificados, adicionando validações obrigatórias.
+
+---
+
+## Níveis de visibilidade em Python
+
+Python usa convenções de nomenclatura para indicar quem deve acessar um atributo:
+
+| Prefixo | Nome | Uso pretendido |
+|---|---|---|
+| `nome` | Público | Acesso livre — faz parte da interface da classe |
+| `_nome` | Protegido | Sinal para outros desenvolvedores: "use com cuidado, é interno" |
+| `__nome` | Privado | Python aplica name mangling — dificulta o acesso externo acidental |
+
+> **Importante:** Em Python, nenhum desses níveis é uma barreira técnica absoluta. A proteção é baseada em **convenção e boas práticas**. A comunidade Python confia que os desenvolvedores respeitam os sinais.
+
+### Atributo público
+
+```python
+class Aluno:
+    def __init__(self, nome):
+        self.nome = nome  # público: acessível e modificável livremente
+
+aluno = Aluno("Ana")
+print(aluno.nome)   # Saída: Ana
+aluno.nome = "Ana Paula"  # permitido
+```
+
+### Atributo protegido (um underscore)
+
+O prefixo `_` é um sinal para outros desenvolvedores: "este atributo é de uso interno, pense duas vezes antes de acessar diretamente".
+
+```python
+class ContaBancaria:
+    def __init__(self, titular, saldo_inicial=0):
+        self.titular = titular
+        self._saldo = saldo_inicial  # protegido: convenção de uso interno
     
     def depositar(self, valor):
         if valor > 0:
@@ -43,428 +66,280 @@ class ContaBancaria:
         return self._saldo
 
 conta = ContaBancaria("João", 1000)
-print(conta._saldo)  # Funciona, mas não é recomendado
-conta._saldo = -500  # Perigoso! Quebra a lógica do negócio
+conta.depositar(500)
+print(conta.obter_saldo())  # Saída: 1500
+
+# Tecnicamente ainda é possível acessar diretamente, mas não é recomendado:
+conta._saldo = -500
+# ↑ Isso funciona, mas quebra a lógica. O _ avisa: "não faça isso".
 ```
 
-### 3. Atributos Privados (dois underscores __)
+### Atributo privado (dois underscores)
+
+O prefixo `__` faz com que Python renomeie o atributo internamente, dificultando o acesso acidental de fora da classe.
 
 ```python
 class ContaBancaria:
     def __init__(self, titular, saldo_inicial=0):
         self.titular = titular
-        self.__saldo = saldo_inicial  # Privado - name mangling
-        self.__numero_conta = self.__gerar_numero()
-    
-    def __gerar_numero(self):  # Método privado
-        import random
-        return random.randint(10000, 99999)
-    
+        self.__saldo = saldo_inicial  # privado
+
     def depositar(self, valor):
         if valor > 0:
             self.__saldo += valor
     
-    def sacar(self, valor):
-        if 0 < valor <= self.__saldo:
-            self.__saldo -= valor
-            return True
-        return False
-    
     def obter_saldo(self):
         return self.__saldo
-    
-    def obter_numero_conta(self):
-        return self.__numero_conta
 
-# Uso da classe
 conta = ContaBancaria("Ana", 1500)
+print(conta.obter_saldo())  # Saída: 1500
 
-# Acesso correto através de métodos
-print(conta.obter_saldo())  # 1500
-conta.depositar(500)
-print(conta.obter_saldo())  # 2000
-
-# Tentativa de acesso direto falha
-# print(conta.__saldo)  # AttributeError!
-# print(conta.__numero_conta)  # AttributeError!
+# Tentar acessar diretamente gera um erro real:
+print(conta.__saldo)
 ```
 
-| Tipo | Sintaxe | Acesso | Herança | Propósito |
-|------|---------|--------|---------|-----------|
-| **Público** | `nome` | ✅ Total | ✅ Sim | Interface oficial |
-| **Protegido** | `_nome` | ⚠️ Por convenção | ✅ Sim | Uso interno/herança |
-| **Privado** | `__nome` | ❌ Name mangling | ❌ Não | Implementação interna |
-
-**Dica importante**: Em Python, a proteção é mais sobre **convenção** e **boas práticas** do que proteção real.
-
-## Exemplo prático: Sistema de validação
-
-```python
-class Pessoa:
-    def __init__(self, nome, idade):
-        self.__nome = nome
-        self.__idade = None
-        self.definir_idade(idade)  # Usa o setter para validação
-    
-    # Getter para nome
-    def obter_nome(self):
-        return self.__nome
-    
-    # Setter para nome com validação
-    def definir_nome(self, nome):
-        if isinstance(nome, str) and len(nome.strip()) > 0:
-            self.__nome = nome.strip()
-        else:
-            raise ValueError("Nome deve ser uma string não vazia")
-    
-    # Getter para idade
-    def obter_idade(self):
-        return self.__idade
-    
-    # Setter para idade com validação
-    def definir_idade(self, idade):
-        if isinstance(idade, int) and 0 <= idade <= 150:
-            self.__idade = idade
-        else:
-            raise ValueError("Idade deve ser um número entre 0 e 150")
-    
-    def apresentar(self):
-        return f"Olá, eu sou {self.__nome} e tenho {self.__idade} anos"
-
-# Uso seguro da classe
-pessoa = Pessoa("Carlos", 30)
-print(pessoa.apresentar())
-
-# Validação em ação
-try:
-    pessoa.definir_idade(-5)  # Erro!
-except ValueError as e:
-    print(f"Erro: {e}")
-
-try:
-    pessoa.definir_nome("")  # Erro!
-except ValueError as e:
-    print(f"Erro: {e}")
+**Saída do erro:**
+```
+AttributeError: 'ContaBancaria' object has no attribute '__saldo'
 ```
 
-## Properties: A forma pythônica
+O atributo existe, mas o acesso direto por fora da classe falha. Isso é intencional — força o uso dos métodos que você definiu.
 
-Python oferece uma maneira mais elegante usando `@property`:
+---
 
-```python
-class Produto:
-    def __init__(self, nome, preco):
-        self.__nome = nome
-        self.__preco = None
-        self.preco = preco  # Usa o setter
-    
-    @property
-    def nome(self):
-        return self.__nome
-    
-    @nome.setter
-    def nome(self, valor):
-        if isinstance(valor, str) and len(valor.strip()) > 0:
-            self.__nome = valor.strip()
-        else:
-            raise ValueError("Nome deve ser uma string não vazia")
-    
-    @property
-    def preco(self):
-        return self.__preco
-    
-    @preco.setter
-    def preco(self, valor):
-        if isinstance(valor, (int, float)) and valor >= 0:
-            self.__preco = valor
-        else:
-            raise ValueError("Preço deve ser um número não negativo")
-    
-    def __str__(self):
-        return f"{self.nome}: R$ {self.preco:.2f}"
+## `@property`: a forma pythônica de encapsular
 
-# Uso como se fossem atributos normais
-produto = Produto("Notebook", 2500.00)
-print(produto.nome)  # Notebook
-print(produto.preco)  # 2500.0
+Em vez de criar métodos `get_saldo()` e `set_saldo()` manualmente, Python oferece o decorador `@property`, que permite acessar e modificar atributos **como se fossem públicos**, mas com validação por baixo.
 
-# Mas com validação automática
-try:
-    produto.preco = -100  # Erro!
-except ValueError as e:
-    print(f"Erro: {e}")
-```
-
-## Getter e Setter
-
-Em Python, há várias maneiras de implementar getters e setters. As principais abordagens são:
-
-## 1. Métodos explícitos (abordagem tradicional)
-
-```python
-class Pessoa:
-    def __init__(self, nome, idade):
-        self.__nome = nome
-        self.__idade = idade
-    
-    # Getter para nome
-    def get_nome(self):
-        return self.__nome
-    
-    # Setter para nome
-    def set_nome(self, nome):
-        if isinstance(nome, str) and len(nome.strip()) > 0:
-            self.__nome = nome.strip()
-        else:
-            raise ValueError("Nome deve ser uma string não vazia")
-    
-    # Getter para idade
-    def get_idade(self):
-        return self.__idade
-    
-    # Setter para idade
-    def set_idade(self, idade):
-        if isinstance(idade, int) and 0 <= idade <= 150:
-            self.__idade = idade
-        else:
-            raise ValueError("Idade deve estar entre 0 e 150")
-
-# Uso
-pessoa = Pessoa("João", 25)
-print(pessoa.get_nome())  # João
-pessoa.set_idade(30)
-print(pessoa.get_idade())  # 30
-```
-
-## 2. Properties (abordagem pythônica) - RECOMENDADA
-
-### Usando decoradores @property
+### Exemplo: conta bancária com validação
 
 ```python
 class ContaBancaria:
-    def __init__(self, titular, saldo=0):
+    def __init__(self, titular, saldo_inicial=0):
         self.__titular = titular
-        self.__saldo = saldo
-    
+        self.__saldo = 0
+        self.saldo = saldo_inicial  # já passa pela validação do setter
+
     @property
     def titular(self):
-        """Getter para titular"""
+        """Retorna o titular da conta."""
         return self.__titular
-    
+
     @titular.setter
     def titular(self, valor):
-        """Setter para titular"""
         if isinstance(valor, str) and len(valor.strip()) > 0:
             self.__titular = valor.strip()
         else:
-            raise ValueError("Titular deve ser uma string não vazia")
-    
+            raise ValueError("Titular deve ser um nome válido.")
+
     @property
     def saldo(self):
-        """Getter para saldo"""
+        """Retorna o saldo atual."""
         return self.__saldo
-    
+
     @saldo.setter
     def saldo(self, valor):
-        """Setter para saldo"""
         if isinstance(valor, (int, float)) and valor >= 0:
             self.__saldo = valor
         else:
-            raise ValueError("Saldo deve ser um número não negativo")
+            raise ValueError("Saldo não pode ser negativo.")
     
     @property
     def saldo_formatado(self):
-        """Property somente leitura"""
+        """Property somente leitura — calculada automaticamente."""
         return f"R$ {self.__saldo:.2f}"
+```
 
-# Uso - parece acesso direto aos atributos!
+**Usando a classe:**
+
+```python
 conta = ContaBancaria("Maria", 1000)
-print(conta.titular)  # Maria
-print(conta.saldo)    # 1000
-print(conta.saldo_formatado)  # R$ 1000.00
 
-# Mas com validação automática
-conta.titular = "João Silva"  # Funciona
-conta.saldo = 1500           # Funciona
+print(conta.titular)        # Saída: Maria
+print(conta.saldo)          # Saída: 1000
+print(conta.saldo_formatado) # Saída: R$ 1000.00
 
-try:
-    conta.saldo = -100  # Erro!
-except ValueError as e:
-    print(f"Erro: {e}")
+# Atribuição com validação — parece acesso direto, mas passa pelo setter:
+conta.saldo = 1500
+print(conta.saldo)          # Saída: 1500
+
+# Tentativa inválida gera erro claro:
+conta.saldo = -100
 ```
 
-## 3. Usando a função property()
+**Saída do erro:**
+```
+ValueError: Saldo não pode ser negativo.
+```
 
 ```python
-class Temperatura:
-    def __init__(self, celsius=0):
-        self.__celsius = celsius
-    
-    def get_celsius(self):
-        return self.__celsius
-    
-    def set_celsius(self, valor):
-        if valor < -273.15:
-            raise ValueError("Temperatura não pode ser menor que -273.15°C")
-        self.__celsius = valor
-    
-    def get_fahrenheit(self):
-        return (self.__celsius * 9/5) + 32
-    
-    def set_fahrenheit(self, valor):
-        celsius = (valor - 32) * 5/9
-        self.set_celsius(celsius)  # Reutiliza a validação
-    
-    def get_kelvin(self):
-        return self.__celsius + 273.15
-    
-    def set_kelvin(self, valor):
-        celsius = valor - 273.15
-        self.set_celsius(celsius)  # Reutiliza a validação
-    
-    # Criando as properties
-    celsius = property(get_celsius, set_celsius)
-    fahrenheit = property(get_fahrenheit, set_fahrenheit)
-    kelvin = property(get_kelvin, set_kelvin)
-
-# Uso
-temp = Temperatura(25)
-print(f"Celsius: {temp.celsius}")      # 25
-print(f"Fahrenheit: {temp.fahrenheit}") # 77.0
-print(f"Kelvin: {temp.kelvin}")        # 298.15
-
-# Alterando por diferentes escalas
-temp.fahrenheit = 86
-print(f"Celsius: {temp.celsius}")      # 30.0
+# Property somente leitura — não pode ser alterada diretamente:
+conta.saldo_formatado = "R$ 0.00"
 ```
 
-## 4. Property somente leitura
+**Saída do erro:**
+```
+AttributeError: can't set attribute
+```
+
+---
+
+## Por que `@property` é melhor que métodos `get`/`set`?
+
+Compare as duas abordagens:
 
 ```python
-class Circulo:
-    def __init__(self, raio):
-        self.__raio = raio
-    
-    @property
-    def raio(self):
-        return self.__raio
-    
-    @raio.setter
-    def raio(self, valor):
-        if valor > 0:
-            self.__raio = valor
-        else:
-            raise ValueError("Raio deve ser positivo")
-    
-    @property
-    def area(self):
-        """Property somente leitura - calculada dinamicamente"""
-        import math
-        return math.pi * self.__raio ** 2
-    
-    @property
-    def circunferencia(self):
-        """Property somente leitura - calculada dinamicamente"""
-        import math
-        return 2 * math.pi * self.__raio
+# Abordagem antiga (com métodos explícitos):
+conta.set_saldo(1500)
+print(conta.get_saldo())
 
-# Uso
-circulo = Circulo(5)
-print(f"Raio: {circulo.raio}")              # 5
-print(f"Área: {circulo.area:.2f}")          # 78.54
-print(f"Circunferência: {circulo.circunferencia:.2f}")  # 31.42
-
-# Pode alterar o raio
-circulo.raio = 10
-print(f"Nova área: {circulo.area:.2f}")     # 314.16
-
-# Mas não pode alterar área diretamente
-# circulo.area = 100  # AttributeError!
+# Abordagem pythônica (com @property):
+conta.saldo = 1500
+print(conta.saldo)
 ```
 
-## 5. Exemplo prático completo
+O resultado é o mesmo. A segunda abordagem é mais legível, parece acesso direto, mas executa a validação por baixo. É o padrão recomendado em Python.
+
+---
+
+## Exemplo completo: Produto com validações
 
 ```python
 class Produto:
     def __init__(self, nome, preco, categoria="Geral"):
-        self.__nome = nome
-        self.__preco = preco
-        self.__categoria = categoria
+        self.__nome = None
+        self.__preco = None
         self.__desconto = 0
-    
+        self.__categoria = None
+        # Usa os setters para validar desde a criação
+        self.nome = nome
+        self.preco = preco
+        self.categoria = categoria
+
     @property
     def nome(self):
         return self.__nome
-    
+
     @nome.setter
     def nome(self, valor):
         if isinstance(valor, str) and len(valor.strip()) > 0:
             self.__nome = valor.strip().title()
         else:
-            raise ValueError("Nome deve ser uma string não vazia")
-    
+            raise ValueError("Nome deve ser uma string não vazia.")
+
     @property
     def preco(self):
         return self.__preco
-    
+
     @preco.setter
     def preco(self, valor):
         if isinstance(valor, (int, float)) and valor > 0:
             self.__preco = float(valor)
         else:
-            raise ValueError("Preço deve ser um número positivo")
-    
+            raise ValueError("Preço deve ser um número positivo.")
+
     @property
     def categoria(self):
         return self.__categoria
-    
+
     @categoria.setter
     def categoria(self, valor):
         categorias_validas = ["Eletrônicos", "Roupas", "Casa", "Livros", "Geral"]
         if valor in categorias_validas:
             self.__categoria = valor
         else:
-            raise ValueError(f"Categoria deve ser uma de: {categorias_validas}")
-    
+            raise ValueError(f"Categoria inválida. Escolha entre: {categorias_validas}")
+
     @property
     def desconto(self):
         return self.__desconto
-    
+
     @desconto.setter
     def desconto(self, valor):
         if 0 <= valor <= 100:
             self.__desconto = valor
         else:
-            raise ValueError("Desconto deve estar entre 0 e 100%")
-    
+            raise ValueError("Desconto deve estar entre 0% e 100%.")
+
     @property
     def preco_com_desconto(self):
-        """Property calculada - somente leitura"""
+        """Somente leitura — calculado automaticamente."""
         return self.__preco * (1 - self.__desconto / 100)
-    
-    @property
-    def info_completa(self):
-        """Property formatada - somente leitura"""
-        return f"{self.nome} ({self.categoria}) - R$ {self.preco_com_desconto:.2f}"
 
-# Uso
+    @property
+    def resumo(self):
+        """Somente leitura — texto formatado do produto."""
+        return f"{self.nome} ({self.categoria}) — R$ {self.preco_com_desconto:.2f}"
+
+
+# Uso normal:
 produto = Produto("smartphone", 1000)
-print(produto.info_completa)  # Smartphone (Geral) - R$ 1000.00
+print(produto.resumo)
+# Saída: Smartphone (Geral) — R$ 1000.00
 
 produto.categoria = "Eletrônicos"
 produto.desconto = 15
-print(produto.info_completa)  # Smartphone (Eletrônicos) - R$ 850.00
+print(produto.resumo)
+# Saída: Smartphone (Eletrônicos) — R$ 850.00
 
-# Validação funcionando
-try:
-    produto.desconto = 150  # Erro!
-except ValueError as e:
-    print(f"Erro: {e}")
+# Validação em ação:
+produto.desconto = 150
+# ValueError: Desconto deve estar entre 0% e 100%.
 ```
 
-### Quando usar cada abordagem?
+---
 
-**Properties (@property)**: Use sempre que possível - é a forma mais pythônica
-**Métodos explícitos**: Apenas quando você precisa de compatibilidade com código muito antigo
-**Property somente leitura**: Para valores calculados ou que não devem ser alterados externamente
+## Exercícios
 
+### Exercício 1 — Temperatura com validação
+
+Crie uma classe `Temperatura` com um atributo `celsius`.
+
+**Requisitos:**
+- `celsius` deve ser uma property com validação: não aceitar valores abaixo de `-273.15` (zero absoluto)
+- Adicione uma property **somente leitura** `fahrenheit` que converte automaticamente
+
+**Esqueleto:**
+```python
+class Temperatura:
+    def __init__(self, celsius):
+        self.__celsius = None
+        self.celsius = celsius  # passa pelo setter
+
+    @property
+    def celsius(self):
+        # complete aqui
+        pass
+
+    @celsius.setter
+    def celsius(self, valor):
+        # valide e atribua
+        pass
+
+    @property
+    def fahrenheit(self):
+        # fórmula: (celsius * 9/5) + 32
+        pass
+```
+
+**Teste esperado:**
+```python
+t = Temperatura(25)
+print(t.celsius)     # 25
+print(t.fahrenheit)  # 77.0
+
+t.celsius = -300
+# ValueError: Temperatura abaixo do zero absoluto.
+```
+
+---
+
+### Exercício 2 — Aluno com nota protegida
+
+Adicione à classe `Aluno` (do módulo anterior) uma nota final encapsulada.
+
+**Requisitos:**
+- `nota` deve aceitar apenas valores entre `0.0` e `10.0`
+- Property somente leitura `situacao` deve retornar `"Aprovado"` (nota ≥ 6.0) ou `"Reprovado"`
+
+---
