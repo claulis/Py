@@ -562,11 +562,3 @@ frases = [
 ['python é incrível', 'programação funcional', 'funções de ordem superior']
 ```
 
----
-
-## Referências
-
-- VAN ROSSUM, Guido. *Python Functional Programming HOWTO*. Python Documentation.
-- BIRD, Richard; WADLER, Phil. *Introduction to Functional Programming*. Prentice Hall, 1988.
-- MARTIN, Robert C. *Clean Code: A Handbook of Agile Software Craftsmanship*. Prentice Hall, 2008.
-- HUNT, Andrew; THOMAS, David. *The Pragmatic Programmer*. Addison-Wesley, 2019.
