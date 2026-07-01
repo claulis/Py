@@ -1,0 +1,93 @@
+@startuml cls_elementos
+title Diagrama de Classes - Anatomia e Notacao
+
+class ContaBancaria {
+    ' ----- Compartimento de Atributos -----
+    + agencia: String
+    - saldo: float
+    # limite: float
+    ~ codigoBanco: String
+    {static} taxaJuros: float
+    ' ---- separador opcional ----
+    --
+    ' ----- Compartimento de Operacoes -----
+    + depositar(valor: float): void
+    + sacar(valor: float): boolean
+    - validarSenha(s: String): boolean
+    # calcularJuros(): float
+    {abstract} autenticar(): boolean
+    {static} obterTaxaAtual(): float
+}
+
+note right of ContaBancaria
+  COMPARTIMENTO 1: Nome da Classe
+
+  COMPARTIMENTO 2: Atributos
+    visibilidade  nome : tipo
+
+  COMPARTIMENTO 3: Operacoes
+    visibilidade  nome(params) : retorno
+
+  VISIBILIDADE:
+    +  publico     todos os objetos acessam
+    -  privado     apenas a propria classe
+    #  protegido   classe e suas subclasses
+    ~  pacote      classes do mesmo pacote
+
+  MODIFICADORES:
+    {static}    pertence a classe (sublinhado)
+    {abstract}  sem implementacao (italico)
+end note
+
+abstract class Pessoa {
+    - cpf: String
+    - nome: String
+    --
+    + {abstract} autenticar(): boolean
+    + toString(): String
+}
+
+note left of Pessoa
+  Classe abstrata:
+  marcada com <<abstract>>
+  ou em italico no nome.
+  Nao pode ser instanciada
+  diretamente.
+end note
+
+interface Auditavel {
+    + {abstract} registrarAcao(acao: String): void
+    + {abstract} obterHistorico(): List<String>
+}
+
+note left of Auditavel
+  Interface:
+  contrato de comportamento.
+  Todos os metodos sao
+  publicos e abstratos
+  por definicao.
+end note
+
+class ContaCorrente {
+    - tarifaMensal: float
+    --
+    + autenticar(): boolean
+    + registrarAcao(acao: String): void
+    + obterHistorico(): List<String>
+}
+
+' Generalizacao (heranca)
+Pessoa <|-- ContaCorrente
+
+' Realizacao (implementacao de interface)
+Auditavel <|.. ContaCorrente
+
+note bottom of ContaCorrente
+  ContaCorrente herda de Pessoa
+  e implementa Auditavel.
+  Deve fornecer implementacao
+  concreta de todos os metodos
+  abstratos.
+end note
+
+@enduml

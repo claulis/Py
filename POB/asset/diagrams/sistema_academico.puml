@@ -1,0 +1,122 @@
+@startuml sistema_academico
+title Sistema Academico - Diagrama de Casos de Uso
+left to right direction
+
+' ===== ATORES =====
+actor Aluno
+actor Professor
+actor Coordenador
+actor Administrador
+actor "Sistema de\nNotificacao" as SisNotif <<system>>
+
+' ===== SISTEMA =====
+rectangle "Sistema Academico" {
+
+    ' --- Matricula e Ofertas ---
+    usecase "Realizar Matricula" as UC_Matricula
+    usecase "Consultar Ofertas" as UC_ConsultarOfertas
+    usecase "Cancelar Matricula" as UC_CancelarMatricula
+    usecase "Aprovar Cancelamento" as UC_AprovarCancelamento
+
+    ' --- Academico do Aluno ---
+    usecase "Registrar Presenca" as UC_RegistrarPresenca
+    usecase "Consultar Notas" as UC_ConsultarNotas
+    usecase "Consultar Boletim" as UC_ConsultarBoletim
+    usecase "Enviar Trabalho" as UC_EnviarTrabalho
+    usecase "Visualizar Horario" as UC_VisualizarHorario
+
+    ' --- Gestao do Professor ---
+    usecase "Lancar Notas" as UC_LancarNotas
+    usecase "Corrigir Trabalho" as UC_CorrigirTrabalho
+    usecase "Criar Plano de Ensino" as UC_CriarPlano
+    usecase "Gerar Pauta" as UC_GerarPauta
+
+    ' --- Coordenacao ---
+    usecase "Gerenciar Ofertas" as UC_GerenciarOfertas
+    usecase "Gerar Relatorios" as UC_GerarRelatorios
+    usecase "Avaliar Desempenho" as UC_AvaliarDesempenho
+
+    ' --- Administracao ---
+    usecase "Criar Usuarios" as UC_CriarUsuarios
+    usecase "Configurar Calendario" as UC_ConfigurarCalendario
+    usecase "Gerir Permissoes" as UC_GerirPermissoes
+    usecase "Fazer Backup" as UC_FazerBackup
+
+    ' --- Transversais ---
+    usecase "Autenticar Usuario" as UC_Autenticar
+    usecase "Enviar Notificacao" as UC_EnviarNotificacao
+
+    ' ===== INCLUDE (comportamento obrigatorio) =====
+    ' Realizar Matricula sempre consulta ofertas e exige autenticacao
+    UC_Matricula ..> UC_ConsultarOfertas : <<include>>
+    UC_Matricula ..> UC_Autenticar : <<include>>
+    ' Consultar Boletim sempre inclui consultar notas
+    UC_ConsultarBoletim ..> UC_ConsultarNotas : <<include>>
+    ' Gerar Pauta sempre inclui lancamento de notas
+    UC_GerarPauta ..> UC_LancarNotas : <<include>>
+    ' Acoes que geram notificacao automatica
+    UC_LancarNotas ..> UC_EnviarNotificacao : <<include>>
+    UC_CorrigirTrabalho ..> UC_EnviarNotificacao : <<include>>
+
+    ' ===== EXTEND (comportamento condicional) =====
+    ' Cancelamento so aciona aprovacao quando exigido por regra de negocio
+    UC_CancelarMatricula ..> UC_AprovarCancelamento : <<extend>>
+}
+
+' ===== ASSOCIACOES DOS ATORES =====
+
+Aluno --> UC_Matricula
+Aluno --> UC_ConsultarOfertas
+Aluno --> UC_CancelarMatricula
+Aluno --> UC_ConsultarNotas
+Aluno --> UC_ConsultarBoletim
+Aluno --> UC_EnviarTrabalho
+Aluno --> UC_VisualizarHorario
+
+Professor --> UC_RegistrarPresenca
+Professor --> UC_LancarNotas
+Professor --> UC_CorrigirTrabalho
+Professor --> UC_CriarPlano
+Professor --> UC_GerarPauta
+
+Coordenador --> UC_GerenciarOfertas
+Coordenador --> UC_GerarRelatorios
+Coordenador --> UC_AprovarCancelamento
+Coordenador --> UC_AvaliarDesempenho
+
+Administrador --> UC_CriarUsuarios
+Administrador --> UC_ConfigurarCalendario
+Administrador --> UC_GerirPermissoes
+Administrador --> UC_FazerBackup
+
+' Sistema externo (ator secundario): recebe chamada do sistema
+UC_EnviarNotificacao --> SisNotif
+
+' ===== NOTAS =====
+note right of Aluno
+    Ator primario principal.
+    Todas as funcionalidades
+    academicas do ponto de
+    vista do discente.
+end note
+
+note right of Professor
+    Gerencia frequencia,
+    avaliacoes e planejamento
+    pedagogico da turma.
+end note
+
+note right of Coordenador
+    Supervisiona o curriculo,
+    a oferta de disciplinas
+    e o desempenho coletivo.
+end note
+
+note left of SisNotif
+    Ator secundario.
+    Sistema externo acionado
+    pelo sistema academico
+    para envio de avisos.
+end note
+
+@enduml

@@ -1,0 +1,210 @@
+@startuml cls_sistema_academico
+title Sistema Academico - Diagrama de Classes
+skinparam classAttributeIconSize 0
+
+' =========================================================
+' PACOTE: Usuarios
+' Hierarquia de usuarios do sistema.
+' Baseado nas classes implementadas em asset/code/chamada/
+' =========================================================
+package "Usuarios" {
+
+    abstract class Usuario {
+        - id: int
+        - nome: String
+        - email: String
+        - senhaHash: String
+        - ativo: boolean
+        --
+        + {abstract} autenticar(senha: String): boolean
+        + atualizarPerfil(): void
+    }
+
+    class Aluno {
+        - matriculaAcademica: String
+        - presencas: List<String>
+        --
+        + adicionarPresenca(data: String): void
+        + consultarFrequencia(): String
+        + consultarBoletim(): List<Nota>
+        + enviarTrabalho(turma: Turma, arquivoPath: String): Trabalho
+        + autenticar(senha: String): boolean
+    }
+
+    class Professor {
+        - idProfessor: String
+        - titulacao: String
+        --
+        + registrarPresenca(aluno: Aluno, turma: Turma, data: String): void
+        + lancarNota(aluno: Aluno, tipo: String, valor: float): Nota
+        + corrigirTrabalho(trabalho: Trabalho, nota: float): void
+        + criarPlanoEnsino(turma: Turma): PlanoEnsino
+        + gerarPauta(turma: Turma): List<Nota>
+        + autenticar(senha: String): boolean
+    }
+
+    class Coordenador {
+        - setor: String
+        --
+        + gerenciarOfertas(disciplina: Disciplina): Turma
+        + aprovarCancelamento(matricula: Matricula): void
+        + gerarRelatorio(): String
+        + avaliarDesempenho(turma: Turma): void
+        + autenticar(senha: String): boolean
+    }
+
+    class Administrador {
+        - nivelAcesso: int
+        --
+        + criarUsuario(dados: Map): Usuario
+        + configurarCalendario(calendario: Calendario): void
+        + gerirPermissoes(usuario: Usuario, permissao: String): void
+        + fazerBackup(): void
+        + autenticar(senha: String): boolean
+    }
+
+    ' Generalizacao: todos os papeis herdam de Usuario
+    Usuario <|-- Aluno
+    Usuario <|-- Professor
+    Usuario <|-- Coordenador
+    Usuario <|-- Administrador
+}
+
+' =========================================================
+' PACOTE: Academico
+' Entidades do dominio academico.
+' =========================================================
+package "Academico" {
+
+    class Disciplina {
+        - codigo: String
+        - nome: String
+        - ementa: String
+        - cargaHoraria: int
+        - creditos: int
+        --
+        + obterTurmas(): List<Turma>
+    }
+
+    class Turma {
+        - codigo: String
+        - periodo: String
+        - vagas: int
+        - horario: String
+        - sala: String
+        - alunos: List<Aluno>
+        --
+        + matricularAluno(aluno: Aluno): void
+        + removerAluno(aluno: Aluno): void
+        + atualizarProfessor(professor: Professor): void
+        + listarFrequencia(): String
+        + estaDisponivel(): boolean
+        + calcularMediaTurma(): float
+    }
+
+    class Matricula {
+        - dataMatricula: Date
+        - status: String
+        --
+        + cancelar(): void
+        + confirmar(): void
+    }
+
+    class Nota {
+        - tipo: String
+        - valor: float
+        - dataLancamento: Date
+        --
+        + validar(): boolean
+        + corrigir(novoValor: float): void
+    }
+
+    class Trabalho {
+        - titulo: String
+        - arquivoPath: String
+        - dataSubmissao: Date
+        - notaAtribuida: float
+        --
+        + submeter(): void
+        + corrigir(nota: float, feedback: String): void
+    }
+
+    class PlanoEnsino {
+        - objetivos: String
+        - metodologia: String
+        - cronograma: String
+        - bibliografia: String
+        - dataElaboracao: Date
+        --
+        + publicar(): void
+        + atualizar(): void
+    }
+}
+
+' =========================================================
+' PACOTE: Suporte
+' Servicos e entidades de infraestrutura do dominio.
+' =========================================================
+package "Suporte" {
+
+    class Calendario {
+        - anoLetivo: int
+        - inicioSemestre: Date
+        - fimSemestre: Date
+        - inicioMatriculas: Date
+        - fimMatriculas: Date
+        --
+        + matriculasAbertas(): boolean
+        + periodoAtivo(): boolean
+    }
+
+    class Notificacao {
+        - tipo: String
+        - titulo: String
+        - mensagem: String
+        - dataEnvio: Date
+        - lida: boolean
+        --
+        + marcarComoLida(): void
+        + enviar(): void
+    }
+}
+
+' =========================================================
+' RELACIONAMENTOS
+' =========================================================
+
+' Composicao: Turma nao existe sem Disciplina
+' Ao remover Disciplina, as Turmas sao removidas
+Disciplina "1" *-- "0..*" Turma : origina
+
+' Associacao dirigida: Professor leciona Turmas
+Professor "1" --> "0..*" Turma : leciona
+
+' Associacao dirigida: Coordenador supervisiona Turmas
+Coordenador "1" --> "0..*" Turma : supervisiona
+
+' Composicao: Matricula nao existe sem Turma
+Turma "1" *-- "0..*" Matricula : registra
+
+' Associacao dirigida: Aluno realiza Matriculas
+Aluno "1" --> "0..*" Matricula : realiza
+
+' Associacao dirigida: Nota pertence a Turma e a Aluno
+Turma "1" --> "0..*" Nota : possui
+Aluno "1" --> "0..*" Nota : recebe
+Professor "1" --> "0..*" Nota : lanca
+
+' Composicao: Trabalho so existe vinculado a Turma
+Turma "1" *-- "0..*" Trabalho : recebe
+
+' Associacao dirigida: Aluno submete Trabalho
+Aluno "1" --> "0..*" Trabalho : submete
+
+' Composicao: PlanoEnsino pertence exclusivamente a uma Turma
+Turma "1" *-- "1" PlanoEnsino : possui
+
+' Agregacao: Notificacao pode ser arquivada apos o fim da sessao do Usuario
+Usuario "1" o-- "0..*" Notificacao : recebe
+
+@enduml

@@ -1,0 +1,140 @@
+@startuml cls_relacionamentos
+title Tipos de Relacionamento - Catalogo de Notacao
+
+skinparam padding 8
+skinparam packageStyle rectangle
+
+' =============================================
+' 1. DEPENDENCIA
+' Notacao: A ..> B
+' Semantica: A usa B temporariamente (parametro, variavel local).
+'            Mudanca em B pode afetar A.
+' =============================================
+package "1. Dependencia  (A ..> B)" {
+    class GeradorRelatorio {
+        + gerar(c: Conexao): void
+    }
+    class Conexao {
+        + executarSQL(q: String): ResultSet
+    }
+    GeradorRelatorio ..> Conexao : usa
+}
+
+' =============================================
+' 2. ASSOCIACAO
+' Notacao: A -- B  (bidirecional)
+' Semantica: A e B se conhecem mutuamente.
+'            Ambos mantem referencia um ao outro.
+' =============================================
+package "2. Associacao  (A -- B)" {
+    class Medico {
+        - crm: String
+    }
+    class Paciente {
+        - cpf: String
+    }
+    Medico "0..*" -- "0..*" Paciente : atende
+}
+
+' =============================================
+' 3. ASSOCIACAO DIRIGIDA
+' Notacao: A --> B  (unidirecional)
+' Semantica: A conhece B, mas B nao conhece A.
+'            A mantem referencia a B.
+' =============================================
+package "3. Associacao Dirigida  (A --> B)" {
+    class Pedido {
+        - numero: int
+    }
+    class Cliente {
+        - cpf: String
+    }
+    Pedido "0..*" --> "1" Cliente : pertence a
+}
+
+' =============================================
+' 4. AGREGACAO
+' Notacao: A o-- B  (diamante vazio em A)
+' Semantica: B e parte de A, mas pode existir
+'            independentemente de A.
+'            Ciclos de vida independentes.
+' =============================================
+package "4. Agregacao  (A o-- B)" {
+    class Departamento {
+        - nome: String
+    }
+    class Funcionario {
+        - nome: String
+    }
+    note bottom of Departamento
+      Funcionario pode existir
+      sem o Departamento.
+      Ex.: transferencia de setor.
+    end note
+    Departamento "1" o-- "0..*" Funcionario : emprega
+}
+
+' =============================================
+' 5. COMPOSICAO
+' Notacao: A *-- B  (diamante cheio em A)
+' Semantica: B e parte essencial de A.
+'            B nao pode existir sem A.
+'            Ciclos de vida compartilhados.
+' =============================================
+package "5. Composicao  (A *-- B)" {
+    class NotaFiscal {
+        - numero: int
+    }
+    class ItemNF {
+        - quantidade: int
+        - valorUnitario: float
+    }
+    note bottom of NotaFiscal
+      ItemNF nao existe fora
+      de uma NotaFiscal.
+      Ao deletar a nota,
+      os itens sao deletados.
+    end note
+    NotaFiscal "1" *-- "1..*" ItemNF : contem
+}
+
+' =============================================
+' 6. GENERALIZACAO (HERANCA)
+' Notacao: A <|-- B  (triangulo vazio aponta para A)
+' Semantica: B e um tipo especializado de A.
+'            B herda atributos e metodos de A.
+'            Relacao "e um" (is-a).
+' =============================================
+package "6. Generalizacao  (A <|-- B)" {
+    class Veiculo {
+        - placa: String
+        + mover(): void
+    }
+    class Carro {
+        - numPortas: int
+        + mover(): void
+    }
+    Veiculo <|-- Carro
+}
+
+' =============================================
+' 7. REALIZACAO (INTERFACE)
+' Notacao: A <|.. B  (triangulo vazio + linha tracejada)
+' Semantica: B implementa o contrato definido
+'            pela interface A.
+'            Relacao "implementa" (implements).
+' =============================================
+package "7. Realizacao  (I <|.. C)" {
+    interface Exportavel {
+        + exportarCSV(): String
+        + exportarJSON(): String
+    }
+    class Relatorio {
+        - titulo: String
+        + exportarCSV(): String
+        + exportarJSON(): String
+    }
+    Exportavel <|.. Relatorio
+}
+
+@enduml

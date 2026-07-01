@@ -1,0 +1,72 @@
+@startuml uc_elementos
+title Diagrama de Caso de Uso - Referencia de Notacao
+left to right direction
+
+actor "Ator Primario" as AP
+actor "Ator Secundario\n(Sistema Externo)" as AS
+actor "Ator Especializado" as AE
+
+rectangle "Fronteira do Sistema (System Boundary)" {
+    usecase "Caso de Uso A" as UCA
+    usecase "Comportamento\nObrigatorio (B)" as UCB
+    usecase "Comportamento\nOpcional (C)" as UCC
+    usecase "Caso de Uso\nBase (D)" as UCBase
+    usecase "Caso de Uso\nEspecializado (E)" as UCEsp
+}
+
+' Associacao: linha solida entre ator e caso de uso
+AP --> UCA
+UCB --> AS
+
+' Include: tracejado com estereotipo <<include>>
+' UCA SEMPRE executa UCB; UCB e obrigatorio para completar UCA
+UCA ..> UCB : <<include>>
+
+' Extend: tracejado com estereotipo <<extend>>
+' UCC executa apenas sob condicao especifica durante UCA
+UCA ..> UCC : <<extend>>
+
+' Generalizacao entre atores: AE e uma especializacao de AP
+AE --|> AP
+
+' Generalizacao entre casos de uso
+UCBase <|-- UCEsp
+
+note bottom of AP
+  Ator Primario:
+  inicia a interacao com
+  o sistema para atingir
+  um objetivo de negocio.
+end note
+
+note bottom of AS
+  Ator Secundario:
+  sistema externo ou papel
+  de suporte acionado pelo
+  proprio sistema.
+end note
+
+note bottom of UCB
+  <<include>>
+  Comportamento reutilizavel
+  e obrigatorio. UCA nao
+  se completa sem UCB.
+  Sem condicao.
+end note
+
+note bottom of UCC
+  <<extend>>
+  Comportamento condicional
+  e opcional. UCA funciona
+  mesmo sem acionar UCC.
+  Sujeito a condicao.
+end note
+
+note bottom of UCEsp
+  Generalizacao:
+  UCEsp herda e pode
+  sobrescrever o
+  comportamento de UCBase.
+end note
+
+@enduml

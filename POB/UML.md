@@ -1,731 +1,992 @@
-# UML: Diagramas de Caso de Uso e Classe
+# UML: Diagramas de Caso de Uso e Diagrama de Classes
 
-## 📚 Introdução
-
-**UML (Unified Modeling Language)** é uma linguagem gráfica padronizada para modelagem de sistemas de software. Ela fornece notações visuais que facilitam a comunicação entre designers, desenvolvedores e stakeholders.
-
-> "A UML permite que você visualize, especifique, construa e documente os artefatos de um sistema de software intensivo em software." — OMG (Object Management Group)
-
-### Por que usar UML?
-
-- ✅ **Comunicação clara** entre equipes multidisciplinares
-- ✅ **Documentação visual** do sistema antes da codificação
-- ✅ **Identificação de problemas** em fase de design
-- ✅ **Reutilização de padrões** e arquitetura
-- ✅ **Facilita manutenção** e evolução do código
+**Disciplina:** Engenharia de Software / Programacao Orientada a Objetos  
+**Instituto:** IFB - Campus Valparaiso de Goias  
+**Licenca:** CC BY-NC-SA 4.0
 
 ---
 
-## 📊 Tipos Principais de Diagramas UML
+## 1. Introducao a UML
 
-| Tipo | Propósito | Quando Usar |
-|------|----------|-----------|
-| **Caso de Uso** | Comportamento do sistema do ponto de vista do usuário | Fase de requisitos e escopo |
-| **Classe** | Estrutura estática: classes, atributos, relacionamentos | Design detalhado |
-| **Sequência** | Interação temporal entre objetos | Fluxos e protocolos |
-| **Atividade** | Fluxo de processos e workflows | Lógica de negócio |
-| **Estado** | Mudanças de estado de um objeto | Máquinas de estado |
-| **Componente** | Componentes de software e dependências | Arquitetura |
-| **Deployment** | Distribuição física do sistema | Infraestrutura |
+### 1.1 O que e UML
+
+A **UML (Unified Modeling Language)** e uma linguagem de modelagem visual padronizada pelo **OMG (Object Management Group)** para especificacao, construcao, visualizacao e documentacao de artefatos de sistemas de software. A versao vigente e a UML 2.5.1, publicada em 2017.
+
+A UML nao e uma metodologia de desenvolvimento nem uma linguagem de programacao. E uma **notacao grafica** que permite comunicar decisoes de design de forma precisa e nao ambigua entre engenheiros, arquitetos e demais stakeholders de um projeto.
+
+> "A UML e a linguagem padrao da industria para especificar, visualizar, construir e documentar os artefatos de sistemas de software." — OMG UML Specification 2.5.1
+
+### 1.2 Breve Historico
+
+| Ano | Evento |
+|-----|--------|
+| 1994-1995 | Grady Booch, Ivar Jacobson e James Rumbaugh ("Tres Amigos") unificam Booch Method, OOSE e OMT |
+| 1997 | OMG adota UML 1.0 como padrao internacional |
+| 2005 | UML 2.0: reorganizacao dos diagramas, novos diagramas comportamentais |
+| 2017 | UML 2.5.1 (versao atual): simplificacao do metamodelo, adocao ampla na industria |
+
+### 1.3 Porque usar UML
+
+- **Comunicacao**: permite que analistas, desenvolvedores e clientes discutam o sistema com uma linguagem visual comum
+- **Documentacao**: registra decisoes de design que nao sao obvias no codigo fonte
+- **Deteccao precoce de falhas**: inconsistencias e omissoes identificadas no diagrama custam uma fracao do custo de corrigi-las em producao
+- **Base para codigo**: diagramas de classes bem construidos se traduzem diretamente em estrutura de codigo
+
+### 1.4 Ferramentas
+
+- **PlantUML** — definicao de diagramas como texto, integrado ao VS Code, IntelliJ e outros editores
+- **Draw.io / diagrams.net** — ferramenta visual baseada em navegador, gratuita
+- **StarUML** — editor dedicado a UML com suporte a engenharia reversa
+- **Lucidchart** — colaborativo, baseado em nuvem
+- **Enterprise Architect** — solucao comercial completa para projetos grandes
 
 ---
 
-## 1️⃣ Diagrama de Caso de Uso
+## 2. Categorias de Diagramas UML
 
-### O que é?
+A UML 2.5 define **14 tipos de diagramas**, organizados em duas grandes categorias.
 
-Um **diagrama de caso de uso** modela o comportamento externo do sistema, descrevendo **quem** (ator) interage **com quê** (caso de uso) e **por quê** (objetivo).
+### 2.1 Diagramas Estruturais
 
-### Elementos Principais
+Descrevem a **estrutura estatica** do sistema: o que existe e como esta organizado.
 
-```
-┌─────────────────────────────────────────────────────────┐
-│  DIAGRAMA DE CASO DE USO - Elementos Básicos           │
-├─────────────────────────────────────────────────────────┤
-│                                                           │
-│  ATOR (Actor):                                           │
-│    👤  Representa um papel de usuário ou sistema         │
-│                                                           │
-│  CASO DE USO (Use Case):                                 │
-│    (elipse)  Funcionalidade/tarefa que o sistema faz    │
-│                                                           │
-│  SISTEMA (System):                                       │
-│    [retângulo] Delimita o escopo do sistema             │
-│                                                           │
-│  RELACIONAMENTOS:                                        │
-│    ──→  Associação (ator participa do caso de uso)      │
-│    ▷──  Include (caso de uso necessário/obrigatório)    │
-│    ◁──  Extend (caso de uso opcional/condicional)       │
-│                                                           │
-└─────────────────────────────────────────────────────────┘
-```
+| Diagrama | Foco Principal | Uso Tipico |
+|---|---|---|
+| **Classes** | Estrutura de classes, atributos, metodos, relacionamentos | Design detalhado de software OO |
+| Objetos | Instancias concretas em um momento especifico | Exemplificar estados e snapshot do sistema |
+| Componentes | Modulos de software e suas interfaces | Arquitetura de modulos e dependencias |
+| Pacotes | Agrupamento logico de elementos UML | Organizacao de namespaces e modulos |
+| Deployment | Distribuicao fisica de artefatos em nos de infraestrutura | Arquitetura de servidores e redes |
+| Composite Structure | Estrutura interna de uma classe e colaboracoes | Padroes de design complexos |
+| Profile | Extensoes do metamodelo UML para dominios especificos | DSLs e personalizacoes da linguagem |
 
-### Exemplo 1: Sistema de Biblioteca
+### 2.2 Diagramas Comportamentais
+
+Descrevem o **comportamento dinamico** do sistema: como ele age e reage ao longo do tempo.
+
+| Diagrama | Foco Principal | Uso Tipico |
+|---|---|---|
+| **Caso de Uso** | Interacoes entre atores externos e o sistema | Levantamento e documentacao de requisitos |
+| Atividade | Fluxo de controle e dados em um processo | Workflows, logica de negocio, algoritmos |
+| Maquina de Estado | Ciclo de vida de um objeto atraves de estados | Entidades com comportamento dirigido por eventos |
+| Sequencia | Troca de mensagens entre objetos ao longo do tempo | Detalhamento de cenarios e protocolos |
+| Comunicacao | Colaboracao entre objetos com enfase nos links | Alternativa compacta ao diagrama de sequencia |
+| Visao Geral de Interacao | Composicao de diagramas de interacao | Fluxos com subfluxos e ramificacoes complexas |
+| Temporização | Restricoes de tempo entre estados | Sistemas embarcados e de tempo real |
+
+Este documento aprofunda dois diagramas fundamentais para projeto de software orientado a objetos: **Caso de Uso** e **Classes**.
+
+---
+
+## 3. Diagrama de Caso de Uso
+
+### 3.1 Finalidade e Escopo
+
+O diagrama de caso de uso responde a pergunta central do levantamento de requisitos: **quem usa o sistema e para que?**
+
+Ele modela o comportamento do sistema do ponto de vista externo, definindo:
+
+- Os **atores** que interagem com o sistema (papeis, nao individuos)
+- As **funcionalidades** que o sistema oferece (casos de uso)
+- A **fronteira** que separa o que e do sistema e o que e externo a ele
+- Os **relacionamentos** entre atores e funcionalidades
+
+O diagrama de caso de uso **nao descreve** como o sistema funciona internamente. Ele e um contrato de escopo: define o que sera entregue e para quem, sem comprometer a implementacao.
+
+### 3.2 Elementos da Notacao
+
+**Arquivo:** [asset/diagrams/uc_elementos.puml](asset/diagrams/uc_elementos.puml)
 
 ```plantuml
-@startuml BibliotecaCasoDeUso
+@startuml uc_elementos
+title Diagrama de Caso de Uso - Referencia de Notacao
 left to right direction
-skinparam packageStyle rectangle
 
-actor "Leitor" as Leitor
-actor "Bibliotecário" as Bibliotecario
-actor "Administrador" as Admin
+actor "Ator Primario" as AP
+actor "Ator Secundario\n(Sistema Externo)" as AS
+actor "Ator Especializado" as AE
 
-rectangle "Sistema de Biblioteca" {
-    usecase "Buscar Livro" as UC1
-    usecase "Emprestar Livro" as UC2
-    usecase "Devolver Livro" as UC3
-    usecase "Renovar Empréstimo" as UC4
-    usecase "Registrar Leitor" as UC5
-    usecase "Gerar Relatório" as UC6
-    usecase "Validar CPF" as UC7
-    
-    UC2 ..> UC7 : <<include>>
-    UC4 --> UC3 : <<extend>>
+rectangle "Fronteira do Sistema (System Boundary)" {
+    usecase "Caso de Uso A" as UCA
+    usecase "Comportamento\nObrigatorio (B)" as UCB
+    usecase "Comportamento\nOpcional (C)" as UCC
+    usecase "Caso de Uso\nBase (D)" as UCBase
+    usecase "Caso de Uso\nEspecializado (E)" as UCEsp
 }
 
-Leitor --> UC1
-Leitor --> UC2
-Leitor --> UC3
-Leitor --> UC4
+AP --> UCA
+UCB --> AS
+UCA ..> UCB : <<include>>
+UCA ..> UCC : <<extend>>
+AE --|> AP
+UCBase <|-- UCEsp
 
-Bibliotecario --> UC2
-Bibliotecario --> UC3
-Bibliotecario --> UC5
+note bottom of UCB
+  <<include>>
+  Comportamento reutilizavel
+  e obrigatorio. UCA nao
+  se completa sem UCB.
+end note
 
-Admin --> UC6
-Admin --> UC5
+note bottom of UCC
+  <<extend>>
+  Comportamento condicional
+  e opcional. UCA funciona
+  mesmo sem acionar UCC.
+end note
 
+note bottom of UCEsp
+  Generalizacao:
+  UCEsp herda e pode
+  sobrescrever UCBase.
+end note
 @enduml
 ```
 
-### Descrevendo um Caso de Uso
+#### Resumo dos Elementos
 
-Cada caso de uso deve ter uma descrição em **formato estruturado**:
-
-#### Exemplo: Caso de Uso "Emprestar Livro"
-
-| Atributo | Descrição |
-|----------|-----------|
-| **ID** | UC02 |
-| **Nome** | Emprestar Livro |
-| **Atores** | Leitor, Bibliotecário |
-| **Pré-condição** | Leitor cadastrado; Livro disponível |
-| **Fluxo Principal** | 1. Leitor solicita livro<br>2. Bibliotecário valida CPF<br>3. Sistema registra empréstimo<br>4. Sistema gera recibo |
-| **Fluxo Alternativo** | Se livro indisponível: mostrar outras obras similares |
-| **Pós-condição** | Empréstimo registrado; Livro marcado como indisponível |
-| **Restrições** | Máximo 3 livros por leitor |
+| Elemento | Notacao | Descricao |
+|---|---|---|
+| **Ator Primario** | Figura humana, a esquerda | Inicia a interacao para atingir um objetivo |
+| **Ator Secundario** | Figura humana, a direita | Reage ou presta servico ao sistema |
+| **Caso de Uso** | Elipse com nome no infinitivo | Funcionalidade que entrega valor ao ator |
+| **Fronteira do Sistema** | Retangulo rotulado | Delimita o escopo do sistema modelado |
+| **Associacao** | Linha solida | Ator participa do caso de uso |
+| **Include** | Linha tracejada `<<include>>` | Caso de uso base sempre invoca o incluido |
+| **Extend** | Linha tracejada `<<extend>>` | Caso de uso base invoca o extensor condicionalmente |
+| **Generalizacao** | Seta com triangulo vazio | Heranca de comportamento entre atores ou entre casos de uso |
 
 ---
 
-## 2️⃣ Diagrama de Classes
+### 3.3 Relacionamentos em Detalhe
 
-### O que é?
+#### 3.3.1 Associacao
 
-Um **diagrama de classes** mostra a estrutura estática do sistema, incluindo:
-- **Classes** e seus atributos
-- **Métodos** (operações)
-- **Relacionamentos** entre classes (herança, composição, agregação)
+A **associacao** e o relacionamento mais simples: representa a participacao de um ator em um caso de uso.
 
-### Elementos Principais
-
-#### 1. Estrutura de uma Classe
+- Representada por uma **linha solida**
+- Nao tem direcao obrigatoria, mas convencionalmente o ator aponta para o caso de uso quando ele o inicia
+- Quando um ator secundario (sistema externo) e chamado pelo sistema, o caso de uso aponta para o ator
 
 ```
-┌─────────────────┐
-│  Livro          │  ← Nome da classe
-├─────────────────┤
-│ - isbn: String  │  ← Atributos (dados)
-│ - titulo: String│     (- privado, # protegido, + público)
-│ - autor: String │
-├─────────────────┤
-│ + emprestar()   │  ← Métodos (comportamentos)
-│ + devolver()    │
-│ + renovar()     │
-└─────────────────┘
+Aluno ——> (Consultar Notas)
+(Enviar Notificacao) ——> SistemaEmail
 ```
 
-#### 2. Modificadores de Acesso
+#### 3.3.2 Include
 
-| Símbolo | Significado | Acesso |
-|---------|------------|--------|
-| **+** | Público | Qualquer classe |
-| **-** | Privado | Apenas a própria classe |
-| **#** | Protegido | Classe e subclasses |
-| **~** | Pacote | Apenas classes do mesmo pacote |
+A relacao `<<include>>` modela a **reutilizacao de comportamento obrigatorio**.
 
-#### 3. Relacionamentos
+- O caso de uso **base** delega parte de seu fluxo ao caso de uso **incluido**
+- A execucao do incluido e **sempre obrigatoria** quando o base e invocado
+- Tipicamente usada para extrair comportamentos comuns a multiplos casos de uso
+
+**Direcao da seta:** do base para o incluido  
+**Analogia:** chamada de funcao — o base sempre chama o incluido
+
+```
+(Realizar Matricula) ..> (Autenticar Usuario) : <<include>>
+```
+
+Interpretacao: sempre que "Realizar Matricula" e executado, "Autenticar Usuario" tambem e executado.
+
+#### 3.3.3 Extend
+
+A relacao `<<extend>>` modela **comportamento condicional e opcional**.
+
+- O caso de uso **extensor** adiciona comportamento ao caso de uso **base** em um ponto de extensao
+- A extensao so ocorre quando uma **condicao de guarda** e satisfeita
+- O caso de uso base funciona normalmente mesmo que a extensao nao seja acionada
+
+**Direcao da seta:** do extensor para o base  
+**Analogia:** plugin ou hook — o base pode ou nao ser estendido
+
+```
+(Cancelar Matricula) ..> (Aprovar Cancelamento) : <<extend>>
+```
+
+Interpretacao: "Cancelar Matricula" pode, sob certas condicoes de negocio, acionar "Aprovar Cancelamento". O cancelamento pode tambem ser direto, sem aprovacao.
+
+#### 3.3.4 Comparacao Include versus Extend
+
+| Criterio | `<<include>>` | `<<extend>>` |
+|---|---|---|
+| Obrigatoriedade | Sempre executado | Executado sob condicao |
+| Dependencia | Base depende do incluido | Base e independente do extensor |
+| Iniciativa | O base invoca o incluido | O extensor decide acionar o base |
+| Direcao da seta | Base -> Incluido | Extensor -> Base |
+| Analogia | Chamada de funcao obrigatoria | Middleware ou plugin condicional |
+| Uso tipico | Comportamentos reutilizados em varios UC | Comportamentos opcionais ou excepcionais |
+
+#### 3.3.5 Generalizacao entre Atores
+
+Um ator pode especializar outro, herdando todas as suas associacoes.
+
+```
+Professor --|> Usuario
+Administrador --|> Usuario
+```
+
+O ator especializado herda todos os casos de uso do ator generico e pode ter casos de uso adicionais exclusivos.
+
+#### 3.3.6 Generalizacao entre Casos de Uso
+
+Um caso de uso pode especializar outro, herdando seu fluxo basico e substituindo ou adicionando passos.
+
+```
+(Realizar Matricula Prioritaria) <|-- (Realizar Matricula)
+```
+
+Diferente de `<<extend>>`, a generalizacao representa uma variante completa, nao apenas uma adicao condicional.
+
+---
+
+### 3.4 Especificacao Textual de um Caso de Uso
+
+O diagrama grafico e apenas o mapa. Cada elipse deve ser acompanhada de uma **especificacao textual estruturada** que detalha o fluxo com precisao suficiente para implementacao e testes.
+
+Template padrao:
+
+| Campo | Conteudo |
+|---|---|
+| **Identificador** | Codigo unico (ex.: UC-03) |
+| **Nome** | Verbo no infinitivo que descreve o objetivo do ator |
+| **Atores** | Lista dos atores primarios e secundarios envolvidos |
+| **Pre-condicoes** | Estado do sistema necessario para iniciar o caso de uso |
+| **Fluxo Principal** | Sequencia numerada de passos no cenario de sucesso |
+| **Fluxo Alternativo** | Variantes do fluxo principal (caminhos secundarios validos) |
+| **Fluxo de Excecao** | Tratamento de erros e condicoes anormais |
+| **Pos-condicoes** | Estado do sistema apos a execucao bem-sucedida |
+| **Regras de Negocio** | Restricoes e invariantes que governam o caso de uso |
+
+**Exemplo:** Especificacao de "Realizar Matricula"
+
+| Campo | Conteudo |
+|---|---|
+| **Identificador** | UC-01 |
+| **Nome** | Realizar Matricula |
+| **Atores** | Aluno (primario) |
+| **Pre-condicoes** | Aluno autenticado no sistema; periodo de matriculas aberto no calendario |
+| **Fluxo Principal** | 1. Aluno consulta ofertas de disciplinas disponíveis  2. Sistema exibe turmas com vagas  3. Aluno seleciona uma turma  4. Sistema valida pre-requisitos e disponibilidade  5. Sistema registra a matricula e reduz o contador de vagas  6. Sistema confirma a operacao ao aluno |
+| **Fluxo Alternativo** | 3a. Nenhuma turma disponivel: sistema exibe mensagem e encerra |
+| **Fluxo de Excecao** | 4a. Pre-requisitos nao cumpridos: sistema bloqueia e informa os requisitos faltantes |
+| **Pos-condicoes** | Matricula registrada com status "confirmada"; vaga descontada da turma |
+| **Regras de Negocio** | RN-01: Maximo de 6 disciplinas por periodo; RN-02: Colisao de horarios nao permitida |
+
+---
+
+### 3.5 Boas Praticas no Diagrama de Caso de Uso
+
+**Nomenclatura:**
+- Nomeie casos de uso com verbos no infinitivo que expressem o objetivo do ator, nao acoes do sistema: "Consultar Extrato" e melhor que "ExibirDadosExtrato"
+- Nomeie atores pelo papel (funcao no contexto do sistema), nao pelo cargo: "Aprovador" em vez de "Gerente de Credito"
+
+**Escopo:**
+- Mantenha o diagrama no nivel de negocio, nao de implementacao. "Autenticar Usuario" e um caso de uso valido; "Validar Token JWT" e detalhe de implementacao
+- Evite casos de uso que representem passos internos do sistema sem valor direto ao ator (ex.: "Salvar no Banco de Dados")
+
+**Relacionamentos:**
+- Use `<<include>>` para comportamentos que ocorrem em varios casos de uso (DRY: Don't Repeat Yourself)
+- Use `<<extend>>` com parcimonia. Muitas extensoes indicam que o caso de uso base e demasiadamente generico
+- Evite cadeias longas de include ou extend; elas obscurecem o fluxo
+
+**Volume:**
+- Um diagrama com mais de 20 casos de uso costuma perder clareza. Considere subdividir por subsistema
+- Inclua apenas os atores que realmente interagem com o sistema; excluir atores internos (DBA, Servidor) que nao sao papeis de negocio
+
+---
+
+## 4. Diagrama de Classes
+
+### 4.1 Finalidade
+
+O diagrama de classes modela a **estrutura estatica** do sistema orientado a objetos:
+
+- As **classes** que existem no sistema
+- Os **atributos** e **metodos** de cada classe
+- Os **relacionamentos** entre classes
+- As **restricoes** e **invariantes** do modelo
+
+E o diagrama mais utilizado para traduzir requisitos em design e o design em codigo. Um diagrama de classes bem construido mapeia diretamente para a estrutura de modulos, pacotes e arquivos do projeto.
+
+### 4.2 Anatomia de uma Classe
+
+**Arquivo:** [asset/diagrams/cls_elementos.puml](asset/diagrams/cls_elementos.puml)
 
 ```plantuml
-@startuml Relacionamentos
-skinparam classBackgroundColor #FEFCE8
-skinparam classArrowColor #333333
+@startuml cls_elementos_resumo
+title Estrutura de uma Classe
 
-class A {
+class ContaBancaria {
+    + agencia: String
+    - saldo: float
+    # limite: float
+    ~ codigoBanco: String
+    {static} taxaJuros: float
+    --
+    + depositar(valor: float): void
+    + sacar(valor: float): boolean
+    - validarSenha(s: String): boolean
+    {abstract} autenticar(): boolean
+    {static} obterTaxaAtual(): float
 }
 
-class B {
-}
-
-class C {
-}
-
-class D {
-}
-
-class E {
-}
-
-class F {
-}
-
-A "1" --> "*" B : Associação
-C "1" *-- "*" D : Composição (parte obrigatória)
-E "1" o-- "*" F : Agregação (parte opcional)
-
-note right of A
-  Associação simples:
-  A conhece B
+note right of ContaBancaria
+  COMPARTIMENTO 1: Nome da Classe
+  COMPARTIMENTO 2: Atributos
+  COMPARTIMENTO 3: Operacoes
+  
+  + publico   - privado
+  # protegido ~ pacote
+  
+  {static}   pertence a classe
+  {abstract} sem implementacao
 end note
-
-note right of C
-  Composição:
-  D não existe sem C
-  (forte dependência)
-end note
-
-note right of E
-  Agregação:
-  F pode existir sem E
-  (dependência fraca)
-end note
-
 @enduml
 ```
 
-#### 4. Herança (Generalização)
+#### 4.2.1 Compartimentos
+
+Uma classe e dividida em ate tres compartimentos separados por linhas horizontais:
+
+1. **Nome**: identificador da classe, em negrito, centralizado. Classes abstratas aparecem em italico ou com o estereotipo `<<abstract>>`
+2. **Atributos**: lista de atributos no formato `visibilidade nome : tipo [= valorPadrao]`
+3. **Operacoes**: lista de metodos no formato `visibilidade nome(parametros) : tipoRetorno`
+
+#### 4.2.2 Modificadores de Visibilidade
+
+| Simbolo | Nome | Acessivel por |
+|---|---|---|
+| `+` | Publico | Qualquer classe |
+| `-` | Privado | Apenas a propria classe |
+| `#` | Protegido | A classe e suas subclasses |
+| `~` | Pacote | Classes do mesmo pacote/modulo |
+
+#### 4.2.3 Modificadores de Escopo e Natureza
+
+| Notacao | Significado | Representacao visual |
+|---|---|---|
+| `{static}` | Pertence a classe, nao ao objeto | Texto sublinhado |
+| `{abstract}` | Sem implementacao na classe atual | Texto em italico |
+
+#### 4.2.4 Tipos de Dados
+
+Em UML, tipos sao independentes de linguagem. Use tipos descritivos:
+
+| UML | Python | Java |
+|---|---|---|
+| `String` | `str` | `String` |
+| `Integer` | `int` | `int` / `Integer` |
+| `Float` | `float` | `double` / `float` |
+| `Boolean` | `bool` | `boolean` |
+| `Date` | `datetime` | `LocalDate` |
+| `List<T>` | `list[T]` | `List<T>` |
+| `Map<K,V>` | `dict[K, V]` | `Map<K,V>` |
+
+---
+
+### 4.3 Multiplicidade
+
+A multiplicidade especifica **quantas instancias** de uma classe podem se associar a instancias de outra classe.
+
+| Notacao | Significado |
+|---|---|
+| `1` | Exatamente uma instancia |
+| `0..1` | Zero ou uma instancia (opcional) |
+| `*` ou `0..*` | Zero ou mais instancias |
+| `1..*` | Uma ou mais instancias |
+| `n` | Exatamente n instancias |
+| `m..n` | Entre m e n instancias |
+
+**Exemplo de leitura:**
+
+```
+Turma "1" *-- "0..*" Matricula
+```
+
+Leitura: Uma turma possui zero ou mais matriculas. Cada matricula pertence a exatamente uma turma.
+
+A multiplicidade e colocada nas **extremidades** da linha de relacionamento, proxima a cada classe participante.
+
+---
+
+### 4.4 Tipos de Relacionamento
+
+**Arquivo:** [asset/diagrams/cls_relacionamentos.puml](asset/diagrams/cls_relacionamentos.puml)
+
+Os sete tipos de relacionamento, em ordem crescente de acoplamento:
 
 ```plantuml
-@startuml Heranca
-skinparam classBackgroundColor #E8F4F8
-skinparam classArrowColor #333333
+@startuml cls_relacionamentos_resumo
+title Tipos de Relacionamento - Visao Geral
 
-class Animal {
-    - nome: String
-    - idade: int
-    --
-    + fazer_som(): void
-    + mover(): void
-}
+' 1. Dependencia
+class A1 <<GeradorRelatorio>>
+class B1 <<Conexao>>
+A1 ..> B1 : 1. Dependencia (usa)
 
-class Cachorro {
-    - raca: String
-    --
-    + buscar(): void
-}
+' 2. Associacao
+class A2 <<Medico>>
+class B2 <<Paciente>>
+A2 "0..*" -- "0..*" B2 : 2. Associacao
 
-class Gato {
-    - cor: String
-    --
-    + arranhar(): void
-}
+' 3. Associacao Dirigida
+class A3 <<Pedido>>
+class B3 <<Cliente>>
+A3 "0..*" --> "1" B3 : 3. Assoc. Dirigida
 
+' 4. Agregacao
+class A4 <<Departamento>>
+class B4 <<Funcionario>>
+A4 "1" o-- "0..*" B4 : 4. Agregacao
+
+' 5. Composicao
+class A5 <<NotaFiscal>>
+class B5 <<Item>>
+A5 "1" *-- "1..*" B5 : 5. Composicao
+
+' 6. Generalizacao
+class A6 <<Animal>>
+class B6 <<Cachorro>>
+A6 <|-- B6 : 6. Generalizacao
+
+' 7. Realizacao
+interface I1 <<Exportavel>>
+class C1 <<Relatorio>>
+I1 <|.. C1 : 7. Realizacao
+@enduml
+```
+
+#### 4.4.1 Dependencia (`A ..> B`)
+
+**Semantica:** A usa B de forma temporaria (como parametro, variavel local ou tipo de retorno). A mudanca na interface de B pode quebrar A.
+
+**Acoplamento:** o mais fraco.
+
+```
+GeradorRelatorio ..> Conexao : usa
+```
+
+#### 4.4.2 Associacao (`A -- B`)
+
+**Semantica:** A e B se conhecem mutuamente. Ambos mantem referencia um ao outro. O relacionamento e persistente (nao apenas temporario como a dependencia).
+
+**Acoplamento:** fraco a moderado.
+
+```
+Medico "0..*" -- "0..*" Paciente : atende
+```
+
+#### 4.4.3 Associacao Dirigida (`A --> B`)
+
+**Semantica:** A conhece e navega ate B, mas B nao tem referencia a A. A seta indica a direcao de navegacao.
+
+**Acoplamento:** moderado.
+
+```
+Pedido "0..*" --> "1" Cliente : pertence a
+```
+
+#### 4.4.4 Agregacao (`A o-- B`)
+
+**Semantica:** B e parte de A, mas pode existir de forma independente de A. Ciclos de vida **distintos**. Representada pelo diamante vazio na extremidade do todo.
+
+**Regra pratica:** se destruir A nao implica destruir B, use agregacao.
+
+```
+Departamento "1" o-- "0..*" Funcionario : emprega
+```
+
+Um funcionario pode ser transferido de departamento; existe antes e apos o departamento.
+
+#### 4.4.5 Composicao (`A *-- B`)
+
+**Semantica:** B e parte essencial de A e nao pode existir sem ele. Ciclos de vida **compartilhados**. Representada pelo diamante cheio na extremidade do todo.
+
+**Regra pratica:** se destruir A implica destruir B, use composicao.
+
+```
+NotaFiscal "1" *-- "1..*" ItemNF : contem
+```
+
+Um item de nota fiscal nao tem sentido fora da sua nota.
+
+#### 4.4.6 Generalizacao / Heranca (`SuperClasse <|-- SubClasse`)
+
+**Semantica:** SubClasse e um tipo especializado de SuperClasse. Herda todos os atributos e operacoes publicos e protegidos. Relacao "e um" (is-a).
+
+```
 Animal <|-- Cachorro
 Animal <|-- Gato
+```
 
-note right of Animal
-  Classe pai (superclasse)
-  Define características comuns
+O triangulo vazio aponta sempre para a **superclasse**.
+
+#### 4.4.7 Realizacao / Interface (`Interface <|.. Classe`)
+
+**Semantica:** Classe se compromete a implementar o contrato definido pela Interface. Todos os metodos abstratos da interface devem ser concretizados.
+
+```
+Exportavel <|.. Relatorio
+```
+
+A linha tracejada com triangulo vazio distingue a realizacao da heranca solida.
+
+#### 4.4.8 Tabela Comparativa
+
+| Tipo | Notacao | Destruir A destroi B? | B existe sem A? | Direcao |
+|---|---|---|---|---|
+| Dependencia | `..>` | N/A | N/A | Unidirecional |
+| Associacao | `--` | Nao | Sim | Bidirecional |
+| Assoc. Dirigida | `-->` | Nao | Sim | Unidirecional |
+| Agregacao | `o--` | Nao | Sim | Unidirecional |
+| Composicao | `*--` | Sim | Nao | Unidirecional |
+| Generalizacao | `<|--` | N/A | N/A | Superclasse <- Subclasse |
+| Realizacao | `<|..` | N/A | N/A | Interface <- Classe |
+
+---
+
+### 4.5 Classes Abstratas e Interfaces
+
+#### Classes Abstratas
+
+Uma **classe abstrata** define atributos e operacoes comuns que subclasses devem herdar, mas nao pode ser instanciada diretamente. Ela pode conter tanto metodos concretos (com implementacao) quanto metodos abstratos (sem implementacao).
+
+Em UML:
+- O nome aparece em _italico_
+- Metodos abstratos aparecem em _italico_
+- Estereotipo `<<abstract>>` pode ser adicionado ao compartimento do nome
+
+```python
+# Python correspondente
+from abc import ABC, abstractmethod
+
+class Usuario(ABC):
+    def __init__(self, nome: str):
+        self._nome = nome
+
+    @abstractmethod
+    def autenticar(self, senha: str) -> bool:
+        pass
+
+    def atualizar_perfil(self) -> None:
+        pass  # implementacao concreta herdada
+```
+
+#### Interfaces
+
+Uma **interface** e um contrato puro: define somente assinaturas de operacoes, sem nenhum atributo de instancia e sem implementacao. Em linguagens como Python (via `Protocol` ou `ABC`), Java e C#, interfaces garantem que classes nao relacionadas por heranca compartilhem o mesmo comportamento.
+
+Em UML:
+- Indicada pelo estereotipo `<<interface>>` no compartimento do nome
+- Todos os metodos sao implicitamente publicos e abstratos
+- Realizada por classes com a relacao `<|..`
+
+```python
+# Python: interface via ABC
+from abc import ABC, abstractmethod
+
+class Exportavel(ABC):
+    @abstractmethod
+    def exportar_csv(self) -> str:
+        pass
+
+    @abstractmethod
+    def exportar_json(self) -> str:
+        pass
+```
+
+---
+
+### 4.6 Estereotipos e Notas
+
+**Estereotipos** estendem a semantica de elementos UML para representar conceitos especificos do dominio ou da tecnologia:
+
+```
+<<entity>>     — classe que representa dado persistido
+<<boundary>>   — classe de interface com o usuario ou sistema externo
+<<control>>    — classe que orquestra logica de negocio
+<<service>>    — componente sem estado que presta servico
+<<repository>> — responsavel pelo acesso a dados
+```
+
+**Notas** sao comentarios anexados a elementos do diagrama. Usadas para:
+- Documentar restricoes que a notacao nao expressa
+- Adicionar informacoes de implementacao relevantes
+- Registrar decisoes de design
+
+```plantuml
+class Matricula {
+    - status: String
+}
+note right of Matricula
+  Valores validos de status:
+  "pendente", "confirmada",
+  "cancelada", "trancada"
 end note
+```
 
-note right of Cachorro
-  Classe filha (subclasse)
-  Herda de Animal
-  Adiciona características específicas
-end note
+---
 
+### 4.7 Boas Praticas no Diagrama de Classes
+
+**Design das classes:**
+- Cada classe deve ter uma **unica responsabilidade** (SRP — Single Responsibility Principle). Uma classe que faz logica de negocio, acesso a banco e formatacao de relatorio viola SRP
+- Atributos devem ser **privados** por padrao (`-`). Exponha apenas o necessario atraves de metodos
+- Prefira **composicao a heranca** quando a relacao nao for claramente "e um". Heranca cria acoplamento forte
+
+**Relacionamentos:**
+- Prefira **associacao dirigida** a associacao bidirecional. Dependencias unidirecionais sao mais faceis de manter e testar
+- Use **composicao** quando a existencia de B depender exclusivamente de A
+- Use **agregacao** quando B puder ter vida propria ou pertencer a varios A ao mesmo tempo
+- Evite dependencias circulares entre classes (A depende de B que depende de A)
+
+**Nomenclatura:**
+- Nomes de classes: substantivos no singular, `PascalCase` (`ContaBancaria`, nao `contas`)
+- Atributos: substantivos, `camelCase` (`dataMatricula`, nao `data_matricula` se seguir Java/UML padrao)
+- Metodos: verbos, `camelCase` (`calcularJuros()`, `obterSaldo()`)
+- Associacoes: verbos ou substantivos que descrevam o papel do relacionamento
+
+**Nivel de abstracao:**
+- O diagrama de classes e um modelo, nao uma listagem exaustiva do codigo. Omita detalhes de implementacao que nao contribuem para o entendimento da arquitetura
+- Inclua apenas atributos e metodos que sao relevantes para o relacionamento com outras classes ou para a compreensao do papel da classe no sistema
+
+---
+
+## 5. Exemplo Integrado: Sistema Academico
+
+### 5.1 Descricao do Dominio
+
+O sistema academico gerencia a vida escolar de alunos e docentes em uma instituicao de ensino. As entidades principais sao:
+
+- **Aluno**: discente com historico de frequencia, notas e matriculas
+- **Professor**: docente que ministra turmas, registra presencas e lanca notas
+- **Coordenador**: supervisiona a oferta de disciplinas e o desempenho coletivo
+- **Administrador**: gerencia usuarios, calendario e infraestrutura do sistema
+- **Turma**: instancia de uma disciplina em um periodo, com horario, sala e professor
+- **Disciplina**: definicao curricular de uma materia (ementa, carga horaria, creditos)
+- **Matricula**: vinculo entre aluno e turma em um periodo
+- **Nota**: registro avaliativo de um aluno em uma turma
+- **Trabalho**: entrega avaliativa submetida pelo aluno
+- **Plano de Ensino**: documento pedagogico associado a uma turma
+
+Este dominio e o mesmo implementado em [asset/code/chamada/](asset/code/chamada/), onde as classes `Aluno`, `Professor` e `Turma` formam o nucleo do sistema de controle de frequencia.
+
+---
+
+### 5.2 Diagrama de Caso de Uso
+
+**Arquivo:** [asset/diagrams/sistema_academico.puml](asset/diagrams/sistema_academico.puml)
+
+```plantuml
+@startuml sistema_academico
+title Sistema Academico - Diagrama de Casos de Uso
+left to right direction
+
+actor Aluno
+actor Professor
+actor Coordenador
+actor Administrador
+actor "Sistema de\nNotificacao" as SisNotif <<system>>
+
+rectangle "Sistema Academico" {
+    usecase "Realizar Matricula" as UC_Matricula
+    usecase "Consultar Ofertas" as UC_ConsultarOfertas
+    usecase "Cancelar Matricula" as UC_CancelarMatricula
+    usecase "Aprovar Cancelamento" as UC_AprovarCancelamento
+    usecase "Registrar Presenca" as UC_RegistrarPresenca
+    usecase "Consultar Notas" as UC_ConsultarNotas
+    usecase "Consultar Boletim" as UC_ConsultarBoletim
+    usecase "Enviar Trabalho" as UC_EnviarTrabalho
+    usecase "Visualizar Horario" as UC_VisualizarHorario
+    usecase "Lancar Notas" as UC_LancarNotas
+    usecase "Corrigir Trabalho" as UC_CorrigirTrabalho
+    usecase "Criar Plano de Ensino" as UC_CriarPlano
+    usecase "Gerar Pauta" as UC_GerarPauta
+    usecase "Gerenciar Ofertas" as UC_GerenciarOfertas
+    usecase "Gerar Relatorios" as UC_GerarRelatorios
+    usecase "Avaliar Desempenho" as UC_AvaliarDesempenho
+    usecase "Criar Usuarios" as UC_CriarUsuarios
+    usecase "Configurar Calendario" as UC_ConfigurarCalendario
+    usecase "Gerir Permissoes" as UC_GerirPermissoes
+    usecase "Fazer Backup" as UC_FazerBackup
+    usecase "Autenticar Usuario" as UC_Autenticar
+    usecase "Enviar Notificacao" as UC_EnviarNotificacao
+
+    UC_Matricula ..> UC_ConsultarOfertas : <<include>>
+    UC_Matricula ..> UC_Autenticar : <<include>>
+    UC_ConsultarBoletim ..> UC_ConsultarNotas : <<include>>
+    UC_GerarPauta ..> UC_LancarNotas : <<include>>
+    UC_LancarNotas ..> UC_EnviarNotificacao : <<include>>
+    UC_CorrigirTrabalho ..> UC_EnviarNotificacao : <<include>>
+
+    UC_CancelarMatricula ..> UC_AprovarCancelamento : <<extend>>
+}
+
+Aluno --> UC_Matricula
+Aluno --> UC_ConsultarOfertas
+Aluno --> UC_CancelarMatricula
+Aluno --> UC_ConsultarNotas
+Aluno --> UC_ConsultarBoletim
+Aluno --> UC_EnviarTrabalho
+Aluno --> UC_VisualizarHorario
+
+Professor --> UC_RegistrarPresenca
+Professor --> UC_LancarNotas
+Professor --> UC_CorrigirTrabalho
+Professor --> UC_CriarPlano
+Professor --> UC_GerarPauta
+
+Coordenador --> UC_GerenciarOfertas
+Coordenador --> UC_GerarRelatorios
+Coordenador --> UC_AprovarCancelamento
+Coordenador --> UC_AvaliarDesempenho
+
+Administrador --> UC_CriarUsuarios
+Administrador --> UC_ConfigurarCalendario
+Administrador --> UC_GerirPermissoes
+Administrador --> UC_FazerBackup
+
+UC_EnviarNotificacao --> SisNotif
 @enduml
 ```
 
-### Exemplo Completo: Sistema de Gerenciamento de Biblioteca
+**Analise do diagrama:**
+
+- `Autenticar Usuario` e incluido por `Realizar Matricula` pois toda matricula exige sessao valida. Poderia igualmente ser incluido por todos os casos de uso que requerem autenticacao
+- `Consultar Boletim` inclui `Consultar Notas` porque o boletim e uma visao agregada das notas; a logica de consulta de notas e reutilizada
+- `Cancelar Matricula` estende `Aprovar Cancelamento`: em alguns casos a regra de negocio exige aprovacao do coordenador; em outros, o cancelamento e direto
+- `Sistema de Notificacao` e um ator secundario (sistema externo): o sistema academico o aciona, nao o contrario
+
+---
+
+### 5.3 Diagrama de Classes
+
+**Arquivo:** [asset/diagrams/cls_sistema_academico.puml](asset/diagrams/cls_sistema_academico.puml)
 
 ```plantuml
-@startuml BibliotecaClasse
-skinparam classBackgroundColor #FFFACD
-skinparam classArrowColor #333333
+@startuml cls_sistema_academico
+title Sistema Academico - Diagrama de Classes
+skinparam classAttributeIconSize 0
 
-package "Sistema de Biblioteca" {
-
-    class Pessoa {
-        - cpf: String
+package "Usuarios" {
+    abstract class Usuario {
+        - id: int
         - nome: String
         - email: String
+        - senhaHash: String
+        - ativo: boolean
         --
-        + validar_email(): boolean
-        + atualizar_perfil(): void
+        + {abstract} autenticar(senha: String): boolean
+        + atualizarPerfil(): void
     }
 
-    class Leitor {
-        - id_leitor: int
-        - endereco: String
-        - telefone: String
+    class Aluno {
+        - matriculaAcademica: String
+        - presencas: List<String>
         --
-        + buscar_livro(): List<Livro>
-        + emprestar_livro(): void
-        + devolver_livro(): void
-        + renovar_emprestimo(): void
+        + adicionarPresenca(data: String): void
+        + consultarFrequencia(): String
+        + consultarBoletim(): List<Nota>
+        + enviarTrabalho(turma: Turma, arquivoPath: String): Trabalho
+        + autenticar(senha: String): boolean
     }
 
-    class Bibliotecario {
-        - id_funcionario: int
-        - departamento: String
+    class Professor {
+        - idProfessor: String
+        - titulacao: String
         --
-        + registrar_leitor(): void
-        + remover_leitor(): void
-        + gerar_relatorio(): void
-        + processar_devolvao(): void
+        + registrarPresenca(aluno: Aluno, turma: Turma, data: String): void
+        + lancarNota(aluno: Aluno, tipo: String, valor: float): Nota
+        + corrigirTrabalho(trabalho: Trabalho, nota: float): void
+        + criarPlanoEnsino(turma: Turma): PlanoEnsino
+        + gerarPauta(turma: Turma): List<Nota>
+        + autenticar(senha: String): boolean
     }
 
-    class Livro {
-        - isbn: String
+    class Coordenador {
+        - setor: String
+        --
+        + gerenciarOfertas(disciplina: Disciplina): Turma
+        + aprovarCancelamento(matricula: Matricula): void
+        + gerarRelatorio(): String
+        + autenticar(senha: String): boolean
+    }
+
+    class Administrador {
+        - nivelAcesso: int
+        --
+        + criarUsuario(dados: Map): Usuario
+        + configurarCalendario(calendario: Calendario): void
+        + gerirPermissoes(usuario: Usuario, permissao: String): void
+        + fazerBackup(): void
+        + autenticar(senha: String): boolean
+    }
+
+    Usuario <|-- Aluno
+    Usuario <|-- Professor
+    Usuario <|-- Coordenador
+    Usuario <|-- Administrador
+}
+
+package "Academico" {
+    class Disciplina {
+        - codigo: String
+        - nome: String
+        - ementa: String
+        - cargaHoraria: int
+        - creditos: int
+        --
+        + obterTurmas(): List<Turma>
+    }
+
+    class Turma {
+        - codigo: String
+        - periodo: String
+        - vagas: int
+        - horario: String
+        - sala: String
+        - alunos: List<Aluno>
+        --
+        + matricularAluno(aluno: Aluno): void
+        + removerAluno(aluno: Aluno): void
+        + atualizarProfessor(professor: Professor): void
+        + listarFrequencia(): String
+        + estaDisponivel(): boolean
+        + calcularMediaTurma(): float
+    }
+
+    class Matricula {
+        - dataMatricula: Date
+        - status: String
+        --
+        + cancelar(): void
+        + confirmar(): void
+    }
+
+    class Nota {
+        - tipo: String
+        - valor: float
+        - dataLancamento: Date
+        --
+        + validar(): boolean
+        + corrigir(novoValor: float): void
+    }
+
+    class Trabalho {
         - titulo: String
-        - autor: String
-        - ano_publicacao: int
-        - disponivel: boolean
+        - arquivoPath: String
+        - dataSubmissao: Date
+        - notaAtribuida: float
         --
-        + marcar_como_disponivel(): void
-        + marcar_como_indisponivel(): void
-        + obter_info(): String
+        + submeter(): void
+        + corrigir(nota: float, feedback: String): void
     }
 
-    class Emprestimo {
-        - id_emprestimo: int
-        - data_emprestimo: Date
-        - data_devolucao_prevista: Date
-        - data_devolucao_real: Date
-        - multa: float
+    class PlanoEnsino {
+        - objetivos: String
+        - metodologia: String
+        - cronograma: String
+        - bibliografia: String
         --
-        + calcular_multa(): float
-        + renovar(): void
-        + finalizar(): void
+        + publicar(): void
+        + atualizar(): void
+    }
+}
+
+package "Suporte" {
+    class Calendario {
+        - anoLetivo: int
+        - inicioSemestre: Date
+        - fimSemestre: Date
+        - inicioMatriculas: Date
+        - fimMatriculas: Date
+        --
+        + matriculasAbertas(): boolean
+        + periodoAtivo(): boolean
     }
 
-    class Exemplar {
-        - numero_exemplar: int
-        - condicao: String
-        - localizacao: String
+    class Notificacao {
+        - tipo: String
+        - titulo: String
+        - mensagem: String
+        - dataEnvio: Date
+        - lida: boolean
         --
-        + verificar_condicao(): String
-        + atualizar_localizacao(): void
+        + marcarComoLida(): void
+        + enviar(): void
     }
-
-    ' Relacionamentos
-    Pessoa <|-- Leitor
-    Pessoa <|-- Bibliotecario
-    
-    Leitor "1" -- "*" Emprestimo : realiza
-    Livro "1" -- "*" Exemplar : contém
-    Exemplar "1" -- "*" Emprestimo : sobre
-    Bibliotecario "1" -- "*" Leitor : gerencia
-    
-    note right of Pessoa
-        Classe abstrata
-        Define atributos comuns
-    end note
-
-    note on link
-        Um leitor pode fazer
-        vários empréstimos
-    end note
 }
 
-@enduml
-```
-
-### Análise da Estrutura
-
-**O que este diagrama nos mostra:**
-
-1. **Herança**: Leitor e Bibliotecário herdam de Pessoa
-2. **Associações**:
-   - Leitor realiza múltiplos Empréstimos (1 para *)
-   - Livro contém múltiplos Exemplares (1 para *)
-   - Exemplar participa de múltiplos Empréstimos (1 para *)
-3. **Responsabilidades**:
-   - Pessoa: dados pessoais
-   - Leitor: buscar e emprestar livros
-   - Livro: informações bibliográficas
-   - Exemplar: dados físicos do livro
-   - Empréstimo: controle de datas e multas
-
----
-
-## 3️⃣ Exemplo Integrado: Sistema de Rede Social
-
-### Diagrama de Caso de Uso
-
-```plantuml
-@startuml RedesSocialCasoUso
-left to right direction
-skinparam packageStyle rectangle
-
-actor "Usuário" as User
-actor "Administrador" as Admin
-
-rectangle "Sistema de Rede Social" {
-    usecase "Criar Conta" as UC1
-    usecase "Fazer Login" as UC2
-    usecase "Fazer Logout" as UC3
-    usecase "Criar Postagem" as UC4
-    usecase "Comentar Postagem" as UC5
-    usecase "Curtir Postagem" as UC6
-    usecase "Seguir Usuário" as UC7
-    usecase "Bloquear Usuário" as UC8
-    usecase "Validar Email" as UC9
-    usecase "Enviar Notificação" as UC10
-    usecase "Suspender Conta" as UC11
-    usecase "Visualizar Feed" as UC12
-    
-    UC1 ..> UC9 : <<include>>
-    UC4 ..> UC10 : <<include>>
-    UC5 ..> UC10 : <<include>>
-    UC6 ..> UC10 : <<include>>
-    UC4 --> UC5 : <<extend>>
-    UC11 --> UC3 : <<extend>>
-}
-
-User --> UC1
-User --> UC2
-User --> UC3
-User --> UC4
-User --> UC5
-User --> UC6
-User --> UC7
-User --> UC8
-User --> UC12
-
-Admin --> UC11
-
-@enduml
-```
-
-### Diagrama de Classes
-
-```plantuml
-@startuml RedesSocialClasse
-skinparam classBackgroundColor #F0F8FF
-skinparam classArrowColor #333333
-
-class Usuario {
-    - id_usuario: int
-    - username: String
-    - email: String
-    - senha: String
-    - data_criacao: Date
-    - ativo: boolean
-    --
-    + criar_conta(): void
-    + fazer_login(): boolean
-    + fazer_logout(): void
-    + atualizar_perfil(): void
-    + bloquear_usuario(): void
-    + obter_seguidores(): List<Usuario>
-}
-
-class Postagem {
-    - id_postagem: int
-    - conteudo: String
-    - data_criacao: Date
-    - quantidade_curtidas: int
-    - deletada: boolean
-    --
-    + editar(): void
-    + deletar(): void
-    + obter_comentarios(): List<Comentario>
-    + contar_curtidas(): int
-}
-
-class Comentario {
-    - id_comentario: int
-    - conteudo: String
-    - data_criacao: Date
-    - deletado: boolean
-    --
-    + editar(): void
-    + deletar(): void
-    + obter_resposta(): List<Comentario>
-}
-
-class Curtida {
-    - id_curtida: int
-    - data_criacao: Date
-    - tipo: String
-    --
-    + remover_curtida(): void
-}
-
-class Notificacao {
-    - id_notificacao: int
-    - tipo: String
-    - mensagem: String
-    - lida: boolean
-    - data_criacao: Date
-    --
-    + marcar_como_lida(): void
-    + deletar(): void
-}
-
-' Relacionamentos
-Usuario "1" -- "*" Postagem : cria
-Usuario "1" -- "*" Comentario : escreve
-Usuario "1" -- "*" Curtida : da
-Usuario "1" -- "*" Notificacao : recebe
-
-Postagem "1" -- "*" Comentario : contém
-Postagem "1" -- "*" Curtida : recebe
-Comentario "1" -- "*" Curtida : recebe
-
-Usuario "*" -- "*" Usuario : segue
-
-note right of Usuario
-    Relacionamento reflexivo:
-    Um usuário segue 
-    múltiplos usuários
-end note
-
+Disciplina "1" *-- "0..*" Turma : origina
+Professor "1" --> "0..*" Turma : leciona
+Coordenador "1" --> "0..*" Turma : supervisiona
+Turma "1" *-- "0..*" Matricula : registra
+Aluno "1" --> "0..*" Matricula : realiza
+Turma "1" --> "0..*" Nota : possui
+Aluno "1" --> "0..*" Nota : recebe
+Professor "1" --> "0..*" Nota : lanca
+Turma "1" *-- "0..*" Trabalho : recebe
+Aluno "1" --> "0..*" Trabalho : submete
+Turma "1" *-- "1" PlanoEnsino : possui
+Usuario "1" o-- "0..*" Notificacao : recebe
 @enduml
 ```
 
 ---
 
-## 4️⃣ Padrões e Boas Práticas
+### 5.4 Rastreabilidade: Casos de Uso para Classes
 
-### ✅ Princípios para Bom Design OOP
+A tabela abaixo mapeia os casos de uso do diagrama para as classes responsaveis por sua realizacao:
 
-| Princípio | Descrição | Exemplo |
-|-----------|-----------|---------|
-| **SRP** (Single Responsibility) | Cada classe tem UMA responsabilidade | `Pagamento` não deve enviar email |
-| **OCP** (Open/Closed) | Aberta para extensão, fechada para modificação | Usar herança ao invés de grandes `if/else` |
-| **LSP** (Liskov Substitution) | Subclasses devem substituir superclasses | `Gato` deve funcionar onde `Animal` é esperado |
-| **ISP** (Interface Segregation) | Muitas interfaces específicas | `Voador` separado de `Animal` |
-| **DIP** (Dependency Inversion) | Depender de abstrações, não implementações | Usar `Animal` ao invés de `Cachorro` específico |
+| Caso de Uso | Classe Orquestradora | Classes Colaboradoras |
+|---|---|---|
+| Realizar Matricula | `Aluno` | `Turma`, `Matricula`, `Calendario` |
+| Consultar Boletim | `Aluno` | `Nota`, `Turma` |
+| Registrar Presenca | `Professor` | `Aluno`, `Turma` |
+| Lancar Notas | `Professor` | `Nota`, `Turma`, `Notificacao` |
+| Corrigir Trabalho | `Professor` | `Trabalho`, `Notificacao` |
+| Criar Plano de Ensino | `Professor` | `PlanoEnsino`, `Turma` |
+| Gerar Pauta | `Professor` | `Nota`, `Turma` |
+| Gerenciar Ofertas | `Coordenador` | `Disciplina`, `Turma` |
+| Aprovar Cancelamento | `Coordenador` | `Matricula` |
+| Configurar Calendario | `Administrador` | `Calendario` |
 
-### ❌ Erros Comuns
+**Analise dos relacionamentos:**
 
-Um diagrama de classe pode violar princípios SOLID:
-
-**Erro: Responsabilidades Múltiplas**
-
-```plantuml
-@startuml ErroResponsabilidades
-skinparam classBackgroundColor #FFE4E1
-
-class Veiculo {
-    - velocidade: float
-    - combustivel: float
-    - passageiros: int
-    --
-    + acelerar(): void
-    + frear(): void
-    + abrir_porta(): void
-    + ligar_radio(): void
-    + pagar_seguro(): void
-    + fazer_manutencao(): void
-    + registrar_multa(): void
-}
-
-note right of Veiculo
-    ❌ ERRADO: Classe faz TUDO!
-    - Movimentação
-    - Entretenimento  
-    - Seguros
-    - Manutenção
-    - Gestão legal
-end note
-
-@enduml
-```
-
-**Solução: Separar Responsabilidades**
-
-```plantuml
-@startuml CorrecaoResponsabilidades
-skinparam classBackgroundColor #E8F5E9
-
-class Veiculo {
-    - velocidade: float
-    --
-    + acelerar(): void
-    + frear(): void
-}
-
-class RadioEntretenimento {
-    --
-    + ligar_radio(): void
-    + mudar_estacao(): void
-}
-
-class SistemaSeguro {
-    --
-    + calcular_premio(): float
-    + cobrar_seguro(): void
-}
-
-class OficinaMecanica {
-    --
-    + fazer_manutencao(): void
-    + diagnosticar(): void
-}
-
-Veiculo "1" -- "*" RadioEntretenimento
-Veiculo "1" -- "*" SistemaSeguro
-Veiculo "1" -- "*" OficinaMecanica
-
-note right of Veiculo
-    ✅ CORRETO: Cada classe
-    tem UMA responsabilidade
-end note
-
-@enduml
-```
+- A composicao `Disciplina *-- Turma` reflete a regra de negocio: uma turma nao existe sem estar associada a uma disciplina curricular
+- A composicao `Turma *-- Matricula` expressa que uma matricula perde sentido sem a turma a qual se refere; ao encerrar ou cancelar uma turma, as matriculas associadas sao igualmente afetadas
+- A agregacao `Usuario o-- Notificacao` e intencional: notificacoes podem ser arquivadas e consultadas mesmo que o usuario mude de papel no sistema; o ciclo de vida nao e estritamente dependente
 
 ---
 
-## 5️⃣ Exercícios Práticos
+## 6. Referencias
 
-### 🎯 Exercício 1: Sistema de Banco
+### Especificacoes e Padroes
 
-Modele um sistema bancário com os seguintes requisitos:
-
-**Atores:**
-- Clientes
-- Caixas (funcionários)
-- Gerente
-- Sistema Externo (BCB - Banco Central)
-
-**Casos de Uso:**
-- Criar Conta
-- Depositar
-- Sacar
-- Transferir
-- Consultar Saldo
-- Solicitar Empréstimo
-- Pagar Fatura
-
-**Classes:**
-- Pessoa
-- Cliente
-- Funcionario
-- ContaBancaria
-- Transacao
-- Emprestimo
-
-**Desafio:** Crie o diagrama de caso de uso e o diagrama de classes com todos os relacionamentos apropriados.
-
----
-
-### 🎯 Exercício 2: Sistema de E-commerce
-
-Analise um e-commerce real (Mercado Livre, Amazon) e modele:
-
-1. **Diagrama de Caso de Uso** com:
-   - Cliente normal
-   - Vendedor
-   - Administrador
-   - Mínimo 10 casos de uso
-
-2. **Diagrama de Classes** com:
-   - Produto
-   - Pedido
-   - ItemPedido
-   - Cliente
-   - Carrinho
-   - Avaliação
-   - Pagamento
-   - Entrega
-
----
-
-### 🎯 Exercício 3: Refatoração de Design
-
-Dado este diagrama **problemático**, identifique violações de SOLID e refatore:
-
-```plantuml
-@startuml ExercicioRefatoracao
-skinparam classBackgroundColor #FFE4E1
-
-class Funcionario {
-    - id: int
-    - nome: String
-    --
-    + lidar_com_vendas(): void
-    + processar_boleto(): void
-    + fazer_relatorio(): void
-    + limpar_chao(): void
-    + consertar_impressora(): void
-    + responder_email(): void
-    + gerir_estoq(): void
-}
-
-@enduml
-```
-
-**Questões:**
-1. Quantas responsabilidades esta classe tem?
-2. Qual princípio SOLID está sendo violado?
-3. Refatore dividindo em múltiplas classes apropriadas
-
----
-
-## 📖 Referências e Leitura Complementar
+- OMG UML Specification 2.5.1: https://www.omg.org/spec/UML/
+- ISO/IEC 19505-1:2012 — Information technology: Object Management Group UML
 
 ### Livros
-- **"UML Destilado"** - Martin Fowler
-- **"Notação e Modelagem de Processos"** - Freund & Rücker
-- **"Clean Architecture"** - Robert C. Martin
-- **"Design Patterns"** - Gang of Four
 
-### Ferramentas Online
-- [PlantUML Editor](http://www.plantuml.com/plantuml/uml/)
-- [Lucidchart](https://www.lucidchart.com)
-- [Draw.io](https://www.draw.io)
-- [StarUML](http://staruml.io/)
+- FOWLER, Martin. **UML Essencial** (UML Distilled). 3. ed. Addison-Wesley, 2004.
+- JACOBSON, Ivar; BOOCH, Grady; RUMBAUGH, James. **The Unified Software Development Process**. Addison-Wesley, 1999.
+- LARMAN, Craig. **Utilizando UML e Padroes**. 3. ed. Bookman, 2007.
+- MARTIN, Robert C. **Clean Architecture**. Prentice Hall, 2017.
 
-### Documentação Oficial
-- [OMG UML Specification](https://www.omg.org/spec/UML/)
-- [PlantUML Documentation](https://plantuml.com)
+### Ferramentas
 
----
+- PlantUML: https://plantuml.com
+- Draw.io: https://www.drawio.com
+- StarUML: https://staruml.io
 
-## 🔑 Resumo dos Conceitos
+### Arquivos de Diagrama (este repositorio)
 
-| Conceito | Definição | Quando Usar |
-|----------|-----------|-----------|
-| **Caso de Uso** | Descrição de interação entre ator e sistema | Levantamento de requisitos |
-| **Classe** | Molde para objetos com atributos e métodos | Design de software |
-| **Herança** | Relação "é um" entre classes | Compartilhar código comum |
-| **Agregação** | Relação "tem um" (fraca) | Composição opcional |
-| **Composição** | Relação "parte de" (forte) | Dependência obrigatória |
-| **Interface** | Contrato sem implementação | Define comportamento esperado |
-| **Polimorfismo** | Mesmo método, múltiplas implementações | Flexibilidade e extensibilidade |
-
----
-
-## 📝 Conclusão
-
-A modelagem com UML é fundamental para:
-
-✅ **Comunicação**: Visualizar ideias antes de codificar  
-✅ **Documentação**: Registrar decisões de design  
-✅ **Qualidade**: Identificar falhas no design cedo  
-✅ **Reutilização**: Padrões e arquitetura claros  
-✅ **Manutenção**: Sistema compreensível e evolutivo  
-
-> "Um diagrama bem feito poupa mil linhas de código"
-
----
-
-**Autoria:** Prof. Claudio  
-**Disciplina:** Engenharia de Software / Programação Orientada a Objetos  
-**Instituto:** IFB - Campus Valparaíso de Goiás  
-**Licença:** CC BY-NC-SA 4.0
+| Arquivo | Conteudo |
+|---|---|
+| [asset/diagrams/uc_elementos.puml](asset/diagrams/uc_elementos.puml) | Referencia de notacao do diagrama de caso de uso |
+| [asset/diagrams/sistema_academico.puml](asset/diagrams/sistema_academico.puml) | Diagrama de caso de uso do sistema academico |
+| [asset/diagrams/cls_elementos.puml](asset/diagrams/cls_elementos.puml) | Referencia de notacao do diagrama de classes |
+| [asset/diagrams/cls_relacionamentos.puml](asset/diagrams/cls_relacionamentos.puml) | Catalogo de todos os tipos de relacionamento |
+| [asset/diagrams/cls_sistema_academico.puml](asset/diagrams/cls_sistema_academico.puml) | Diagrama de classes do sistema academico |
+| [asset/code/chamada/](asset/code/chamada/) | Implementacao Python das classes Aluno, Professor e Turma |
