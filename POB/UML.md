@@ -97,51 +97,7 @@ O diagrama de caso de uso **nao descreve** como o sistema funciona internamente.
 
 **Arquivo:** [asset/diagrams/uc_elementos.puml](asset/diagrams/uc_elementos.puml)
 
-```plantuml
-@startuml uc_elementos
-title Diagrama de Caso de Uso - Referencia de Notacao
-left to right direction
-
-actor "Ator Primario" as AP
-actor "Ator Secundario\n(Sistema Externo)" as AS
-actor "Ator Especializado" as AE
-
-rectangle "Fronteira do Sistema (System Boundary)" {
-    usecase "Caso de Uso A" as UCA
-    usecase "Comportamento\nObrigatorio (B)" as UCB
-    usecase "Comportamento\nOpcional (C)" as UCC
-    usecase "Caso de Uso\nBase (D)" as UCBase
-    usecase "Caso de Uso\nEspecializado (E)" as UCEsp
-}
-
-AP --> UCA
-UCB --> AS
-UCA ..> UCB : <<include>>
-UCA ..> UCC : <<extend>>
-AE --|> AP
-UCBase <|-- UCEsp
-
-note bottom of UCB
-  <<include>>
-  Comportamento reutilizavel
-  e obrigatorio. UCA nao
-  se completa sem UCB.
-end note
-
-note bottom of UCC
-  <<extend>>
-  Comportamento condicional
-  e opcional. UCA funciona
-  mesmo sem acionar UCC.
-end note
-
-note bottom of UCEsp
-  Generalizacao:
-  UCEsp herda e pode
-  sobrescrever UCBase.
-end note
-@enduml
-```
+![Diagrama de Caso de Uso - Referencia de Notacao](asset/img/diagrams/uc_elementos.png)
 
 #### Resumo dos Elementos
 
@@ -313,37 +269,7 @@ E o diagrama mais utilizado para traduzir requisitos em design e o design em cod
 
 **Arquivo:** [asset/diagrams/cls_elementos.puml](asset/diagrams/cls_elementos.puml)
 
-```plantuml
-@startuml cls_elementos_resumo
-title Estrutura de uma Classe
-
-class ContaBancaria {
-    + agencia: String
-    - saldo: float
-    # limite: float
-    ~ codigoBanco: String
-    {static} taxaJuros: float
-    --
-    + depositar(valor: float): void
-    + sacar(valor: float): boolean
-    - validarSenha(s: String): boolean
-    {abstract} autenticar(): boolean
-    {static} obterTaxaAtual(): float
-}
-
-note right of ContaBancaria
-  COMPARTIMENTO 1: Nome da Classe
-  COMPARTIMENTO 2: Atributos
-  COMPARTIMENTO 3: Operacoes
-  
-  + publico   - privado
-  # protegido ~ pacote
-  
-  {static}   pertence a classe
-  {abstract} sem implementacao
-end note
-@enduml
-```
+![Estrutura de uma Classe](asset/img/diagrams/cls_elementos_resumo.png)
 
 #### 4.2.1 Compartimentos
 
@@ -416,46 +342,7 @@ A multiplicidade e colocada nas **extremidades** da linha de relacionamento, pro
 
 Os sete tipos de relacionamento, em ordem crescente de acoplamento:
 
-```plantuml
-@startuml cls_relacionamentos_resumo
-title Tipos de Relacionamento - Visao Geral
-
-' 1. Dependencia
-class A1 <<GeradorRelatorio>>
-class B1 <<Conexao>>
-A1 ..> B1 : 1. Dependencia (usa)
-
-' 2. Associacao
-class A2 <<Medico>>
-class B2 <<Paciente>>
-A2 "0..*" -- "0..*" B2 : 2. Associacao
-
-' 3. Associacao Dirigida
-class A3 <<Pedido>>
-class B3 <<Cliente>>
-A3 "0..*" --> "1" B3 : 3. Assoc. Dirigida
-
-' 4. Agregacao
-class A4 <<Departamento>>
-class B4 <<Funcionario>>
-A4 "1" o-- "0..*" B4 : 4. Agregacao
-
-' 5. Composicao
-class A5 <<NotaFiscal>>
-class B5 <<Item>>
-A5 "1" *-- "1..*" B5 : 5. Composicao
-
-' 6. Generalizacao
-class A6 <<Animal>>
-class B6 <<Cachorro>>
-A6 <|-- B6 : 6. Generalizacao
-
-' 7. Realizacao
-interface I1 <<Exportavel>>
-class C1 <<Relatorio>>
-I1 <|.. C1 : 7. Realizacao
-@enduml
-```
+![Tipos de Relacionamento - Visao Geral](asset/img/diagrams/cls_relacionamentos_resumo.png)
 
 #### 4.4.1 Dependencia (`A ..> B`)
 
@@ -615,16 +502,7 @@ class Exportavel(ABC):
 - Adicionar informacoes de implementacao relevantes
 - Registrar decisoes de design
 
-```plantuml
-class Matricula {
-    - status: String
-}
-note right of Matricula
-  Valores validos de status:
-  "pendente", "confirmada",
-  "cancelada", "trancada"
-end note
-```
+![Exemplo de Nota em Classe](asset/img/diagrams/cls_nota_exemplo.png)
 
 ---
 
@@ -678,78 +556,7 @@ Este dominio e o mesmo implementado em [asset/code/chamada/](asset/code/chamada/
 
 **Arquivo:** [asset/diagrams/sistema_academico.puml](asset/diagrams/sistema_academico.puml)
 
-```plantuml
-@startuml sistema_academico
-title Sistema Academico - Diagrama de Casos de Uso
-left to right direction
-
-actor Aluno
-actor Professor
-actor Coordenador
-actor Administrador
-actor "Sistema de\nNotificacao" as SisNotif <<system>>
-
-rectangle "Sistema Academico" {
-    usecase "Realizar Matricula" as UC_Matricula
-    usecase "Consultar Ofertas" as UC_ConsultarOfertas
-    usecase "Cancelar Matricula" as UC_CancelarMatricula
-    usecase "Aprovar Cancelamento" as UC_AprovarCancelamento
-    usecase "Registrar Presenca" as UC_RegistrarPresenca
-    usecase "Consultar Notas" as UC_ConsultarNotas
-    usecase "Consultar Boletim" as UC_ConsultarBoletim
-    usecase "Enviar Trabalho" as UC_EnviarTrabalho
-    usecase "Visualizar Horario" as UC_VisualizarHorario
-    usecase "Lancar Notas" as UC_LancarNotas
-    usecase "Corrigir Trabalho" as UC_CorrigirTrabalho
-    usecase "Criar Plano de Ensino" as UC_CriarPlano
-    usecase "Gerar Pauta" as UC_GerarPauta
-    usecase "Gerenciar Ofertas" as UC_GerenciarOfertas
-    usecase "Gerar Relatorios" as UC_GerarRelatorios
-    usecase "Avaliar Desempenho" as UC_AvaliarDesempenho
-    usecase "Criar Usuarios" as UC_CriarUsuarios
-    usecase "Configurar Calendario" as UC_ConfigurarCalendario
-    usecase "Gerir Permissoes" as UC_GerirPermissoes
-    usecase "Fazer Backup" as UC_FazerBackup
-    usecase "Autenticar Usuario" as UC_Autenticar
-    usecase "Enviar Notificacao" as UC_EnviarNotificacao
-
-    UC_Matricula ..> UC_ConsultarOfertas : <<include>>
-    UC_Matricula ..> UC_Autenticar : <<include>>
-    UC_ConsultarBoletim ..> UC_ConsultarNotas : <<include>>
-    UC_GerarPauta ..> UC_LancarNotas : <<include>>
-    UC_LancarNotas ..> UC_EnviarNotificacao : <<include>>
-    UC_CorrigirTrabalho ..> UC_EnviarNotificacao : <<include>>
-
-    UC_CancelarMatricula ..> UC_AprovarCancelamento : <<extend>>
-}
-
-Aluno --> UC_Matricula
-Aluno --> UC_ConsultarOfertas
-Aluno --> UC_CancelarMatricula
-Aluno --> UC_ConsultarNotas
-Aluno --> UC_ConsultarBoletim
-Aluno --> UC_EnviarTrabalho
-Aluno --> UC_VisualizarHorario
-
-Professor --> UC_RegistrarPresenca
-Professor --> UC_LancarNotas
-Professor --> UC_CorrigirTrabalho
-Professor --> UC_CriarPlano
-Professor --> UC_GerarPauta
-
-Coordenador --> UC_GerenciarOfertas
-Coordenador --> UC_GerarRelatorios
-Coordenador --> UC_AprovarCancelamento
-Coordenador --> UC_AvaliarDesempenho
-
-Administrador --> UC_CriarUsuarios
-Administrador --> UC_ConfigurarCalendario
-Administrador --> UC_GerirPermissoes
-Administrador --> UC_FazerBackup
-
-UC_EnviarNotificacao --> SisNotif
-@enduml
-```
+![Sistema Academico - Diagrama de Casos de Uso](asset/img/diagrams/sistema_academico.png)
 
 **Analise do diagrama:**
 
@@ -764,174 +571,7 @@ UC_EnviarNotificacao --> SisNotif
 
 **Arquivo:** [asset/diagrams/cls_sistema_academico.puml](asset/diagrams/cls_sistema_academico.puml)
 
-```plantuml
-@startuml cls_sistema_academico
-title Sistema Academico - Diagrama de Classes
-skinparam classAttributeIconSize 0
-
-package "Usuarios" {
-    abstract class Usuario {
-        - id: int
-        - nome: String
-        - email: String
-        - senhaHash: String
-        - ativo: boolean
-        --
-        + {abstract} autenticar(senha: String): boolean
-        + atualizarPerfil(): void
-    }
-
-    class Aluno {
-        - matriculaAcademica: String
-        - presencas: List<String>
-        --
-        + adicionarPresenca(data: String): void
-        + consultarFrequencia(): String
-        + consultarBoletim(): List<Nota>
-        + enviarTrabalho(turma: Turma, arquivoPath: String): Trabalho
-        + autenticar(senha: String): boolean
-    }
-
-    class Professor {
-        - idProfessor: String
-        - titulacao: String
-        --
-        + registrarPresenca(aluno: Aluno, turma: Turma, data: String): void
-        + lancarNota(aluno: Aluno, tipo: String, valor: float): Nota
-        + corrigirTrabalho(trabalho: Trabalho, nota: float): void
-        + criarPlanoEnsino(turma: Turma): PlanoEnsino
-        + gerarPauta(turma: Turma): List<Nota>
-        + autenticar(senha: String): boolean
-    }
-
-    class Coordenador {
-        - setor: String
-        --
-        + gerenciarOfertas(disciplina: Disciplina): Turma
-        + aprovarCancelamento(matricula: Matricula): void
-        + gerarRelatorio(): String
-        + autenticar(senha: String): boolean
-    }
-
-    class Administrador {
-        - nivelAcesso: int
-        --
-        + criarUsuario(dados: Map): Usuario
-        + configurarCalendario(calendario: Calendario): void
-        + gerirPermissoes(usuario: Usuario, permissao: String): void
-        + fazerBackup(): void
-        + autenticar(senha: String): boolean
-    }
-
-    Usuario <|-- Aluno
-    Usuario <|-- Professor
-    Usuario <|-- Coordenador
-    Usuario <|-- Administrador
-}
-
-package "Academico" {
-    class Disciplina {
-        - codigo: String
-        - nome: String
-        - ementa: String
-        - cargaHoraria: int
-        - creditos: int
-        --
-        + obterTurmas(): List<Turma>
-    }
-
-    class Turma {
-        - codigo: String
-        - periodo: String
-        - vagas: int
-        - horario: String
-        - sala: String
-        - alunos: List<Aluno>
-        --
-        + matricularAluno(aluno: Aluno): void
-        + removerAluno(aluno: Aluno): void
-        + atualizarProfessor(professor: Professor): void
-        + listarFrequencia(): String
-        + estaDisponivel(): boolean
-        + calcularMediaTurma(): float
-    }
-
-    class Matricula {
-        - dataMatricula: Date
-        - status: String
-        --
-        + cancelar(): void
-        + confirmar(): void
-    }
-
-    class Nota {
-        - tipo: String
-        - valor: float
-        - dataLancamento: Date
-        --
-        + validar(): boolean
-        + corrigir(novoValor: float): void
-    }
-
-    class Trabalho {
-        - titulo: String
-        - arquivoPath: String
-        - dataSubmissao: Date
-        - notaAtribuida: float
-        --
-        + submeter(): void
-        + corrigir(nota: float, feedback: String): void
-    }
-
-    class PlanoEnsino {
-        - objetivos: String
-        - metodologia: String
-        - cronograma: String
-        - bibliografia: String
-        --
-        + publicar(): void
-        + atualizar(): void
-    }
-}
-
-package "Suporte" {
-    class Calendario {
-        - anoLetivo: int
-        - inicioSemestre: Date
-        - fimSemestre: Date
-        - inicioMatriculas: Date
-        - fimMatriculas: Date
-        --
-        + matriculasAbertas(): boolean
-        + periodoAtivo(): boolean
-    }
-
-    class Notificacao {
-        - tipo: String
-        - titulo: String
-        - mensagem: String
-        - dataEnvio: Date
-        - lida: boolean
-        --
-        + marcarComoLida(): void
-        + enviar(): void
-    }
-}
-
-Disciplina "1" *-- "0..*" Turma : origina
-Professor "1" --> "0..*" Turma : leciona
-Coordenador "1" --> "0..*" Turma : supervisiona
-Turma "1" *-- "0..*" Matricula : registra
-Aluno "1" --> "0..*" Matricula : realiza
-Turma "1" --> "0..*" Nota : possui
-Aluno "1" --> "0..*" Nota : recebe
-Professor "1" --> "0..*" Nota : lanca
-Turma "1" *-- "0..*" Trabalho : recebe
-Aluno "1" --> "0..*" Trabalho : submete
-Turma "1" *-- "1" PlanoEnsino : possui
-Usuario "1" o-- "0..*" Notificacao : recebe
-@enduml
-```
+![Sistema Academico - Diagrama de Classes](asset/img/diagrams/cls_sistema_academico.png)
 
 ---
 
