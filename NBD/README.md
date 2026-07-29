@@ -38,7 +38,7 @@
 - **Vantagens Detalhadas**:
   - **Eficiência**: Reduz duplicação (redundância), evitando inconsistências (ex.: mesmo endereço de cliente armazenado em múltiplos lugares).
   - **Compartilhamento**: Suporta acesso concorrente por múltiplos usuários ou aplicações.
-  - **Integridade**: Enforces regras, como validação de dados (ex.: idade deve ser positiva).
+  - **Integridade**: Impõe regras, como validação de dados (ex.: idade deve ser positiva).
   - **Escalabilidade**: Pode crescer de megabytes para petabytes.
 
 - **Desvantagens e Desafios**:
@@ -79,17 +79,32 @@ Um DBMS é o software intermediário entre o usuário (ou aplicação) e os dado
 
 Modelos de dados são abstrações que definem como dados são representados, armazenados e manipulados. Eles evoluíram para atender necessidades variadas, de rigidez a flexibilidade.
 
-- **Modelo Hierárquico**: Dados em estrutura de árvore, com um pai e múltiplos filhos. Ex.: Sistema de arquivos (pastas e subpastas). Vantagens: Navegação rápida em hierarquias; Desvantagens: Dificuldade em relações muitos-para-muitos, requer duplicação para múltiplos pais. Usado em mainframes antigos.
+- **Modelo Hierárquico**: Organiza os dados como uma árvore, em que cada registro tem um único "pai" e pode ter vários "filhos".
+  - *Exemplo*: um sistema de arquivos, onde cada pasta tem subpastas.
+  - *Vantagem*: navegação muito rápida quando a relação já é naturalmente hierárquica.
+  - *Desvantagem*: relações muitos-para-muitos são difíceis de representar — um registro com dois "pais" obriga a duplicar o dado. Foi muito usado em mainframes antigos e caiu em desuso.
 
-- **Modelo em Rede**: Permite múltiplos pais e filhos, formando uma rede. Baseado no padrão CODASYL. Ex.: Um funcionário reportando a múltiplos gerentes. Vantagens: Mais flexível que hierárquico; Desvantagens: Complexo de navegar e manter, com pointers manuais.
+- **Modelo em Rede**: Evolução do hierárquico — um registro pode ter múltiplos pais e múltiplos filhos, formando uma rede em vez de uma árvore. Baseado no padrão CODASYL.
+  - *Exemplo*: um funcionário que reporta a dois gerentes ao mesmo tempo.
+  - *Vantagem*: mais flexível que o hierárquico.
+  - *Desvantagem*: navegar pela rede exige seguir "ponteiros" manuais entre registros — complexo de programar e manter.
 
-- **Modelo Relacional**: Dados em tabelas (relações), com linhas (tuplas) e colunas (atributos). Usa chaves primárias e estrangeiras para joins. Álgebra relacional (seleção, projeção, união) subjaz às operações. Ex.: Tabela "Empregados" com ID como PK, ligada a "Departamentos". Vantagens: Simples, poderoso para queries; Desvantagens: Rigidez em esquemas.
+- **Modelo Relacional**: Organiza os dados em tabelas (relações), com linhas (tuplas) e colunas (atributos), conectadas por chaves primárias e estrangeiras em vez de ponteiros. É o modelo detalhado no restante deste material.
+  - *Exemplo*: uma tabela "Empregados" (com ID como chave primária) ligada a uma tabela "Departamentos".
+  - *Vantagem*: simples de entender e muito poderoso para consultas — apoiado na álgebra relacional (seleção, projeção, união).
+  - *Desvantagem*: o esquema é rígido; mudar a estrutura de uma tabela em produção exige planejamento.
 
-- **Modelo Orientado a Objetos (OODBMS)**: Integra OO como classes, herança e encapsulamento. Ex.: Um objeto "Carro" com métodos. Usado em CAD ou multimídia. Vantagens: Natural para linguagens como Java; Desvantagens: Menos padronizado.
+- **Modelo Orientado a Objetos (OODBMS)**: Guarda os dados como objetos de uma linguagem de programação, com classes, herança e encapsulamento, em vez de "traduzir" objetos para linhas de tabela.
+  - *Exemplo*: um objeto `Carro` que já carrega seus próprios métodos, salvo diretamente no banco.
+  - *Vantagem*: natural para linguagens orientadas a objetos como Java.
+  - *Desvantagem*: menos padronizado entre fornecedores; usado principalmente em nichos como CAD e multimídia.
 
-- **Modelo de Documentos**: Armazena dados em documentos autônomos (JSON/BSON). Ex.: { "nome": "João", "endereços": [array] }. Vantagens: Flexível para schemas dinâmicos; Desvantagens: Dificuldade em joins complexos.
+- **Modelo de Documentos**: Armazena cada registro como um documento autocontido, geralmente em JSON ou BSON, em vez de espalhar os dados em várias tabelas.
+  - *Exemplo*: `{ "nome": "João", "enderecos": ["Rua A, 123", "Av. B, 456"] }` guarda todos os endereços de João em um único documento.
+  - *Vantagem*: schema flexível — documentos da mesma coleção podem ter campos diferentes entre si.
+  - *Desvantagem*: joins entre documentos são mais difíceis e menos eficientes do que em um banco relacional.
 
-- **Outros Modelos**: Colunar (para analytics, ex.: BigQuery), Grafos (nós e arestas para relações, ex.: Facebook's social graph).
+- **Outros Modelos**: Colunar (armazena por coluna em vez de por linha, ótimo para analytics, ex.: BigQuery) e Grafos (nós e arestas representam as relações diretamente, ex.: o grafo social do Facebook).
 
 - **Exemplo Comparativo** (em tabela para clareza):
 
@@ -199,10 +214,10 @@ Uma chave primária (PK) é um atributo (ou conjunto de atributos) que identific
 
 ## Chaves Estrangeiras (Foreign Keys): Conexões entre Tabelas
 
-Uma chave estrangeira (FK) é um atributo em uma tabela que referencia a PK de outra tabela, estabelecendo um relacionamento. Ela enforces a integridade referencial, garantindo que valores na FK existam na tabela referenciada. Isso previne "órfãos" (registros sem pai válido) e modela relações como 1:N (um para muitos) ou N:N (muitos para muitos, via tabela intermediária).
+Uma chave estrangeira (FK) é um atributo em uma tabela que referencia a PK de outra tabela, estabelecendo um relacionamento. Ela garante que todo valor gravado na FK já exista como PK na tabela referenciada — isso previne "órfãos" (registros sem pai válido) e modela relações como 1:N (um para muitos) ou N:N (muitos para muitos, via tabela intermediária).
 
 - **Características Detalhadas**:
-  - **Referencial**: Deve combinar o tipo e tamanho da PK referenciada.
+  - **Referencial**: Deve combinar o tipo e o tamanho da PK referenciada.
   - **Ações em Cascata**: ON DELETE CASCADE (exclui filhos ao deletar pai), ON UPDATE RESTRICT (impede atualizações que quebrem referências).
   - **Relacionamentos**: 1:1 (raro, ex.: perfil de usuário), 1:N (comum, ex.: um cliente tem muitos pedidos), N:N (ex.: alunos e cursos, via tabela de matrículas).
   - **Constraints**: Definida com FOREIGN KEY ... REFERENCES.
@@ -246,7 +261,7 @@ Essa distinção é pivotal na era do big data.
   - **Desvantagens**: Escalabilidade vertical limitada; schema changes são disruptivos.
 
 - **Não Relacionais (NoSQL)**:
-  - **Características**: Esquema flexível, BASE (Basically Available, Soft state, Eventual consistency) em vez de ACID.
+  - **Características**: Esquema flexível, segue o modelo BASE (Basically Available, Soft state, Eventual consistency) em vez de ACID — o sistema prioriza estar sempre disponível e aceita que, por um curto período, réplicas diferentes mostrem valores levemente desatualizados até se sincronizarem. *Exemplo*: ao curtir uma foto no Instagram, o contador pode demorar um instante para atualizar em todos os servidores — isso é consistência eventual, e é aceitável nesse caso (diferente de um saldo bancário, onde não seria).
   - **Tipos Detalhados**:
     - Key-Value: Simples como dicionários (ex.: Redis para sessões de usuário).
     - Documentos: Para dados nested (ex.: MongoDB para logs).
@@ -319,7 +334,23 @@ Desenvolvido por Peter Chen em 1976, o ER Model é uma ferramenta de modelagem c
   Atributos: Cliente (ID PK, Nome), Pedido (ID PK, Data, ClienteID FK)
   ```
 
-- **Conversão para Relacional**: Entidades viram tabelas, relacionamentos viram FKs ou tabelas de junção.
+- **Conversão para Relacional**: Entidades viram tabelas, atributos viram colunas, e relacionamentos viram chaves estrangeiras (1:N) ou uma tabela de junção (N:N). Aplicando isso ao diagrama acima:
+
+  ```sql
+  CREATE TABLE Cliente (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL
+  );
+
+  CREATE TABLE Pedido (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Data DATE NOT NULL,
+    ClienteID INT NOT NULL,
+    FOREIGN KEY (ClienteID) REFERENCES Cliente(ID)
+  );
+  ```
+
+  Note que o "1:N" do diagrama virou, na prática, a `FOREIGN KEY (ClienteID)` dentro de `Pedido` — o mesmo padrão visto na seção de [Chaves Estrangeiras](#chaves-estrangeiras-foreign-keys-conexões-entre-tabelas).
 
 - **Ferramentas**: Lucidchart, ERDPlus para diagramas.
 
@@ -341,7 +372,17 @@ Processo para eliminar redundância e anomalias (inserção, atualização, excl
   - **BCNF**: Toda dependência funcional é de superchave.
   - **4NF/5NF**: Para multivalorados e joins.
 
-- **Exemplo Passo a Passo**: Tabela não normalizada → Divida em múltiplas tabelas ligadas por FKs.
+- **Exemplo Passo a Passo**: Considere esta tabela não normalizada:
+
+  | PedidoID | Cliente | Produtos                | CidadeCliente | CEP    |
+  |----------|---------|--------------------------|---------------|--------|
+  | 1        | João    | Caneta, Caderno          | São Paulo     | 01000  |
+
+  1. **1NF** (valores atômicos, sem listas dentro de uma célula): separe "Produtos" em uma linha por produto, criando uma tabela `Pedido_Item(PedidoID, Produto)`.
+  2. **2NF** (sem dependências parciais): se a chave fosse composta (`PedidoID + Produto`) e "Cliente" dependesse só de `PedidoID` — não do par completo —, mova "Cliente" para sua própria tabela: `Pedido(PedidoID, ClienteID)`.
+  3. **3NF** (sem dependências transitivas): "CidadeCliente" depende do "CEP", que depende do cliente — não do pedido. Ou seja, `Cidade` depende de `PedidoID` só indiretamente, através de `CEP`. Mova esses dados para `Cliente(ClienteID, Nome, CEP, Cidade)`.
+
+  Resultado: três tabelas menores (`Cliente`, `Pedido`, `Pedido_Item`) ligadas por chaves estrangeiras, sem repetir "São Paulo" a cada pedido do mesmo cliente.
 
 - **Denormalização**: Reintroduz redundância para performance (ex.: Armazene total calculado).
 
@@ -393,16 +434,25 @@ Processo para eliminar redundância e anomalias (inserção, atualização, excl
 
 ## Propriedades ACID
 
-Garantem confiabilidade em transações.
+Garantem confiabilidade em transações — blocos de comandos SQL que devem ser tratados como uma única unidade indivisível.
 
-- **Atomicidade**: Usando logs para all-or-nothing.
-- **Consistência**: Checks de constraints pós-transação.
-- **Isolamento**: Níveis como Read Committed evitam phantoms.
-- **Durabilidade**: Write-ahead logging (WAL) persiste mudanças.
+- **Atomicidade**: A transação é "tudo ou nada". Se qualquer comando falhar no meio do caminho, o banco desfaz (rollback) tudo o que já havia sido feito, usando os logs de transação.
+- **Consistência**: Antes e depois da transação, os dados devem respeitar todas as regras do banco (constraints, chaves, triggers) — uma transação nunca pode deixar os dados num estado inválido.
+- **Isolamento**: Transações executando ao mesmo tempo não devem enxergar resultados parciais umas das outras. Níveis de isolamento (ex.: Read Committed) controlam o quanto uma transação pode ver do trabalho ainda não confirmado de outra, evitando *phantom reads* (quando a mesma consulta, repetida dentro da transação, retorna linhas diferentes porque outra transação inseriu dados no meio do caminho).
+- **Durabilidade**: Depois do `COMMIT`, a mudança sobrevive mesmo a uma queda de energia — garantido pelo Write-Ahead Logging (WAL), que grava a mudança em um log em disco antes de confirmar a transação.
 
-- **Exemplo**: ATM: Debita conta A, credita B; falha reverte.
+- **Exemplo em SQL**: Uma transferência de R$100 da conta A para a conta B:
 
-- **Importância**: Essencial para sistemas críticos como bancos.
+  ```sql
+  START TRANSACTION;
+  UPDATE Contas SET Saldo = Saldo - 100 WHERE ID = 'A';
+  UPDATE Contas SET Saldo = Saldo + 100 WHERE ID = 'B';
+  COMMIT;
+  ```
+
+  Se o servidor cair depois do primeiro `UPDATE` mas antes do `COMMIT`, a atomicidade garante que o débito é desfeito automaticamente — a conta A nunca fica debitada sem que a conta B tenha recebido o valor.
+
+- **Importância**: Essencial para sistemas críticos como bancos, onde perder ou duplicar uma transação tem custo real.
 
 **Exercícios de fixação:**
 
@@ -411,15 +461,25 @@ Garantem confiabilidade em transações.
 
 ## Transações
 
-Unidades lógicas de trabalho.
+Uma transação é uma unidade lógica de trabalho: um conjunto de comandos SQL que só faz sentido se executado por completo (ver [Propriedades ACID](#propriedades-acid) acima).
 
-- **Estados**: Active, Partially Committed, Committed, Failed, Aborted.
-- **Controle**: SAVEPOINT para partial rollbacks.
-- **Concorrência**: Problemas como lost updates resolvidos por locks.
+- **Estados**: Active (em execução) → Partially Committed (comandos terminaram, aguardando confirmação) → Committed (confirmada e durável) — ou, em caso de erro, Failed → Aborted (desfeita).
+- **Controle com SAVEPOINT**: Permite desfazer só uma parte da transação, sem cancelar tudo:
 
-- **Exemplo**: Transação distribuída em múltiplos DBs usa 2PC (Two-Phase Commit).
+  ```sql
+  START TRANSACTION;
+  UPDATE Estoque SET Quantidade = Quantidade - 1 WHERE Produto = 'Caneta';
+  SAVEPOINT depois_estoque;
+  UPDATE Contas SET Saldo = Saldo - 5 WHERE Cliente = 'João';
+  -- Se o pagamento falhar, desfaz só o pagamento e mantém a baixa no estoque:
+  ROLLBACK TO depois_estoque;
+  COMMIT;
+  ```
 
-- **Importância**: Mantém integridade em ambientes multi-threaded.
+- **Concorrência e "lost update"**: Imagine duas pessoas comprando o último item do estoque ao mesmo tempo. Se ambas leem "Quantidade = 1" antes de qualquer uma escrever, as duas podem decrementar para 0 — e o sistema deixa passar duas vendas de um item que só existia um. O DBMS evita isso com locks (uma transação bloqueia a linha até terminar) ou MVCC (visto na seção de [DBMS](#sistemas-de-gerenciamento-de-bancos-de-dados-dbms)).
+- **Transações distribuídas**: Quando uma transação envolve mais de um banco (ex.: debitar em um servidor e creditar em outro), usa-se 2PC (Two-Phase Commit): primeiro todos os bancos confirmam que *conseguem* aplicar a mudança (fase de preparação); só depois, se todos concordarem, a mudança é efetivada em todos ao mesmo tempo (fase de commit).
+
+- **Importância**: Mantém a integridade dos dados em ambientes com múltiplos usuários e processos simultâneos.
 
 ## Segurança em Bancos de Dados
 
@@ -427,7 +487,7 @@ Protege contra ameaças internas/externas.
 
 - **Medidas Detalhadas**:
   - **Autenticação**: Senhas, MFA, certificados.
-  - **Autorização**: RBAC (Role-Based Access Control).
+  - **Autorização**: RBAC (Role-Based Access Control) — em vez de conceder permissões a cada usuário individualmente, você cria papéis (ex.: "vendedor", "gerente") com um conjunto fixo de permissões e atribui os usuários a esses papéis.
   - **Criptografia**: AES para dados, TLS para conexões.
   - **Auditoria**: Logs de queries para compliance.
   - **Defesas**: Contra SQL Injection (use parametros), DDoS (firewalls).
@@ -443,24 +503,48 @@ Protege contra ameaças internas/externas.
 
 ## Big Data e Bancos Distribuídos
 
-Lida com volume, variedade, velocidade (3Vs).
+Big Data se refere a volumes de dados grandes (ou rápidos) demais para um único servidor tradicional processar — resumido nos "3Vs": Volume (quantidade), Variedade (formatos diferentes) e Velocidade (chegam em tempo real).
 
-- **Tecnologias**: Hadoop (HDFS + MapReduce), Spark (in-memory processing), Kafka para streaming.
-- **Técnicas**: Sharding (particionamento), Replicação (master-slave), CAP Theorem (Consistency, Availability, Partition tolerance – escolha 2).
-- **Exemplos**: Elasticsearch para busca full-text, BigTable no Google.
+- **Tecnologias**:
+  - **Hadoop**: distribui o armazenamento (HDFS — o dado é dividido e espalhado por vários servidores) e o processamento (MapReduce — divide um cálculo grande em tarefas menores, roda em paralelo em cada servidor e depois combina os resultados).
+  - **Spark**: faz algo parecido com o MapReduce, mas processa em memória em vez de gravar resultados intermediários em disco a cada etapa — muito mais rápido para cálculos iterativos.
+  - **Kafka**: uma fila de mensagens de alto volume, usada para capturar eventos em tempo real (ex.: cada clique em um site) antes de eles serem processados.
 
-- **Importância**: Essencial para AI/ML com dados massivos.
+- **Técnicas**:
+  - **Sharding**: divide uma tabela grande em pedaços menores ("shards"), cada um armazenado em um servidor diferente, para que nenhum servidor precise guardar os dados inteiros.
+  - **Replicação master-slave**: mantém cópias dos mesmos dados em vários servidores; o "master" recebe as escritas e as replica para os "slaves", que atendem às leituras.
+  - **CAP Theorem**: em um sistema distribuído só é possível garantir 2 das 3 propriedades ao mesmo tempo — Consistência (todos os nós veem o mesmo dado), Disponibilidade (o sistema sempre responde) e Tolerância a Partição (continua funcionando mesmo se a rede entre servidores cair). Como partições de rede acontecem na prática, a escolha real é entre Consistência e Disponibilidade durante uma falha.
+
+- **Exemplos**: Elasticsearch para busca full-text em grandes volumes de texto, BigTable no Google para bilhões de linhas.
+
+- **Importância**: Essencial para sistemas de IA/ML, que dependem de treinar modelos com dados massivos.
 
 ## Backup e Recuperação
 
-Estratégias para continuidade.
+Estratégias para garantir que o banco sobreviva a falhas de hardware, erros humanos ou ataques.
 
-- **Tipos**: Full, Differential (mudanças desde full), Incremental (desde último backup).
-- **Métricas**: RPO (ex.: perda de 1 hora), RTO (ex.: recuperação em 30 min).
-- **Ferramentas**: pg_dump para PostgreSQL, mysqldump para MySQL.
-- **Planejamento**: Teste restores, offsite storage para DR (Disaster Recovery).
+- **Tipos de backup**:
+  - **Full**: cópia completa do banco. Mais simples de restaurar, mas mais lento de gerar e mais pesado de armazenar.
+  - **Differential**: guarda só o que mudou desde o último full. Restaurar exige o full + o differential mais recente.
+  - **Incremental**: guarda só o que mudou desde o último backup (full ou incremental). Mais rápido de gerar, mas restaurar exige aplicar vários incrementos em sequência.
 
-- **Importância**: Previne perda irreversível; "dados são o novo petróleo", proteja-os.
+- **Métricas que orientam a estratégia**:
+  - **RPO (Recovery Point Objective)**: quanto dado a empresa aceita perder. Um RPO de 1 hora exige backups pelo menos a cada hora.
+  - **RTO (Recovery Time Objective)**: quanto tempo o sistema pode ficar fora do ar até ser restaurado. Um RTO de 30 minutos exige um processo de restore rápido e já testado, não só um backup guardado.
+
+- **Comandos práticos**:
+
+  ```bash
+  # Backup completo em MySQL
+  mysqldump -u root -p meu_banco > backup_2026-07-29.sql
+
+  # Restaurar a partir do backup
+  mysql -u root -p meu_banco < backup_2026-07-29.sql
+  ```
+
+- **Planejamento**: Um backup só vale algo se o restore já foi testado antes da emergência real; guarde cópias fora do local principal (offsite) como parte do plano de Disaster Recovery (DR).
+
+- **Importância**: Previne perda irreversível de dados — a única coisa pior que não ter backup é descobrir, na hora da crise, que o backup nunca funcionou.
 
 ## Como Tudo Se Conecta
 
