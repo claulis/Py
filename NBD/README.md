@@ -1,10 +1,33 @@
 # Banco de dados
 
+## Sumário
+
+- [O Que É um Banco de Dados?](#o-que-é-um-banco-de-dados)
+- [Sistemas de Gerenciamento de Bancos de Dados (DBMS)](#sistemas-de-gerenciamento-de-bancos-de-dados-dbms)
+- [Modelos de Dados](#modelos-de-dados)
+- [Tabelas: A Estrutura Básica de Armazenamento de Dados](#tabelas-a-estrutura-básica-de-armazenamento-de-dados)
+- [Chaves Primárias (Primary Keys): Identificadores Únicos](#chaves-primárias-primary-keys-identificadores-únicos)
+- [Chaves Estrangeiras (Foreign Keys): Conexões entre Tabelas](#chaves-estrangeiras-foreign-keys-conexões-entre-tabelas)
+- [Bancos de Dados Relacionais vs. Não Relacionais](#bancos-de-dados-relacionais-vs-não-relacionais)
+- [Linguagem SQL (Structured Query Language)](#linguagem-sql-structured-query-language)
+- [Entidade-Relacionamento (ER Model)](#entidade-relacionamento-er-model)
+- [Normalização](#normalização)
+- [Índices: Aceleradores de Consultas](#índices-aceleradores-de-consultas)
+- [Propriedades ACID](#propriedades-acid)
+- [Transações](#transações)
+- [Segurança em Bancos de Dados](#segurança-em-bancos-de-dados)
+- [Big Data e Bancos Distribuídos](#big-data-e-bancos-distribuídos)
+- [Backup e Recuperação](#backup-e-recuperação)
+- [Como Tudo Se Conecta](#como-tudo-se-conecta)
+- [Exemplos Completos](#exemplos-completos)
+
+## O Que É um Banco de Dados?
+
 - **Elementos Fundamentais**:
   - **Dados**: Podem ser estruturados (ex.: números em colunas), semi-estruturados (ex.: XML ou JSON) ou não estruturados (ex.: imagens ou vídeos). Em um banco relacional, dados são armazenados em tabelas, onde cada linha é um registro e cada coluna é um atributo.
   - **Metadados**: "Dados sobre dados", como o esquema que define tipos de dados (inteiro, string, data), constraints (restrições como "não nulo") e índices para otimização.
   - **Relacionamentos**: Como dados se conectam, por exemplo, um cliente relacionado a múltiplos pedidos.
-  
+
 - **História Breve**: Os bancos de dados evoluíram dos anos 1960 com sistemas hierárquicos (como IMS da IBM) para o modelo relacional nos anos 1970, graças a Edgar F. Codd, que propôs o uso de álgebra relacional para manipulação de dados.
 
 - **Exemplos Práticos**:
@@ -78,180 +101,11 @@ Modelos de dados são abstrações que definem como dados são representados, ar
 
 - **Importância**: O modelo certo alinha com os requisitos da aplicação, afetando performance e manutenção.
 
-## Bancos de Dados Relacionais vs. Não Relacionais
+**Exercícios de fixação:**
 
-Essa distinção é pivotal na era do big data.
-
-- **Relacionais (SQL)**:
-  - **Características**: Esquema fixo, ACID-compliant, queries complexas com joins, subqueries e agregações (SUM, AVG).
-  - **Internals**: Armazenamento row-based (bom para transações), normalização para integridade.
-  - **Exemplos**: MySQL para WordPress, PostgreSQL para GIS.
-  - **Vantagens**: Forte consistência, maturidade, ferramentas de BI.
-  - **Desvantagens**: Escalabilidade vertical limitada; schema changes são disruptivos.
-
-- **Não Relacionais (NoSQL)**:
-  - **Características**: Esquema flexível, BASE (Basically Available, Soft state, Eventual consistency) em vez de ACID.
-  - **Tipos Detalhados**:
-    - Key-Value: Simples como dicionários (ex.: Redis para sessões de usuário).
-    - Documentos: Para dados nested (ex.: MongoDB para logs).
-    - Colunares: Otimizado para leituras analíticas (ex.: Cassandra para time-series).
-    - Grafos: Para travessias (ex.: Neo4j para fraudes detection).
-  - **Exemplos**: DynamoDB na AWS para escalabilidade serverless.
-  - **Vantagens**: Horizontal scaling, tolerância a falhas, alta throughput.
-  - **Desvantagens**: Consistência eventual pode levar a dados "stale"; queries limitadas sem SQL-like.
-
-- **Quando Escolher?** Relacional para finanças (precisão); NoSQL para IoT (volume).
-
-- **Importância**: A escolha impacta arquitetura de sistemas; híbridos (polyglot persistence) são comuns hoje.
-
-## Linguagem SQL (Structured Query Language)
-
-SQL é declarativa: você descreve o que quer, não como obter. Pronuncia-se "sequel" ou "S-Q-L".
-
-SQL (Structured Query Language), ou Linguagem de Consulta Estruturada, é a linguagem padrão utilizada para gerenciar e manipular bancos de dados relacionais. Ela foi criada na década de 1970 baseada no modelo relacional de dados, e desde então tornou-se fundamental para qualquer sistema que precise armazenar, consultar e modificar dados organizados em tabelas.
-
-SQL é uma **linguagem declarativa** que permite ao usuário especificar o **que deseja obter ou modificar nos dados, sem precisar dizer como o banco de dados deve executar* essas operações. Basicamente, o usuário escreve comandos SQL e o sistema gerenciador do banco de dados (SGBD), como MySQL, PostgreSQL, Oracle, SQL Server, entre outros, interpreta e executa essas consultas ou comandos.
-
-Um banco de dados relacional SQL organiza as informações em tabelas compostas por linhas (registros) e colunas (campos). Cada coluna representa um atributo e cada linha representa uma entidade ou instância do dado.
-
-### Principais componentes e comandos do SQL
-
-- [**DDL (Data Definition Language):**](/NBD/ddl.md) Cria e altera estruturas de bancos, tabelas e índices. Exemplos: `CREATE`, `ALTER`, `DROP`.
-- [**DML (Data Manipulation Language):**](/NBD/dml.md) Manipula dados armazenados, como inserir, atualizar, excluir.
-- [**DQL (Data Query Language):**](/NBD/dql.md) Consulta dados.
-- **DCL (Data Control Language):** Controla permissões e acessos.
-- **TCL (Transaction Control Language):** Controla transações.
-
-### Como o SQL funciona?
-
-O usuário escreve comandos SQL que são enviados ao SGBD. Este processa a consulta, decide o plano de execução ideal, acessa os dados físicos, realiza as operações solicitadas e retorna os resultados.
-
-A linguagem é declarativa, ou seja, o usuário diz o que quer ("selecionar clientes maiores de 30 anos") e o banco determina como fazer isso internamente. O SQL permite consultar diversas tabelas relacionadas, fazer agregações, ordenar dados, filtrar por condições, etc.
-
-### Sistemas que suportam SQL
-
-Existem muitos SGBDs que implementam SQL, como MySQL, PostgreSQL, Microsoft SQL Server, Oracle, MariaDB, SQLite, entre outros. Embora o núcleo do SQL seja padrão, cada sistema pode ter suas extensões específicas.
-
-SQL é a linguagem universal para lidar com bancos de dados relacionais, permitindo armazenar, manipular, consultar e administrar dados estruturados. Seu domínio é essencial para desenvolvedores, analistas de dados, administradores de banco de dados e qualquer profissional que trabalhe com dados.
-
-SQL simplifica a transformação de dados brutos em informações úteis para decisão, análise e operação de sistemas modernos.
-
-## Entidade-Relacionamento (ER Model)
-
-Desenvolvido por Peter Chen em 1976, o ER Model é uma ferramenta de modelagem conceitual.
-
-- **Componentes Expandidos**:
-  - **Entidades**: Fortes (independentes) vs. Fracas (dependem de outra).
-  - **Atributos**: Simples (atomic), Compostos (ex.: Endereço com Rua+Cidade), Multivalorados (ex.: Telefones), Derivados (ex.: Idade de DataNasc).
-  - **Relacionamentos**: Cardinalidade (1:1, 1:N, N:N), Participação (total/parcial). Ex.: N:N resolvido com tabela intermediária.
-
-- **Diagrama Textual Exemplo**:
-  ```
-  [Cliente] --1:N-- [Pedido] --N:1-- [Produto]
-  Atributos: Cliente (ID PK, Nome), Pedido (ID PK, Data, ClienteID FK)
-  ```
-
-- **Conversão para Relacional**: Entidades viram tabelas, relacionamentos viram FKs ou tabelas de junção.
-
-- **Ferramentas**: Lucidchart, ERDPlus para diagramas.
-
-- **Importância**: Previne erros de design, facilitando comunicação entre stakeholders.
-
-## Normalização
-
-Processo para eliminar redundância e anomalias (inserção, atualização, exclusão).
-
-- **Formas Normais Detalhadas**:
-  - **1NF**: Valores atômicos, sem grupos repetidos. Ex.: Separe "Hobbies: ler, nadar" em linhas.
-  - **2NF**: 1NF + sem dependências parciais (atributos dependem da PK completa em chaves compostas).
-  - **3NF**: 2NF + sem dependências transitivas (ex.: Cidade depende de CEP, não de Empregado).
-  - **BCNF**: Toda dependência funcional é de superchave.
-  - **4NF/5NF**: Para multivalorados e joins.
-
-- **Exemplo Passo a Passo**: Tabela não normalizada → Divida em múltiplas tabelas ligadas por FKs.
-
-- **Denormalização**: Reintroduz redundância para performance (ex.: Armazene total calculado).
-
-- **Importância**: Bancos normalizados são eficientes em espaço e consistentes, mas equilibre com performance.
-
-## Índices
-
-Índices aceleram buscas usando estruturas como B-trees ou hashes.
-
-- **Tipos Detalhados**:
-  - **Primário**: Único, clusterizado (ordena dados).
-  - **Secundário**: Não único, non-clusterizado.
-  - **Único/Composto**: Para constraints ou múltiplas colunas.
-  - **Full-Text**: Para buscas textuais (ex.: LIKE '%termo%').
-
-- **Funcionamento**: B-tree permite O(log n) buscas vs. O(n) scan.
-
-- **Exemplo**: Sem índice, SELECT em 1M linhas é lento; com, instantâneo.
-
-- **Manutenção**: Atualizações reconstroem índice, consumindo I/O.
-
-- **Importância**: Crítico para queries em produção; monitore com EXPLAIN em SQL.
-
-## Propriedades ACID
-
-Garantem confiabilidade em transações.
-
-- **Atomicidade**: Usando logs para all-or-nothing.
-- **Consistência**: Checks de constraints pós-transação.
-- **Isolamento**: Níveis como Read Committed evitam phantoms.
-- **Durabilidade**: Write-ahead logging (WAL) persiste mudanças.
-
-- **Exemplo**: ATM: Debita conta A, credita B; falha reverte.
-
-- **Importância**: Essencial para sistemas críticos como bancos.
-
-## Transações
-
-Unidades lógicas de trabalho.
-
-- **Estados**: Active, Partially Committed, Committed, Failed, Aborted.
-- **Controle**: SAVEPOINT para partial rollbacks.
-- **Concorrência**: Problemas como lost updates resolvidos por locks.
-
-- **Exemplo**: Transação distribuída em múltiplos DBs usa 2PC (Two-Phase Commit).
-
-- **Importância**: Mantém integridade em ambientes multi-threaded.
-
-## Segurança em Bancos de Dados
-
-Protege contra ameaças internas/externas.
-
-- **Medidas Detalhadas**:
-  - **Autenticação**: Senhas, MFA, certificados.
-  - **Autorização**: RBAC (Role-Based Access Control).
-  - **Criptografia**: AES para dados, TLS para conexões.
-  - **Auditoria**: Logs de queries para compliance.
-  - **Defesas**: Contra SQL Injection (use parametros), DDoS (firewalls).
-
-- **Exemplo**: `PREPARE stmt FROM 'SELECT * FROM Users WHERE ID = ?';` previne injeções.
-
-- **Importância**: Com leis como LGPD/GDPR, violações custam milhões.
-
-## Big Data e Bancos Distribuídos
-
-Lida com volume, variedade, velocidade (3Vs).
-
-- **Tecnologias**: Hadoop (HDFS + MapReduce), Spark (in-memory processing), Kafka para streaming.
-- **Técnicas**: Sharding (particionamento), Replicação (master-slave), CAP Theorem (Consistency, Availability, Partition tolerance – escolha 2).
-- **Exemplos**: Elasticsearch para busca full-text, BigTable no Google.
-
-- **Importância**: Essencial para AI/ML com dados massivos.
-
-## Backup e Recuperação
-
-Estratégias para continuidade.
-
-- **Tipos**: Full, Differential (mudanças desde full), Incremental (desde último backup).
-- **Métricas**: RPO (ex.: perda de 1 hora), RTO (ex.: recuperação em 30 min).
-- **Ferramentas**: pg_dump para PostgreSQL, mysqldump para MySQL.
-- **Planejamento**: Teste restores, offsite storage para DR (Disaster Recovery).
-
-- **Importância**: Previne perda irreversível; "dados são o novo petróleo", proteja-os.
+1. Explique a diferença entre o modelo hierárquico e o modelo em rede, citando um exemplo de cada.
+2. Por que o modelo relacional se tornou dominante em vez do hierárquico ou em rede?
+3. Em qual cenário um modelo de documentos (JSON) seria mais adequado que um modelo relacional?
 
 ## Tabelas: A Estrutura Básica de Armazenamento de Dados
 
@@ -287,6 +141,25 @@ As tabelas são o coração de um banco de dados relacional. Elas representam um
 
 - **Por Que São Importantes?** Tabelas são a unidade mínima de armazenamento lógico. Sem elas, os dados seriam uma sopa desorganizada, impossibilitando consultas eficientes. Elas formam a base para os outros conceitos que discutiremos.
 
+**Exercícios de fixação:**
+
+1. Escreva o comando `CREATE TABLE` para uma tabela `Livros` com as colunas: `ID` (chave primária, auto incremento), `Titulo` (texto de até 150 caracteres, obrigatório), `Ano` (inteiro) e `Preco` (decimal com 2 casas, deve ser maior que 0).
+
+   <details><summary>Ver resposta</summary>
+
+   ```sql
+   CREATE TABLE Livros (
+     ID INT AUTO_INCREMENT PRIMARY KEY,
+     Titulo VARCHAR(150) NOT NULL,
+     Ano INT,
+     Preco DECIMAL(10,2) CHECK (Preco > 0)
+   );
+   ```
+
+   </details>
+
+2. O que acontece se você tentar inserir uma linha na tabela acima sem informar o campo `Titulo`? Por quê?
+
 ## Chaves Primárias (Primary Keys): Identificadores Únicos
 
 Uma chave primária (PK) é um atributo (ou conjunto de atributos) que identifica unicamente cada registro em uma tabela. Ela garante que não haja duplicatas e serve como referência para relacionamentos. Toda tabela bem projetada deve ter uma PK, que é automaticamente indexada (veremos índices adiante) para buscas rápidas.
@@ -318,6 +191,11 @@ Uma chave primária (PK) é um atributo (ou conjunto de atributos) que identific
   - **Limitações**: Em bancos distribuídos, IDs sequenciais podem causar hotspots; use UUIDs para evitar.
 
 - **Por Que São Importantes?** Sem PKs, tabelas seriam como listas sem IDs – impossível referenciar itens de forma confiável, levando a dados duplicados e inconsistentes.
+
+**Exercícios de fixação:**
+
+1. Por que geralmente é melhor usar uma chave artificial (surrogate, ex.: ID) em vez do CPF como chave primária de uma tabela de Clientes?
+2. Dê um exemplo de chave primária composta e explique em que situação ela é necessária.
 
 ## Chaves Estrangeiras (Foreign Keys): Conexões entre Tabelas
 
@@ -351,25 +229,148 @@ Uma chave estrangeira (FK) é um atributo em uma tabela que referencia a PK de o
 
 - **Por Que São Importantes?** FKs transformam tabelas isoladas em um sistema interconectado, essencial para bancos normalizados e consultas complexas.
 
+**Exercícios de fixação:**
+
+1. Escreva o SQL para criar uma tabela `Matriculas` que referencia `Alunos.ID` e `Cursos.ID`, apagando as matrículas automaticamente quando o aluno for removido.
+2. O que é um registro "órfão" e como a FK evita isso?
+
+## Bancos de Dados Relacionais vs. Não Relacionais
+
+Essa distinção é pivotal na era do big data.
+
+- **Relacionais (SQL)**:
+  - **Características**: Esquema fixo, ACID-compliant, queries complexas com joins, subqueries e agregações (SUM, AVG).
+  - **Internals**: Armazenamento row-based (bom para transações), normalização para integridade.
+  - **Exemplos**: MySQL para WordPress, PostgreSQL para GIS.
+  - **Vantagens**: Forte consistência, maturidade, ferramentas de BI.
+  - **Desvantagens**: Escalabilidade vertical limitada; schema changes são disruptivos.
+
+- **Não Relacionais (NoSQL)**:
+  - **Características**: Esquema flexível, BASE (Basically Available, Soft state, Eventual consistency) em vez de ACID.
+  - **Tipos Detalhados**:
+    - Key-Value: Simples como dicionários (ex.: Redis para sessões de usuário).
+    - Documentos: Para dados nested (ex.: MongoDB para logs).
+    - Colunares: Otimizado para leituras analíticas (ex.: Cassandra para time-series).
+    - Grafos: Para travessias (ex.: Neo4j para fraudes detection).
+  - **Exemplos**: DynamoDB na AWS para escalabilidade serverless.
+  - **Vantagens**: Horizontal scaling, tolerância a falhas, alta throughput.
+  - **Desvantagens**: Consistência eventual pode levar a dados "stale"; queries limitadas sem SQL-like.
+
+- **Quando Escolher?** Relacional para finanças (precisão); NoSQL para IoT (volume).
+
+- **Importância**: A escolha impacta arquitetura de sistemas; híbridos (polyglot persistence) são comuns hoje.
+
+## Linguagem SQL (Structured Query Language)
+
+SQL é declarativa: você descreve o que quer, não como obter. Pronuncia-se "sequel" ou "S-Q-L".
+
+SQL (Structured Query Language), ou Linguagem de Consulta Estruturada, é a linguagem padrão utilizada para gerenciar e manipular bancos de dados relacionais. Ela foi criada na década de 1970 baseada no modelo relacional de dados, e desde então tornou-se fundamental para qualquer sistema que precise armazenar, consultar e modificar dados organizados em tabelas.
+
+SQL é uma **linguagem declarativa** que permite ao usuário especificar o **que deseja obter ou modificar nos dados, sem precisar dizer como o banco de dados deve executar** essas operações. Basicamente, o usuário escreve comandos SQL e o sistema gerenciador do banco de dados (SGBD), como MySQL, PostgreSQL, Oracle, SQL Server, entre outros, interpreta e executa essas consultas ou comandos.
+
+Um banco de dados relacional SQL organiza as informações em tabelas compostas por linhas (registros) e colunas (campos). Cada coluna representa um atributo e cada linha representa uma entidade ou instância do dado.
+
+### Principais componentes e comandos do SQL
+
+- [**DDL (Data Definition Language):**](/NBD/ddl.md) Cria e altera estruturas de bancos, tabelas e índices. Exemplos: `CREATE`, `ALTER`, `DROP`.
+- [**DML (Data Manipulation Language):**](/NBD/dml.md) Manipula dados armazenados, como inserir, atualizar, excluir.
+- [**DQL (Data Query Language):**](/NBD/dql.md) Consulta dados.
+- **DCL (Data Control Language):** Controla permissões e acessos.
+- **TCL (Transaction Control Language):** Controla transações.
+
+### Como o SQL funciona?
+
+O usuário escreve comandos SQL que são enviados ao SGBD. Este processa a consulta, decide o plano de execução ideal, acessa os dados físicos, realiza as operações solicitadas e retorna os resultados.
+
+A linguagem é declarativa, ou seja, o usuário diz o que quer ("selecionar clientes maiores de 30 anos") e o banco determina como fazer isso internamente. O SQL permite consultar diversas tabelas relacionadas, fazer agregações, ordenar dados, filtrar por condições, etc.
+
+### Sistemas que suportam SQL
+
+Existem muitos SGBDs que implementam SQL, como MySQL, PostgreSQL, Microsoft SQL Server, Oracle, MariaDB, SQLite, entre outros. Embora o núcleo do SQL seja padrão, cada sistema pode ter suas extensões específicas.
+
+SQL é a linguagem universal para lidar com bancos de dados relacionais, permitindo armazenar, manipular, consultar e administrar dados estruturados. Seu domínio é essencial para desenvolvedores, analistas de dados, administradores de banco de dados e qualquer profissional que trabalhe com dados.
+
+SQL simplifica a transformação de dados brutos em informações úteis para decisão, análise e operação de sistemas modernos.
+
+**Exercícios de fixação:**
+
+1. Classifique cada comando como DDL, DML ou DQL: `ALTER TABLE`, `INSERT INTO`, `SELECT`, `DROP TABLE`, `UPDATE`.
+
+   <details><summary>Ver resposta</summary>
+
+   DDL: `ALTER TABLE`, `DROP TABLE` — DML: `INSERT INTO`, `UPDATE` — DQL: `SELECT`
+
+   </details>
+
+2. Veja os exemplos completos de [DDL](/NBD/ddl.md), [DML](/NBD/dml.md) e [DQL](/NBD/dql.md) e execute pelo menos uma consulta de cada tipo em um banco de testes.
+
+## Entidade-Relacionamento (ER Model)
+
+Desenvolvido por Peter Chen em 1976, o ER Model é uma ferramenta de modelagem conceitual.
+
+- **Componentes Expandidos**:
+  - **Entidades**: Fortes (independentes) vs. Fracas (dependem de outra).
+  - **Atributos**: Simples (atomic), Compostos (ex.: Endereço com Rua+Cidade), Multivalorados (ex.: Telefones), Derivados (ex.: Idade de DataNasc).
+  - **Relacionamentos**: Cardinalidade (1:1, 1:N, N:N), Participação (total/parcial). Ex.: N:N resolvido com tabela intermediária.
+
+- **Diagrama Textual Exemplo**:
+  ```
+  [Cliente] --1:N-- [Pedido] --N:1-- [Produto]
+  Atributos: Cliente (ID PK, Nome), Pedido (ID PK, Data, ClienteID FK)
+  ```
+
+- **Conversão para Relacional**: Entidades viram tabelas, relacionamentos viram FKs ou tabelas de junção.
+
+- **Ferramentas**: Lucidchart, ERDPlus para diagramas.
+
+- **Importância**: Previne erros de design, facilitando comunicação entre stakeholders.
+
+**Exercícios de fixação:**
+
+1. Modele um mini sistema de "Biblioteca" com as entidades Livro, Autor e Empréstimo. Quais são as cardinalidades entre elas?
+2. Como um relacionamento N:N entre Aluno e Curso é representado quando convertido para o modelo relacional?
+
+## Normalização
+
+Processo para eliminar redundância e anomalias (inserção, atualização, exclusão).
+
+- **Formas Normais Detalhadas**:
+  - **1NF**: Valores atômicos, sem grupos repetidos. Ex.: Separe "Hobbies: ler, nadar" em linhas.
+  - **2NF**: 1NF + sem dependências parciais (atributos dependem da PK completa em chaves compostas).
+  - **3NF**: 2NF + sem dependências transitivas (ex.: Cidade depende de CEP, não de Empregado).
+  - **BCNF**: Toda dependência funcional é de superchave.
+  - **4NF/5NF**: Para multivalorados e joins.
+
+- **Exemplo Passo a Passo**: Tabela não normalizada → Divida em múltiplas tabelas ligadas por FKs.
+
+- **Denormalização**: Reintroduz redundância para performance (ex.: Armazene total calculado).
+
+- **Importância**: Bancos normalizados são eficientes em espaço e consistentes, mas equilibre com performance.
+
+**Exercícios de fixação:**
+
+1. Dada uma tabela `Pedido(ID, Cliente, Produto1, Produto2, Produto3)`, explique por que ela viola a 1NF e como corrigi-la.
+2. Dê um exemplo de dependência transitiva que viola a 3NF.
+
 ## Índices: Aceleradores de Consultas
 
 Índices são estruturas de dados auxiliares que melhoram a velocidade de recuperação de dados, semelhantes a um índice remissivo em um livro. Em vez de escanear toda a tabela (full table scan), o DBMS usa o índice para localizar registros rapidamente. Eles são criados em colunas frequentemente usadas em WHERE, JOIN ou ORDER BY.
 
 - **Características Detalhadas**:
   - **Estruturas Internas**: B-Tree (para ranges, ex.: >, <), Hash (para igualdades exatas), Bitmap (para colunas de baixa cardinalidade, ex.: gênero M/F).
-  - **Tipos**: Primário (automático na PK), Secundário (em outras colunas), Único (enforces unicidade), Composto (múltiplas colunas), Clusterizado (ordena dados fisicamente), Non-Clusterizado (aponta para dados).
+  - **Tipos**: Primário (automático na PK, clusterizado, ordena os dados fisicamente), Secundário (não único, non-clusterizado, aponta para os dados), Único/Composto (para constraints ou múltiplas colunas), Full-Text (para buscas textuais, ex.: `LIKE '%termo%'`).
   - **Custo**: Consomem espaço em disco e tempo em inserts/updates/deletes (índice deve ser atualizado).
 
 - **Criação e Uso em SQL**:
   - Simples: `CREATE INDEX idx_nome ON Clientes(Nome);`
   - Único: `CREATE UNIQUE INDEX idx_email ON Clientes(Email);`
   - Composto: `CREATE INDEX idx_composto ON Pedidos(Cliente_ID, Data);`
-  - Analisar: `EXPLAIN SELECT * FROM Clientes WHERE Nome = 'João';` (mostra se índice é usado).
+  - Analisar: `EXPLAIN SELECT * FROM Clientes WHERE Nome = 'João';` (mostra se o índice é usado).
   - Remover: `DROP INDEX idx_nome ON Clientes;`
 
 - **Exemplos Práticos**:
   - **Analogia**: Em um catálogo telefônico, o índice por nome permite achar números rapidamente, sem ler página por página.
-  - **Uso Real**: Em uma tabela de logs com milhões de entradas, índice em "Data" acelera `SELECT WHERE Data BETWEEN '2024-01-01' AND '2024-12-31';`.
+  - **Uso Real**: Em uma tabela de logs com milhões de entradas, índice em "Data" acelera `SELECT WHERE Data BETWEEN '2024-01-01' AND '2024-12-31';`. Sem índice, essa mesma busca em 1 milhão de linhas seria lenta; com índice, quase instantânea.
 
 - **Vantagens dos Índices**:
   - **Desempenho**: Reduz tempo de query de O(n) para O(log n).
@@ -383,16 +384,101 @@ Uma chave estrangeira (FK) é um atributo em uma tabela que referencia a PK de o
   - **Sobrecarga**: Muitos índices ralentizam inserts; use apenas em colunas com alta seletividade (muitos valores únicos).
   - **Limitações**: Inúteis em colunas de baixa cardinalidade (ex.: booleano); em NoSQL, índices são semelhantes mas gerenciados diferentemente.
 
-- **Por Que São Importantes?** Sem índices, consultas em bancos grandes seriam impraticáveis, levando a lentidão inaceitável em aplicações reais.
+- **Por Que São Importantes?** Sem índices, consultas em bancos grandes seriam impraticáveis, levando a lentidão inaceitável em aplicações reais. São críticos para queries em produção — monitore sempre com `EXPLAIN`.
 
-### Interconexões entre os Conceitos
+**Exercícios de fixação:**
 
-- **Tabelas e Chaves**: PKs são definidas nas tabelas para unicidade, enquanto FKs conectam tabelas, formando o modelo relacional.
+1. Por que criar um índice em toda coluna de uma tabela pode ser uma má ideia?
+2. Em qual situação um índice Full-Text seria mais útil que um índice B-Tree comum?
+
+## Propriedades ACID
+
+Garantem confiabilidade em transações.
+
+- **Atomicidade**: Usando logs para all-or-nothing.
+- **Consistência**: Checks de constraints pós-transação.
+- **Isolamento**: Níveis como Read Committed evitam phantoms.
+- **Durabilidade**: Write-ahead logging (WAL) persiste mudanças.
+
+- **Exemplo**: ATM: Debita conta A, credita B; falha reverte.
+
+- **Importância**: Essencial para sistemas críticos como bancos.
+
+**Exercícios de fixação:**
+
+1. Dê um exemplo (diferente do caixa eletrônico do texto) do que aconteceria se a propriedade de Atomicidade não existisse.
+2. Qual a diferença prática entre Isolamento e Consistência?
+
+## Transações
+
+Unidades lógicas de trabalho.
+
+- **Estados**: Active, Partially Committed, Committed, Failed, Aborted.
+- **Controle**: SAVEPOINT para partial rollbacks.
+- **Concorrência**: Problemas como lost updates resolvidos por locks.
+
+- **Exemplo**: Transação distribuída em múltiplos DBs usa 2PC (Two-Phase Commit).
+
+- **Importância**: Mantém integridade em ambientes multi-threaded.
+
+## Segurança em Bancos de Dados
+
+Protege contra ameaças internas/externas.
+
+- **Medidas Detalhadas**:
+  - **Autenticação**: Senhas, MFA, certificados.
+  - **Autorização**: RBAC (Role-Based Access Control).
+  - **Criptografia**: AES para dados, TLS para conexões.
+  - **Auditoria**: Logs de queries para compliance.
+  - **Defesas**: Contra SQL Injection (use parametros), DDoS (firewalls).
+
+- **Exemplo**: `PREPARE stmt FROM 'SELECT * FROM Users WHERE ID = ?';` previne injeções.
+
+- **Importância**: Com leis como LGPD/GDPR, violações custam milhões.
+
+**Exercícios de fixação:**
+
+1. Por que usar uma query parametrizada (como `PREPARE stmt FROM 'SELECT * FROM Users WHERE ID = ?'`) previne SQL Injection, enquanto concatenar strings diretamente na query não?
+2. O que é RBAC e por que é preferível a dar acesso de administrador para todos os usuários?
+
+## Big Data e Bancos Distribuídos
+
+Lida com volume, variedade, velocidade (3Vs).
+
+- **Tecnologias**: Hadoop (HDFS + MapReduce), Spark (in-memory processing), Kafka para streaming.
+- **Técnicas**: Sharding (particionamento), Replicação (master-slave), CAP Theorem (Consistency, Availability, Partition tolerance – escolha 2).
+- **Exemplos**: Elasticsearch para busca full-text, BigTable no Google.
+
+- **Importância**: Essencial para AI/ML com dados massivos.
+
+## Backup e Recuperação
+
+Estratégias para continuidade.
+
+- **Tipos**: Full, Differential (mudanças desde full), Incremental (desde último backup).
+- **Métricas**: RPO (ex.: perda de 1 hora), RTO (ex.: recuperação em 30 min).
+- **Ferramentas**: pg_dump para PostgreSQL, mysqldump para MySQL.
+- **Planejamento**: Teste restores, offsite storage para DR (Disaster Recovery).
+
+- **Importância**: Previne perda irreversível; "dados são o novo petróleo", proteja-os.
+
+## Como Tudo Se Conecta
+
+Agora que você viu cada peça separadamente, vale a pena juntar tudo:
+
+- **Tabelas e Chaves**: PKs são definidas nas tabelas para garantir unicidade, enquanto FKs conectam tabelas, formando o modelo relacional.
 - **Chaves e Índices**: PKs e FKs geralmente têm índices automáticos; índices adicionais otimizam consultas envolvendo chaves.
-- **Tudo Junto**: Em um design normalizado, tabelas relacionadas via FKs usam índices para joins eficientes. Exemplo: Em um ER Model, entidades viram tabelas com PKs, relacionamentos viram FKs, e colunas frequentes ganham índices.
-- **Boas Práticas**: Sempre defina PKs; use FKs para integridade; crie índices baseados em queries reais (use EXPLAIN); normalize para evitar redundância, mas denormalize se performance for crítica.
+- **Modelo ER e Tabelas**: No ER Model, entidades viram tabelas com PKs, relacionamentos viram FKs, e colunas frequentes ganham índices.
+- **Normalização e Chaves**: A normalização usa PKs e FKs para eliminar redundância, dividindo dados em tabelas menores e ligadas entre si.
+- **SQL Amarra Tudo**: DDL cria tabelas, chaves e índices; DML e DQL manipulam e consultam os dados; ACID garante que essas operações sejam confiáveis mesmo com múltiplos usuários simultâneos.
+- **Boas Práticas**: Sempre defina PKs; use FKs para integridade; crie índices baseados em queries reais (use `EXPLAIN`); normalize para evitar redundância, mas denormalize se performance for crítica.
 
-## Exemplos completos
+## Exemplos Completos
 
-| [MySQL Connector](/NBD/Mysqlconnector/) | [Alchemy ORM](/NBD/SqlAlchemy/)   | [db_pedidos.sql](/NBD/Mysqlconnector/db_pedidos.sql)
-| :-------------: | :-----------: | :------------:|
+Projetos práticos para ver os conceitos acima em código real:
+
+| Exemplo | O que mostra |
+| :-- | :-- |
+| [MySQL Connector](/NBD/Mysqlconnector/) | Conexão direta ao MySQL a partir do Python com `mysql-connector`, escrevendo SQL "puro" (sem ORM). |
+| [Alchemy ORM](/NBD/SqlAlchemy/) | As mesmas operações, mas usando SQLAlchemy (ORM) — compare com o exemplo anterior para ver a diferença entre escrever SQL manualmente e mapear tabelas para classes Python. |
+| [db_pedidos.sql](/NBD/Mysqlconnector/db_pedidos.sql) | Script SQL completo de criação de um banco de pedidos, útil para praticar DDL, PK e FK vistos acima. |
