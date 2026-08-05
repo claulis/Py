@@ -241,19 +241,43 @@ graph TD
 
 | Padrão | Onde aparece no Django |
 |---|---|
-| **Active Record** | O `Model` sabe se salvar: `pedido.save()`. Difere do Data Mapper do SQLAlchemy — veja `PDS/mvc/`, onde `PedidoRepository` separa o objeto de domínio (`Pedido`) da persistência |
+| **Active Record** | O `Model` sabe se salvar: `pedido.save()` |
 | **Observer / Pub-Sub** | Sistema de *signals*: `post_save`, `pre_delete` |
-| **Template Method** | Class-Based Views: `dispatch()` define o esqueleto do fluxo; subclasses sobrescrevem `get_context_data()`, `form_valid()`, `get_queryset()` |
-| **Facade** | `django.shortcuts` — `render()`, `get_object_or_404()` escondem vários subsistemas atrás de uma função só |
-| **Proxy / Lazy Loading** | Um `QuerySet` só executa SQL quando é iterado; `request.user` é um `SimpleLazyObject`; `gettext_lazy()` adia a tradução até o texto ser exibido |
-| **Builder / Interface fluente** | `Model.objects.filter(...).exclude(...).order_by(...)` — cada chamada devolve um novo `QuerySet`, encadeável |
-| **Factory** | `Manager` (`Model.objects`) como fábrica de `QuerySet`s; `Form` gerando campos e widgets a partir da declaração da classe |
-| **Composite** | Objetos `Q` formam uma árvore de expressões booleanas; formsets agregam vários `Form` sob a mesma interface de um `Form` só |
+| **Template Method** | Class-Based Views: `dispatch()` define o esqueleto do fluxo |
+| **Facade** | `django.shortcuts` — `render()`, `get_object_or_404()` |
+| **Proxy / Lazy Loading** | `QuerySet` preguiçoso, `request.user`, `gettext_lazy()` |
+| **Builder / Interface fluente** | `Model.objects.filter(...).exclude(...).order_by(...)` |
+| **Factory** | `Manager` (`Model.objects`) como fábrica de `QuerySet`s |
+| **Composite** | Objetos `Q`, combinados com `\|` e `&` |
 | **Decorator** | `@login_required`, `@require_POST`, `@cached_property` |
-| **Command** | *Management commands* — cada comando é uma classe com `BaseCommand.handle()`, executável via `python manage.py nome_do_comando` |
-| **Descriptor**¹ | Os `Field` do ORM usam o protocolo de descritores do Python para interceptar o acesso a atributos — é o que permite a uma ForeignKey disparar uma query só quando o atributo é lido |
+| **Command** | *Management commands* — `BaseCommand.handle()` |
+| **Descriptor**¹ | Os `Field` do ORM interceptam acesso a atributos |
 
 ¹ Específico de Python, não pertence ao catálogo GoF original.
+
+Cada um em detalhe — para que serve, como funciona, onde exatamente aparece:
+
+**Active Record** existe para dar ao próprio objeto de domínio a capacidade de se persistir, sem precisar de uma classe separada cuidando disso. Funciona porque o `Model` herda de uma base que já implementa `save()`, `delete()` e expõe um `Manager` (`.objects`) para consultas — todo `Model` criado carrega esse comportamento de graça. Em Django, isso é literal: `pedido.save()` grava no banco, `Pedido.objects.filter(cliente="Ana Paula")` consulta — o dado e a forma de persisti-lo moram na mesma classe. Difere do Data Mapper do SQLAlchemy, usado em `PDS/mvc/`, onde `PedidoRepository` é uma classe à parte que persiste `Pedido` sem que `Pedido` saiba disso.
+
+**Observer / Pub-Sub** existe para permitir que várias partes do sistema reajam a um evento sem que quem dispara o evento precise conhecer quem está ouvindo. Funciona com um despachante central que mantém uma lista de funções inscritas para um evento específico e, quando o evento acontece, chama cada uma delas passando os dados. Em Django, é o sistema de *signals*: `post_save`, `pre_delete` e outros são disparados automaticamente pelo ORM, e qualquer função decorada com `@receiver(post_save, sender=Pedido)` passa a ser notificada sempre que um `Pedido` for salvo.
+
+**Template Method** existe para fixar o roteiro de um processo numa classe-base, deixando só os pontos que variam para as subclasses preencherem. Funciona porque um método da classe-base chama, numa ordem já definida, uma sequência de outros métodos — alguns fixos, outros feitos para serem sobrescritos — sem que a subclasse precise reescrever a ordem inteira. Em Django, é a espinha dorsal das Class-Based Views: `ListView.dispatch()` já sabe buscar o queryset, montar o contexto, escolher o template e renderizar; a subclasse só sobrescreve `get_queryset()`, `get_context_data()` ou `form_valid()` nos pontos certos.
+
+**Facade** existe para esconder atrás de uma função só a complexidade de vários subsistemas que, juntos, resolvem uma tarefa comum. Funciona porque a função de fachada aciona internamente várias classes — carregar o template, montar o contexto, renderizar HTML, embrulhar numa resposta HTTP — e expõe para quem chama só os parâmetros que importam. Em Django, `render()` e `get_object_or_404()`, ambos em `django.shortcuts`, são exatamente isso: uma chamada simples escondendo `Template`, `Context`, `HttpResponse` e tratamento de exceção por trás.
+
+**Proxy / Lazy Loading** existe para adiar um trabalho caro até o momento em que o resultado é de fato necessário, evitando gastar tempo com algo que talvez nunca seja usado. Funciona com um objeto-substituto que intercepta o primeiro acesso, dispara a operação real só nessa hora, e guarda o resultado para os acessos seguintes. Em Django, um `QuerySet` não roda SQL nenhum até ser iterado ou convertido em lista; `request.user` é um `SimpleLazyObject` que só busca o usuário no banco quando algum atributo dele é lido pela primeira vez; `gettext_lazy()` adia a tradução de um texto até o momento em que ele é efetivamente exibido.
+
+**Builder / Interface fluente** existe para construir um objeto complexo — aqui, uma consulta SQL — aos poucos, em vez de exigir um único construtor com dezenas de parâmetros. Funciona porque cada método de construção devolve uma nova instância (ou uma cópia ajustada) do próprio construtor, permitindo encadear chamada após chamada até fechar a construção. Em Django, `Model.objects.filter(...).exclude(...).order_by(...)` é esse encadeamento: cada `QuerySet` é imutável, e cada chamada devolve um novo `QuerySet` com mais uma condição embutida.
+
+**Factory** existe para centralizar a criação de objetos numa classe própria, em vez de espalhar chamadas de construtor pelo código inteiro. Funciona porque a classe fábrica expõe métodos que já sabem montar e devolver instâncias prontas do tipo que ela produz. Em Django, `Model.objects` é um `Manager` — a fábrica que produz `QuerySet`s para aquele `Model` — e um `Form` também é uma fábrica, gerando seus campos e widgets a partir da declaração da classe.
+
+**Composite** existe para que um objeto individual e uma composição de vários objetos possam ser tratados pela mesma interface, sem que quem usa precise diferenciar os dois casos. Funciona com uma estrutura em árvore, onde cada nó — folha ou composto — responde ao mesmo método, e um nó composto só repassa a chamada para seus filhos. Em Django, objetos `Q` são essa árvore: `Q(cliente="Ana Paula") | (Q(ano=2026) & ~Q(cliente="Bruno Costa"))` combina folhas e sub-árvores, e `.filter()` sabe processar a árvore inteira do mesmo jeito, não importa quantos níveis ela tenha.
+
+**Decorator** existe para acrescentar comportamento a uma função sem alterar o código-fonte dela. Funciona porque uma função decoradora recebe a função original como argumento e devolve uma nova função, que roda lógica extra antes ou depois de chamar a original. Em Django, `@login_required` barra o acesso antes da view rodar; `@require_POST` rejeita métodos HTTP errados; `@cached_property` guarda o resultado de um cálculo caro na primeira chamada e devolve o valor guardado nas seguintes.
+
+**Command** existe para transformar uma ação em um objeto, para que ela possa ser invocada, listada ou reutilizada de forma padronizada, em vez de ser só uma função solta. Funciona porque cada ação vira uma classe com um único método de execução, seguindo a mesma interface de todas as outras ações do mesmo tipo. Em Django, cada *management command* é uma classe que herda de `BaseCommand` e implementa `handle()`, executável de modo uniforme via `python manage.py nome_do_comando`, seja qual for o comando.
+
+**Descriptor**¹ existe para interceptar o acesso de leitura ou escrita a um atributo de uma classe, rodando lógica extra nesse exato momento. Funciona porque a classe implementa os métodos especiais `__get__` e/ou `__set__`, que o próprio Python chama automaticamente sempre que o atributo é lido ou escrito num objeto — sem que quem lê o atributo perceba que algo além de uma leitura simples está acontecendo. Em Django, os `Field` do ORM usam esse protocolo para, por exemplo, fazer uma `ForeignKey` disparar uma consulta ao banco só no instante em que o atributo relacionado é de fato lido, não quando o objeto é criado.
 
 ---
 
