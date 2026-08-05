@@ -4,6 +4,16 @@ Django combina padrões em dois níveis distintos, e misturar os dois é a fonte
 
 ---
 
+## Pré-requisito: os princípios SOLID
+
+Antes de entrar em MVC e no restante deste documento, vale fixar os cinco princípios SOLID — não são um padrão arquitetural nem um padrão de projeto, são as diretrizes de design que decidem *como* as classes dentro de qualquer um desses padrões devem se relacionar. É por causa do SOLID, por exemplo, que a implementação de MVC discutida na Seção 1.1 separa `PedidoService` e `IPedidoRepository` do Controller, em vez de deixar tudo numa classe só.
+
+[`solid.md`](/PDS/solid.md) explica os cinco princípios (SRP, OCP, LSP, ISP, DIP) do zero até um programa integrado, com a implementação correspondente em [`PDS/solid/`](/PDS/solid/).
+
+📦 [Baixar o projeto completo (solid.zip)](/PDS/solid.zip) — mesma pasta `PDS/solid/`, pronta para extrair e rodar com `python main.py`, sem nenhuma dependência externa.
+
+---
+
 ## 1. Nível Arquitetural
 
 ### 1.1 MVC (Model-View-Controller)
@@ -36,7 +46,9 @@ class PedidoView:
         print(f"Pedido para {pedido.cliente}")
 ```
 
-A implementação completa deste padrão — com banco de dados, tratamento de erros e a discussão de um Controller que acaba violando o SRP — está em [`PDS/mvc/mvc.md`](/PDS/mvc/mvc.md), com o código correspondente em [`PDS/mvc/`](/PDS/mvc/). É esse MVC "de livro-texto" que a próxima seção compara com o MTV do Django — o mapeamento entre os dois é o primeiro ponto de confusão de quem chega no framework já conhecendo o padrão clássico.
+A implementação completa deste padrão — com banco de dados, tratamento de erros e os princípios SOLID aplicados via Service e Repository — está em [`PDS/mvc/mvc.md`](/PDS/mvc/mvc.md), com o código correspondente em [`PDS/mvc/`](/PDS/mvc/). É esse MVC "de livro-texto" que a próxima seção compara com o MTV do Django — o mapeamento entre os dois é o primeiro ponto de confusão de quem chega no framework já conhecendo o padrão clássico.
+
+📦 [Baixar o projeto completo (mvc.zip)](/PDS/mvc.zip) — mesma pasta `PDS/mvc/`, pronta para extrair e rodar com `pip install -r requirements.txt && python main.py`.
 
 ### 1.2 MTV (Model–Template–View)
 
