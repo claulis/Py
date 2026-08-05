@@ -1,6 +1,6 @@
 # Arquitetura e Estrutura do Projeto MVC
 
-Esta pasta é a implementação concreta do MVC descrito em [`PDS/arquitetura.md`](/PDS/arquitetura.md#11-mvc-model-view-controller): um sistema de gerenciamento de pedidos (`Pedido`, `ItemPedido`) de uma loja online, persistido com SQLAlchemy em um arquivo SQLite local. Além dos três papéis clássicos do MVC, a estrutura aplica os cinco princípios SOLID (explicados em [`solid.md`](/PDS/solid.md)) na divisão interna do que seria só o "Controller": a lógica de negócio e o acesso a dados vivem em classes próprias, cada uma com uma única razão para mudar.
+Esta pasta implementa o MVC descrito em [`PDS/arquitetura.md`](/PDS/arquitetura.md#11-mvc-model-view-controller): um sistema de gerenciamento de pedidos (`Pedido`, `ItemPedido`) de uma loja online, persistido com SQLAlchemy em um arquivo SQLite local. Além dos três papéis clássicos do MVC, o projeto aplica os cinco princípios SOLID (explicados em [`solid.md`](/PDS/solid.md)) na divisão interna do que costuma ser só o "Controller": a lógica de negócio e o acesso a dados vivem em classes próprias, cada uma com uma única razão para mudar.
 
 ## Estrutura de pastas
 
@@ -25,7 +25,7 @@ mvc/
     └── pedido_controller.py           # Controller: só orquestra
 ```
 
-`models/`, `views/` e `controllers/` continuam sendo os três papéis clássicos do MVC. `repositories/` e `services/` são a divisão interna do que, numa implementação mais simples, estaria tudo dentro do Controller — e é exatamente essa divisão que este documento existe para justificar.
+`models/`, `views/` e `controllers/` são os três papéis clássicos do MVC. `repositories/` isola o acesso a dados atrás de uma interface (DIP); `services/` concentra a regra de negócio (SRP). Juntas, essas duas pastas são o que mantém o Controller magro.
 
 ## Visão geral da arquitetura
 
@@ -44,7 +44,7 @@ graph TD
     PED -->|um-para-muitos, cascade| ITEM[ItemPedido]
 ```
 
-O Controller não fala mais com o banco nem decide regra de negócio — ele só recebe um `PedidoService` e uma `PedidoView` prontos (injeção de dependência) e coordena os dois. Quem de fato acessa o banco é `PedidoRepository`, e quem decide o que é um pedido válido é `PedidoService`. Nenhuma seta liga `PedidoController` diretamente a `PedidoRepository` ou a `Pedido` — tudo passa pelo `PedidoService` no meio.
+O Controller não fala com o banco nem decide regra de negócio — ele recebe um `PedidoService` e uma `PedidoView` prontos (injeção de dependência) e só coordena os dois. Quem acessa o banco é `PedidoRepository`; quem decide o que é um pedido válido é `PedidoService`. Nenhuma seta liga `PedidoController` diretamente a `PedidoRepository` ou a `Pedido` — tudo passa pelo `PedidoService` no meio.
 
 ---
 
@@ -91,7 +91,7 @@ class ItemPedido(Base):
     pedido = relationship("Pedido", back_populates="itens")
 ```
 
-Nenhuma dessas três classes mudou em relação a uma implementação de MVC mais simples: `Base` só dá a `Pedido` e `ItemPedido` o mapeamento automático para tabelas; `Pedido` guarda `cliente` e `data_pedido`, com `cascade="all, delete-orphan"` garantindo que apagar um pedido apaga seus itens junto; `ItemPedido` guarda `produto`, `quantidade` e `preco` (como `DECIMAL`, não `float`, para não perder precisão em dinheiro), ligado ao `Pedido` pela chave estrangeira `pedido_id`. Os Models não sabem nada sobre SOLID — a mudança inteira acontece nas camadas ao redor deles.
+`Base` dá a `Pedido` e `ItemPedido` o mapeamento automático para tabelas do SQLAlchemy. `Pedido` guarda `cliente` e `data_pedido`, com `cascade="all, delete-orphan"` garantindo que apagar um pedido apaga seus itens junto. `ItemPedido` guarda `produto`, `quantidade` e `preco` (como `DECIMAL`, não `float`, para não perder precisão em dinheiro), ligado ao `Pedido` pela chave estrangeira `pedido_id`. Os Models são só estrutura de dados — não sabem calcular nada, não sabem validar nada, não sabem se persistir sozinhos.
 
 ### `PedidoView` — `views/pedido_view.py`
 
@@ -115,7 +115,7 @@ class PedidoView:
         print(f"Erro: {erro}")
 ```
 
-Também não muda: três métodos estáticos, sem estado, só formatando texto. Continua sendo a única classe que efetivamente lê `Pedido.itens` para exibição.
+Três métodos estáticos, sem estado, cada um só formatando texto para o console. É a única classe do projeto que efetivamente lê `Pedido.itens` para exibição — nenhuma outra classe existe para mostrar dado ao usuário.
 
 ### `IPedidoRepository` — `repositories/ipedido_repository.py`
 
@@ -141,7 +141,7 @@ class IPedidoRepository(ABC):
     def delete(self, pedido_id: int) -> None: pass
 ```
 
-Esta interface não existe por acaso: ela é o Princípio da Inversão de Dependência (DIP) em código. Em vez de `PedidoService` depender diretamente de `PedidoRepository` — uma classe concreta amarrada ao SQLAlchemy — ele vai depender só deste contrato abstrato, o que abriria espaço para qualquer outra implementação (uma em memória, por exemplo) sem tocar em `PedidoService`.
+Esta interface é o Princípio da Inversão de Dependência (DIP) em código: define o contrato que qualquer forma de persistir um `Pedido` precisa cumprir, sem dizer nada sobre *como*. `PedidoService`, mais abaixo, depende só deste contrato — nunca da implementação concreta.
 
 ### `PedidoRepository` — `repositories/pedido_repository.py`
 
@@ -202,7 +202,7 @@ class PedidoRepository(IPedidoRepository):
         self.db.close()
 ```
 
-Esta classe concentra **toda** a conversa com o SQLAlchemy — sessão, `commit`, `rollback`, tratamento de `SQLAlchemyError` — e nada mais. Se o projeto trocasse de banco, ou de ORM, só `PedidoRepository` mudaria; `PedidoService` e `PedidoController`, que só conhecem `IPedidoRepository`, nem perceberiam a troca. É o Princípio da Responsabilidade Única (SRP) aplicado ao acesso a dados: a única razão para esta classe mudar é uma mudança na forma de persistir.
+Esta classe concentra **toda** a conversa com o SQLAlchemy — sessão, `commit`, `rollback`, tratamento de `SQLAlchemyError` — e nada mais. É o Princípio da Responsabilidade Única (SRP) aplicado ao acesso a dados: a única razão para esta classe mudar é uma mudança na forma de persistir. Cada exceção de banco vira um `ValueError` genérico antes de sair da classe, para que o resto do projeto nunca precise importar nada do SQLAlchemy.
 
 ### `PedidoService` — `services/pedido_service.py`
 
@@ -248,7 +248,7 @@ class PedidoService:
         self.repository.delete(pedido_id)
 ```
 
-É aqui que mora a regra de negócio que antes ficaria espalhada dentro de um Controller: um pedido precisa de um `cliente` e de pelo menos um item para existir (`create_pedido`), uma atualização só troca o que foi de fato informado (`update_pedido`), e buscar um pedido inexistente é um erro (`read_pedido_by_id`). `PedidoService` recebe `repository: IPedidoRepository` no construtor — não `PedidoRepository` — e é essa única troca de tipo que separa "depender de uma abstração" de "depender de uma implementação concreta": o DIP inteiro está nessa assinatura.
+É aqui que mora a regra de negócio: um pedido precisa de um `cliente` e de pelo menos um item para existir (`create_pedido`); uma atualização só troca o que foi de fato informado (`update_pedido`); buscar um pedido inexistente é um erro (`read_pedido_by_id`). O construtor recebe `repository: IPedidoRepository`, não `PedidoRepository` — essa assinatura é o DIP inteiro: o módulo de alto nível (a regra de negócio) depende de uma abstração, não de uma implementação concreta amarrada ao SQLAlchemy.
 
 ### `PedidoController` — `controllers/pedido_controller.py`
 
@@ -294,7 +294,7 @@ class PedidoController:
             self.view.exibir_erro(str(e))
 ```
 
-Compare esta classe com a versão anterior deste documento: não sobrou nenhuma linha de SQLAlchemy, nenhum `commit`, nenhum `rollback`, nenhuma regra de negócio. Cada método faz exatamente uma coisa — chama o `PedidoService`, e usa o resultado ou a exceção `ValueError` para decidir o que mandar a `PedidoView` exibir. Essa é a única razão para `PedidoController` mudar agora: uma mudança em *como o resultado deve ser comunicado ao usuário*, não em como ele é calculado ou persistido.
+Não há nenhuma linha de SQLAlchemy, nenhum `commit`, nenhuma regra de negócio aqui. Cada método faz exatamente uma coisa: chama o `PedidoService`, e usa o resultado ou a exceção `ValueError` para decidir o que mandar a `PedidoView` exibir. A única razão para esta classe mudar é uma mudança em *como o resultado deve ser comunicado ao usuário*, não em como ele é calculado ou persistido.
 
 ### Configuração — `config/database.py`
 
@@ -311,7 +311,7 @@ engine = create_engine(DATABASE_URL, echo=False, connect_args={"check_same_threa
 SessionLocal = sessionmaker(bind=engine)
 ```
 
-Sem mudanças: um arquivo SQLite local, criado automaticamente na primeira execução, sem exigir nenhuma instalação externa. Não usa `isolation_level="AUTOCOMMIT"` pelo mesmo motivo de sempre — com autocommit, os `rollback()` dentro de `PedidoRepository` não teriam mais nada para desfazer.
+Um arquivo SQLite local, criado automaticamente na primeira execução, sem exigir nenhuma instalação externa. Não usa `isolation_level="AUTOCOMMIT"`: com autocommit, cada instrução seria persistida assim que executada, e os `rollback()` dentro de `PedidoRepository` não teriam mais nada para desfazer.
 
 ### Ponto de entrada — `main.py`
 
@@ -344,7 +344,7 @@ if __name__ == "__main__":
     repository.close()
 ```
 
-A diferença em relação a uma montagem mais simples está nas quatro primeiras linhas do bloco principal: em vez de só `controller = PedidoController()`, o `main.py` agora monta a cadeia de dependências manualmente — cria o `PedidoRepository`, injeta-o no `PedidoService`, e injeta o `PedidoService` (mais a `PedidoView`) no `PedidoController`. Essa montagem explícita, feita uma única vez no ponto de entrada, é o preço pago pela flexibilidade de poder trocar `PedidoRepository` por qualquer outra implementação de `IPedidoRepository` sem tocar nas outras três classes.
+`Base.metadata.create_all(bind=engine)` cria as tabelas no SQLite se elas ainda não existirem. O bloco principal monta a cadeia de dependências à mão — `PedidoRepository` é injetado em `PedidoService`, que é injetado (junto com `PedidoView`) em `PedidoController` — e então demonstra o ciclo completo: criar um pedido, tentar deletar um que provavelmente não existe (para mostrar o caminho de erro), listar tudo, e fechar a sessão do repositório.
 
 ---
 
@@ -354,7 +354,23 @@ A diferença em relação a uma montagem mais simples está nas quatro primeiras
 
 **DIP** — `PedidoService.__init__` recebe `repository: IPedidoRepository`, não `PedidoRepository`. O módulo de alto nível (a regra de negócio) não depende do módulo de baixo nível (o SQLAlchemy); os dois dependem da abstração `IPedidoRepository`.
 
-Os outros três princípios de `solid.md` aparecem aqui de forma mais discreta: **OCP**, porque adicionar uma segunda implementação de `IPedidoRepository` (um repositório em memória, por exemplo) não exige modificar `PedidoService`; **LSP**, porque qualquer implementação de `IPedidoRepository` pode substituir `PedidoRepository` sem quebrar `PedidoService`; **ISP** não tem um exemplo dedicado nesta pasta, porque `IPedidoRepository` já nasce pequena — os cinco métodos que ela declara são os únicos que qualquer consumidor de fato usa.
+Os outros três aparecem de forma mais discreta: **OCP**, porque adicionar uma segunda implementação de `IPedidoRepository` (um repositório em memória, por exemplo) não exige modificar `PedidoService`; **LSP**, porque qualquer implementação de `IPedidoRepository` pode substituir `PedidoRepository` sem quebrar `PedidoService`; **ISP** não tem um exemplo dedicado aqui, porque `IPedidoRepository` já nasce pequena — os cinco métodos que ela declara são os únicos que qualquer consumidor de fato usa.
+
+---
+
+## Este projeto e o Django
+
+Django resolveria boa parte desse mesmo problema com bem menos código — e é justamente o que ele deixa de fora que este projeto torna visível. Em [`PDS/arquitetura.md`](/PDS/arquitetura.md) isso é explicado em profundidade; aqui, ponto a ponto, com as classes desta pasta como referência:
+
+`Pedido` e `ItemPedido`, em Django, seriam um `models.Model` com `.save()` e `.objects.filter()` prontos — o padrão Active Record. O papel que aqui pertence a `PedidoRepository` estaria fundido dentro do próprio Model; não existiria uma classe separada cuidando só de persistência, porque o Django não pede uma.
+
+`IPedidoRepository` e `PedidoRepository` não têm equivalente pronto no framework. O Django não oferece Repository Pattern nativamente — quem quer essa separação entre domínio e persistência precisa construí-la à mão, exatamente como foi feito nesta pasta.
+
+`PedidoService` também não é nativo do Django. A convenção oficial do framework é *fat models, thin views*: a regra de negócio normalmente entra direto no Model ou na View. Uma camada de serviço explícita como esta é uma escolha de arquitetura que um projeto Django adota por conta própria quando cresce o suficiente para justificar o isolamento.
+
+`PedidoController` corresponde ao que Django chama de `views.py` — que, apesar do nome, ocupa o papel de Controller do MVC clássico, não o de View. `PedidoView` corresponde aos templates.
+
+Ou seja: esta pasta implementa, com Python puro e SQLAlchemy, o que o Django exigiria construir manualmente caso um projeto real precisasse da mesma separação entre regra de negócio e acesso a dados.
 
 ## Como executar o exemplo completo
 
