@@ -1,8 +1,11 @@
+from typing import List
+
 from sqlalchemy.exc import SQLAlchemyError
+
 from config.database import SessionLocal
 from models.pedido import Pedido
 from repositories.ipedido_repository import IPedidoRepository
-from typing import List
+
 
 class PedidoRepository(IPedidoRepository):
     def __init__(self):

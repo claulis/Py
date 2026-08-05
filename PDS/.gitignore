@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.db
+.env
+.pytest_cache/
+repository/pedidos.json
