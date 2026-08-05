@@ -1,12 +1,18 @@
 from models.base import Base
 from config.database import engine
+from repositories.pedido_repository import PedidoRepository
+from services.pedido_service import PedidoService
+from views.pedido_view import PedidoView
 from controllers.pedido_controller import PedidoController
 
 # Criar tabelas no banco, se não existirem
 Base.metadata.create_all(bind=engine)
 
 if __name__ == "__main__":
-    controller = PedidoController()
+    repository = PedidoRepository()
+    service = PedidoService(repository)
+    view = PedidoView()
+    controller = PedidoController(service, view)
 
     # Exemplo de criação e salvamento
     itens_data = [
@@ -21,4 +27,4 @@ if __name__ == "__main__":
     # Exemplo de listagem
     controller.listar_e_exibir()
 
-    controller.fechar()
+    repository.close()

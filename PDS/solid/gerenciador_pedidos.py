@@ -1,10 +1,10 @@
 # gerenciador_pedidos.py
 # Classe para gerenciar pedidos, respeitando DIP
 from processador_pagamento import ProcessadorPagamento
-from repositorio_pedido import RepositorioPedido
+from repositorio_pedido import RepositorioPedidoInterface
 
 class GerenciadorPedidos:
-    def __init__(self, processador_pagamento: ProcessadorPagamento, repositorio: RepositorioPedido):
+    def __init__(self, processador_pagamento: ProcessadorPagamento, repositorio: RepositorioPedidoInterface):
         self.processador_pagamento = processador_pagamento
         self.repositorio = repositorio
 

@@ -1,19 +1,21 @@
-from typing import List, Dict
 from datetime import date
-from models.pedido import Pedido
+from typing import Any, Dict, List
+
 from models.item_pedido import ItemPedido
+from models.pedido import Pedido
 from repositories.ipedido_repository import IPedidoRepository
+
 
 class PedidoService:
     def __init__(self, repository: IPedidoRepository):
         self.repository = repository
 
-    def create_pedido(self, cliente: str, itens_data: List[Dict[str, any]]) -> Pedido:
+    def create_pedido(self, cliente: str, itens_data: List[Dict[str, Any]]) -> Pedido:
         if not cliente:
             raise ValueError("Cliente é obrigatório")
         if not itens_data:
             raise ValueError("Pelo menos um item é obrigatório")
-        
+
         pedido = Pedido(cliente=cliente)
         pedido.itens = [ItemPedido(**item) for item in itens_data]
         return self.repository.create(pedido)
