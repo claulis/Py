@@ -26,7 +26,6 @@ Este projeto é uma API REST para gerenciamento de pedidos e clientes, construí
 8. [Autenticação](#autenticação)
 9. [Rotas disponíveis](#rotas-disponíveis)
 10. [Testes automatizados](#testes-automatizados)
-11. [Histórico de correções e melhorias](#histórico-de-correções-e-melhorias)
 
 ---
 
@@ -304,30 +303,3 @@ pytest tests -v
 
 Cobrem, entre outros pontos: serialização correta de objetos ORM nas respostas, atualização de campos com valor `0`/`False`, rejeição de dados inválidos, paginação, autenticação por chave de API, a lógica de troca de backend SQLite/MySQL, e os principais fluxos de CRUD de pedidos e clientes.
 
----
-
-## Histórico de correções e melhorias
-
-Esta seção documenta o que foi corrigido e evoluído em relação a uma versão anterior do projeto, para referência de quem for revisar o histórico.
-
-### Erros corrigidos
-
-1. **Serialização de resposta quebrada** — os schemas de saída não tinham `from_attributes` habilitado corretamente (havia uma classe `Config` solta no módulo, sem efeito nenhum). Como os controllers retornam objetos do ORM diretamente, toda resposta de leitura ou escrita falhava na validação do Pydantic. Corrigido com `model_config = ConfigDict(from_attributes=True)` em cada schema de saída.
-2. **Atualização de campo com valor "falso" era ignorada** — os services usavam `if update_data.campo:` para decidir se um campo devia ser atualizado, o que descartava silenciosamente `idade=0` ou strings vazias. Corrigido para `if update_data.campo is not None:`.
-3. **Isolamento de transação inadequado** — o engine estava configurado com `isolation_level="AUTOCOMMIT"`, fazendo cada instrução SQL ser confirmada imediatamente, independente do `commit()`/`rollback()` do SQLAlchemy. Removido, restabelecendo o controle transacional padrão.
-4. **Credenciais de banco fixas no código-fonte** — movidas para variáveis de ambiente, lidas via `python-dotenv`.
-5. **Arquivos compilados versionados no Git** — `.gitignore` estava vazio e dezenas de `__pycache__/*.pyc` estavam rastreados. Corrigido.
-
-### Melhorias implementadas
-
-- **Backend de banco de dados configurável** (`DB_BACKEND=sqlite|mysql`) — troca sem alterar código, com SQLite como caminho padrão para começar sem instalar nada.
-- **Autenticação por chave de API** (`X-API-Key`) nas rotas de `/pedidos` e `/clientes`.
-- **Tratamento de erro no repository**: exceções do SQLAlchemy são registradas em log, e a API responde com mensagem genérica, sem vazar detalhes internos do banco.
-- **Paginação** (`skip`/`limit`) nas listagens.
-- **Validação de domínio nos schemas**: idade não pode ser negativa, quantidade de item deve ser maior que zero, preço não pode ser negativo.
-- **Atualização de itens de um pedido existente**, antes não suportada.
-- **CORS habilitado**, para consumo da API a partir de um front-end em outra origem.
-- **Endpoint `GET /health`**, sem autenticação, para checagem de disponibilidade.
-- **Criação de tabelas movida para o evento de *startup*** da aplicação, em vez de ocorrer na importação do módulo.
-- **Suíte de testes automatizados** (`pytest`), incluindo a lógica de troca de backend, com um banco SQLite em memória.
-- **Dependências fixadas por versão** em `requirements.txt`, com `requirements-dev.txt` separado para testes.
