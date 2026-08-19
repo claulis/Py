@@ -6,4 +6,3 @@ class Cliente(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String(100))
     idade = Column(Integer)
-     

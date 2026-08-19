@@ -8,8 +8,8 @@ class ClienteController:
     def __init__(self, service: ClienteService):
         self.service = service
 
-    def listar_clientes(self) -> List[ClienteOutSchema]:
-        return self.service.read_all_clientes()
+    def listar_clientes(self, skip: int = 0, limit: int = 100) -> List[ClienteOutSchema]:
+        return self.service.read_all_clientes(skip, limit)
 
     def ler_cliente(self, cliente_id: int) -> ClienteOutSchema:
         try:

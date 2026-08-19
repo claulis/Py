@@ -13,7 +13,7 @@ class IGenericRepository(Generic[T], ABC):
         pass
 
     @abstractmethod
-    def read_all(self) -> List[T]:
+    def read_all(self, skip: int = 0, limit: int = 100) -> List[T]:
         pass
 
     @abstractmethod

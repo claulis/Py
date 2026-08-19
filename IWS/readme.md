@@ -4,7 +4,7 @@ Uma **API REST** (Application Programming Interface Representational State Trans
 
 Pense em uma API REST como um "garçom" em um restaurante: você (o cliente) faz um pedido (uma solicitação), o garçom leva o pedido à cozinha (o servidor), e a cozinha retorna a comida (os dados) por meio do garçom. A API REST é o intermediário que facilita essa comunicação entre um cliente (como um aplicativo ou site) e um servidor (onde os dados estão armazenados).
 
-Exemplo completo [aqui](/IWS/rest/README.md)
+Um exemplo completo e funcional, com autenticação, paginação, testes automatizados, banco de dados configurável (SQLite ou MySQL) e as demais práticas descritas abaixo, está documentado em [IWS/rest/README.md](/IWS/rest/README.md).
 
 ## Princípios fundamentais do REST
 
@@ -66,7 +66,7 @@ Uma API REST funciona utilizando os padrões da web, especialmente o protocolo *
 
 5. **Formato de Dados**: O JSON é o formato mais comum para troca de dados em APIs REST devido à sua simplicidade e legibilidade. XML ou outros formatos também podem ser usados, mas são menos frequentes.
 
-6. **Autenticação e Segurança**: APIs REST frequentemente requerem autenticação (como tokens JWT, OAuth ou chaves de API) para garantir que apenas usuários autorizados acessem os recursos. Além disso, usam HTTPS para criptografar as comunicações.
+6. **Autenticação e Segurança**: APIs REST frequentemente requerem autenticação (como tokens JWT, OAuth ou chaves de API) para garantir que apenas usuários autorizados acessem os recursos. Além disso, usam HTTPS para criptografar as comunicações. O exemplo prático deste repositório usa chave de API (header `X-API-Key`), a forma mais simples desse mecanismo; JWT e OAuth resolvem o mesmo problema com identidade de usuário e escopos de permissão mais granulares.
 
 ## Exemplo Prático
 

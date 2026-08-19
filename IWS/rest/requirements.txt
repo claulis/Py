@@ -1,6 +1,7 @@
-fastapi 
-uvicorn 
-sqlalchemy 
-mysql-connector-python 
-pydantic 
-typing-extensions
+fastapi==0.141.1
+uvicorn==0.52.4
+sqlalchemy==2.0.52
+mysql-connector-python==26.7.0
+pydantic==2.13.4
+typing-extensions==4.16.0
+python-dotenv==1.2.3

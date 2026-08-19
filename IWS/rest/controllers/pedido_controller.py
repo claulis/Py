@@ -8,8 +8,8 @@ class PedidoController:
     def __init__(self, service: PedidoService):
         self.service = service
 
-    def listar_pedidos(self) -> List[PedidoOutSchema]:
-        return self.service.read_all_pedidos()
+    def listar_pedidos(self, skip: int = 0, limit: int = 100) -> List[PedidoOutSchema]:
+        return self.service.read_all_pedidos(skip, limit)
 
     def ler_pedido(self, pedido_id: int) -> PedidoOutSchema:
         try:

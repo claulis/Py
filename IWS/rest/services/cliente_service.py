@@ -20,14 +20,14 @@ class ClienteService:
             raise ValueError("Cliente não encontrado")
         return cliente
 
-    def read_all_clientes(self) -> List[Cliente]:
-        return self.repository.read_all()
+    def read_all_clientes(self, skip: int = 0, limit: int = 100) -> List[Cliente]:
+        return self.repository.read_all(skip, limit)
 
     def update_cliente(self, cliente_id: int, update_data: ClienteUpdateSchema) -> Cliente:
         cliente = self.read_cliente_by_id(cliente_id)
-        if update_data.nome:
+        if update_data.nome is not None:
             cliente.nome = update_data.nome
-        if update_data.idade:
+        if update_data.idade is not None:
             cliente.idade = update_data.idade
         return self.repository.update(cliente)
 

@@ -16,7 +16,7 @@ class PedidoService:
             raise ValueError("Pelo menos um item é obrigatório")
         
         pedido = Pedido(cliente=pedido_data.cliente)
-        pedido.itens = [ItemPedido(**item.dict()) for item in pedido_data.itens]
+        pedido.itens = [ItemPedido(**item.model_dump()) for item in pedido_data.itens]
         return self.repository.create(pedido)
 
     def read_pedido_by_id(self, pedido_id: int) -> Pedido:
@@ -25,15 +25,17 @@ class PedidoService:
             raise ValueError("Pedido não encontrado")
         return pedido
 
-    def read_all_pedidos(self) -> List[Pedido]:
-        return self.repository.read_all()
+    def read_all_pedidos(self, skip: int = 0, limit: int = 100) -> List[Pedido]:
+        return self.repository.read_all(skip, limit)
 
     def update_pedido(self, pedido_id: int, update_data: PedidoUpdateSchema) -> Pedido:
         pedido = self.read_pedido_by_id(pedido_id)
-        if update_data.cliente:
+        if update_data.cliente is not None:
             pedido.cliente = update_data.cliente
-        if update_data.data_pedido:
+        if update_data.data_pedido is not None:
             pedido.data_pedido = update_data.data_pedido
+        if update_data.itens is not None:
+            pedido.itens = [ItemPedido(**item.model_dump()) for item in update_data.itens]
         return self.repository.update(pedido)
 
     def delete_pedido(self, pedido_id: int) -> None:
