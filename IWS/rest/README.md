@@ -25,7 +25,6 @@ Este projeto é uma API REST para gerenciamento de pedidos e clientes, construí
 7. [Executando a aplicação](#executando-a-aplicação)
 8. [Autenticação](#autenticação)
 9. [Rotas disponíveis](#rotas-disponíveis)
-10. [Testes automatizados](#testes-automatizados)
 
 ---
 
@@ -52,7 +51,7 @@ Repository   → acesso ao banco de dados (CRUD puro), sem nenhuma regra de
 Model (ORM)  → tabelas do banco, mapeadas como classes Python via SQLAlchemy
 ```
 
-**Por que separar assim?** Cada camada pode ser testada e substituída isoladamente. Por exemplo, o repository pode trocar de MySQL para SQLite (como este projeto agora permite) sem que service, controller ou rota percebam qualquer diferença — todos dependem apenas da *interface* do repository, não da implementação concreta.
+**Por que separar assim?** Cada camada pode ser substituída isoladamente. Por exemplo, o repository pode trocar de MySQL para SQLite (como este projeto agora permite) sem que service, controller ou rota percebam qualquer diferença — todos dependem apenas da *interface* do repository, não da implementação concreta.
 
 | Camada | Pasta | Conhece o banco? | Conhece regra de negócio? | Conhece HTTP? |
 |---|---|:---:|:---:|:---:|
@@ -131,13 +130,7 @@ IWS/
     │   └── factory.py                 # Monta a cadeia repository → service → controller
     ├── schemas/
     │   └── schema.py                  # Schemas Pydantic de entrada e saída
-    ├── tests/
-    │   ├── conftest.py                # Fixtures de teste (SQLite em memória, isolado)
-    │   ├── test_database_config.py    # Testa a troca de backend SQLite/MySQL
-    │   ├── test_clientes.py
-    │   └── test_pedidos.py
     ├── requirements.txt                # Dependências de execução
-    ├── requirements-dev.txt            # Dependências de execução + testes
     └── .env.example                    # Modelo de variáveis de ambiente
 ```
 
@@ -289,17 +282,4 @@ Todas as rotas de `/pedidos` e `/clientes` exigem o header `X-API-Key`, com o va
 | DELETE | `/clientes/{id}`       | sim | Remove um cliente                              |
 
 A paginação (`skip`/`limit`) evita carregar a tabela inteira em uma única resposta; os valores padrão são `skip=0` e `limit=100`.
-
----
-
-## Testes automatizados
-
-Os testes usam um banco SQLite **em memória**, isolado tanto do arquivo `db_pedidos.db` local quanto de um eventual MySQL configurado no `.env` — não é necessário nenhum banco real para executá-los.
-
-```powershell
-pip install -r requirements-dev.txt
-pytest tests -v
-```
-
-Cobrem, entre outros pontos: serialização correta de objetos ORM nas respostas, atualização de campos com valor `0`/`False`, rejeição de dados inválidos, paginação, autenticação por chave de API, a lógica de troca de backend SQLite/MySQL, e os principais fluxos de CRUD de pedidos e clientes.
 

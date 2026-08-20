@@ -13,7 +13,7 @@ Uma API REST pode ser comparada ao papel de um garçom em um restaurante:
 
 O cliente não precisa conhecer o funcionamento interno da cozinha — apenas a forma correta de fazer o pedido (a URL e o método corretos) e o formato do que será recebido de volta. Esse contrato entre cliente e servidor é o que uma API REST formaliza.
 
-Um exemplo completo e funcional, com autenticação, paginação, testes automatizados e banco de dados configurável (SQLite ou MySQL), está documentado em [IWS/rest/README.md](/IWS/rest/README.md).
+Um exemplo completo e funcional, com autenticação, paginação e banco de dados configurável (SQLite ou MySQL), está documentado em [IWS/rest/README.md](/IWS/rest/README.md) ([link exemplo rest.zip](/IWS/rest.zip)).
 
 ## Princípios fundamentais do REST
 
