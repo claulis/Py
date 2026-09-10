@@ -2,9 +2,9 @@
 -- SISTEMA ESCOLAR - VERSÃO CORRIGIDA
 -- ============================================
 
-DROP DATABASE IF EXISTS escolar_dados;
-CREATE DATABASE escolar_dados;
-USE escolar_dados;
+DROP DATABASE IF EXISTS escola;
+CREATE DATABASE escola;
+USE escola;
 
 -- ============================================
 -- TABELAS
