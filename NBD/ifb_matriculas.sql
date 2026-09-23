@@ -2,7 +2,6 @@
 -- Base de treino: Matrículas IFB (inspirada no conjunto
 -- "Alunos Matriculados IFB" do dados.gov.br)
 -- Dados FICTÍCIOS. Nomes de campi são reais; alunos são inventados.
--- Público: EMI iniciante (SELECT, WHERE, JOIN, GROUP BY, AVG, HAVING)
 -- =============================================================
 
 DROP DATABASE IF EXISTS ifb_matriculas;
